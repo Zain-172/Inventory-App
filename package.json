@@ -1,0 +1,18 @@
+{
+  "name": "desktop-app",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:frontend\" \"npm:dev:backend\" \"npm:dev:electron\"",
+    "dev:frontend": "cd frontend && npx vite",
+    "dev:backend": "cd backend && npx nodemon server.js",
+    "dev:electron": "wait-on http://localhost:5173 && cmd /c \"set NODE_ENV=development && npx electron electron/main.js\"",
+    "build": "cd frontend && npx vite build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "electron": "^39.2.3",
+    "wait-on": "^9.0.3"
+  }
+}

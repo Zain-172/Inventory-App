@@ -1,0 +1,60 @@
+# --------------------
+# Node dependencies
+# --------------------
+node_modules/
+**/node_modules/
+
+# --------------------
+# Build outputs
+# --------------------
+dist/
+frontend/dist/
+backend/dist/
+electron/dist/
+build/
+out/
+
+# --------------------
+# Logs
+# --------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# --------------------
+# Environment variables
+# --------------------
+.env
+.env.local
+.env.*.local
+
+# --------------------
+# OS files
+# --------------------
+.DS_Store
+Thumbs.db
+
+# --------------------
+# Vite specific
+# --------------------
+.vite/
+
+# --------------------
+# VSCode
+# --------------------
+.vscode/
+.vscode/settings.json
+
+# --------------------
+# Electron specific
+# --------------------
+*.asar
+electron-out/
+
+# --------------------
+# Others
+# --------------------
+*.tsbuildinfo
+*.cache
