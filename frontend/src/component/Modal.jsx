@@ -9,7 +9,7 @@ export default function Modal({ isOpen, onClose, children }) {
     <AnimatePresence>
       {isOpen && (
         <Motion.div
-          className="fixed z-1000 inset-0 flex items-center justify-center bg-black/50"
+          className="fixed z-1000 inset-0 flex items-center justify-center bg-black/50  "
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

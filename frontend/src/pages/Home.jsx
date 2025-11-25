@@ -9,6 +9,13 @@ import {
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
 const Home = () => {
+  const headers = ["ID", "Name", "Stock", "Price"];
+  const data = [
+    { id: 1, name: "Product A", stock: 50, price: 500 },
+    { id: 2, name: "Product B", stock: 20, price: 1500 },
+    { id: 3, name: "Product C", stock: 5, price: 2500 },
+    { id: 4, name: "Product D", stock: 0, price: 3000 },
+  ];
   return (
     <div className="grid grid-cols-[70px_1fr] min-h-screen">
       <nav>
@@ -42,8 +49,9 @@ const Home = () => {
             bgColor="bg-yellow-500/40"
           />
         </div>
-        <div className="px-2">
-          <Table />
+        <div className="px-2 flex flex-col gap-6 items-center justify-center">
+          <Table headers={headers} data={data} />
+          <Table headers={headers} data={data} accent="bg-yellow-500/40" />
         </div>
       </main>
     </div>

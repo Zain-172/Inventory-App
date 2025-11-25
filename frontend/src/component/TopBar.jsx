@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaSun, FaMoon, FaUserCircle } from "react-icons/fa";
 
-export default function TopBar() {
+export default function TopBar({ screen }) {
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ||
       (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
@@ -18,9 +18,8 @@ export default function TopBar() {
 
   return (
     <header className="flex justify-between items-center p-4 bg-white dark:bg-black border-b dark:border-white   ">
-      {/* Logo / Brand */}
       <div className="text-xl font-bold text-gray-900 dark:text-white">
-        Inventory Manager
+        {screen || "Dashboard"}
       </div>
 
       <div className="flex items-center space-x-4">

@@ -21,10 +21,10 @@ table {
   width: 100%;
 }
 th {
-  background-color: rgb(10, 10, 10);
+  background-color: rgb(0, 0, 0);
   transition: all 0.3s ease;
 }
-th, td {
+td {
   padding: 12px 15px;
   border: 1px solid #fff;
   text-align: left;
@@ -35,7 +35,14 @@ th:hover {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
+input {
+  background-color: #222;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 8px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
 tr:hover {
   background-color: #333;
   cursor: pointer;
