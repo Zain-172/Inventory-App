@@ -8,7 +8,7 @@ export default function Table({ data, headers, accent = "bg-blue-500/40" }) {
             <tr>
               {headers.map((header) => (
                 <th key={header} className="px-4 py-2 border text-left">
-                  {header}
+                  {header === "Action" ? "" : header}
                 </th>
               ))}
             </tr>
@@ -18,7 +18,7 @@ export default function Table({ data, headers, accent = "bg-blue-500/40" }) {
             {data.map((row, rowIndex) => (
               <tr key={rowIndex} className="border">
                 {Object.keys(row).map((col, colIndex) => (
-                  <td key={colIndex} className={`px-4 py-2 border ${accent}`}>
+                  <td key={colIndex} className={`px-4 py-2 border ${accent} ${headers[colIndex] == "Action" ? "w-6" : ""}`}>
                     {row[col]}
                   </td>
                 ))}

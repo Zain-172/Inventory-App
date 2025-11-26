@@ -9,6 +9,9 @@ import {
   FaDoorClosed,
   FaPaperPlane,
   FaArrowLeft,
+  FaWarehouse,
+  FaMoneyCheck,
+  FaMoneyCheckAlt,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -62,8 +65,18 @@ const Navigation = () => {
             style={{ padding: "0.5rem 0" }}
             to="/materials"
           >
-            <FaPaperPlane style={{ minWidth: "50px", fontSize: "1.5rem" }} />
-            <p className="text-sm font-bold">Packages</p>
+            <FaWarehouse style={{ minWidth: "50px", fontSize: "1.5rem" }} />
+            <p className="text-sm font-bold">Materials</p>
+          </Link>
+        </li>
+        <li>
+          <Link
+            className="flex gap-4 border-b border-white/30 items-center"
+            style={{ padding: "0.5rem 0" }}
+            to="/sales"
+          >
+            <FaMoneyCheckAlt style={{ minWidth: "50px", fontSize: "1.5rem" }} />
+            <p className="text-sm font-bold">Sales</p>
           </Link>
         </li>
       </ul>

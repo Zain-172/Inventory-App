@@ -5,7 +5,7 @@ import TopBar from "../component/TopBar";
 import { FaPlusCircle } from "react-icons/fa";
 import Dropdown from "../component/DropDown";
 import Modal from "../component/Modal";
-import Form from "../component/Form";
+import Form from "../component/SalesForm";
 
 const Material = () => {
   const headers = ["ID", "Name", "Stock", "Price"];
@@ -21,13 +21,13 @@ const Material = () => {
         <Navigation />
       </nav>
       <main className="flex flex-col">
-        <TopBar screen="Raw Materials" />
+        <TopBar screen="Sales" />
         <div className="px-2 py-6">
             <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-bold mb-4">Raw Materials</h2>
-                <button onClick={() => setIsModalOpen(true)} className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"><FaPlusCircle /> Material</button>
+                <h2 className="text-2xl font-bold mb-4">Sales & Purchase</h2>
+                <button onClick={() => setIsModalOpen(true)} className="mb-4 px-4 py-2 bg-blue-500/40 text-white rounded font-bold flex items-center gap-2"><FaPlusCircle /> Sale</button>
             </div>
-          <Table headers={headers} data={data} accent="bg-green-500/40" />
+          <Table headers={headers} data={data} accent="bg-blue-500/40" />
         </div>
       </main>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add New Material">

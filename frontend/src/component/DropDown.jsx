@@ -6,8 +6,8 @@ export default function Dropdown({
   label = "Select",
   options = [],
   onChange,
-  className = "w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg flex justify-between items-center cursor-pointer",
-  optionClassName = "px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors",
+  className = "w-full px-4 py-2 bg-white dark:bg-[#222] border border-gray-300 dark:border-gray-600 rounded-lg flex justify-between items-center cursor-pointer",
+  optionClassName = "px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors",
 }) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(label);
@@ -24,6 +24,7 @@ export default function Dropdown({
       <button
         onClick={() => setOpen(!open)}
         className={className}
+        type="button"
       >
         {selected}
         <span className={`transition-transform ${open ? "rotate-180" : ""}`}>
@@ -40,6 +41,7 @@ export default function Dropdown({
             transition={{ duration: 0.15 }}
             className="absolute mt-2 w-full border rounded-xl shadow-lg z-20 px-1 py-2 bg-[#181818] border-white/20"
           >
+            <div className="px-4 py-1 border-b">{label}</div>
             {options.map((option, index) => (
               <div
                 key={index}

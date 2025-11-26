@@ -21,58 +21,86 @@ export default function Form({ onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-[#181818] border border-white/40 p-6 rounded-xl shadow-[0px_0px_10px] shadow-white/20 w-96">
-      <h2 className="text-xl font-semibold mb-4">Add Material</h2>
+    <form onSubmit={handleSubmit} className="bg-[#181818] border border-white/40 p-6 rounded-xl shadow-[0px_0px_10px] shadow-white/20 w-[90vw] max-w-3xl">
+      <h2 className="text-3xl font-semibold text-center mb-4">Production</h2>
+      <div className="flex gap-4 w-full">
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium mb-1">Material</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Material X"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Material Name</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Material X"
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium mb-1">Stock</label>
+          <input
+            type="number"
+            name="stock"
+            value={formData.stock}
+            onChange={handleChange}
+            placeholder="100"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
       </div>
+      <div className="flex gap-4 w-full">
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium mb-1">Price (Rs.)</label>
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleChange}
+            placeholder="200"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Stock Quantity</label>
-        <input
-          type="number"
-          name="stock"
-          value={formData.stock}
-          onChange={handleChange}
-          placeholder="100"
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium mb-1">Category</label>
+          <Dropdown className="w-full px-3 py-2 border border-white/20 bg-[#222] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center"
+                  optionClassName="bg-[#181818] px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-400 transition-colors"
+          label="Category" options={["Raw Material", "Finished Product", "Consumable"]} onChange={(value) => setFormData((prev) => ({ ...prev, category: value }))} />
+        </div>
       </div>
+      <div className="flex gap-4 w-full">
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium mb-1">Material</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Material X"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Price (Rs.)</label>
-        <input
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          placeholder="200"
-          className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          required
-        />
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium mb-1">Stock</label>
+          <input
+            type="number"
+            name="stock"
+            value={formData.stock}
+            onChange={handleChange}
+            placeholder="100"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
       </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Category</label>
-        <Dropdown className="w-full px-3 py-2 border border-white/20 bg-[#222] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center"
-                optionClassName="bg-[#181818] px-4 py-2 cursor-pointer rounded-lg hover:bg-gray-400 transition-colors"
-         label="Category" options={["Raw Material", "Finished Product", "Consumable"]} onChange={(value) => setFormData((prev) => ({ ...prev, category: value }))} />
-      </div>
-
       <button
         type="submit"
-        className="w-full flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
+        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
       >
         <FaPlusCircle /> Material
       </button>
