@@ -27,6 +27,17 @@
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print {
+    background: white;
+    height: 100%;
+    width: 100%;
+  }
+}
+
 table {
   border-collapse: collapse;
   width: 100%;

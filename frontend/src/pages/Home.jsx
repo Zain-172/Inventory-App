@@ -49,7 +49,7 @@ const Home = () => {
             bgColor="bg-yellow-500/40"
           />
         </div>
-        <div className="px-2 flex flex-col gap-6 items-center justify-center">
+        <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
           <Table headers={headers} data={data} />
           <Table headers={headers} data={data} accent="bg-yellow-500/40" />
         </div>

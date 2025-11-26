@@ -30,15 +30,8 @@ export default function SalesForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit && onSubmit(formData);
-    setFormData({
-      product: "",
-      quantity: "",
-      salesman: "Default Salesman",
-    });
+
     setIsModalOpen(true);
-    setTimeout(() => {
-      window.print();
-    }, 100);
   };
     const addEntry = () => {
     if (formData.product && formData.quantity) {

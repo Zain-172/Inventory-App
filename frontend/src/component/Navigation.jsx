@@ -24,7 +24,7 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`flex flex-col absolute top-0 left-0 px-[10px] h-full ${
+      className={`fixed left-0 top-0 flex flex-col px-[10px] h-full ${
         isOpen ? "w-[250px]" : "w-[70px]"
       } overflow-hidden transition-all duration-300 z-100 dark:bg-black border-r border-white bg-gray-200`}
     >
