@@ -20,7 +20,6 @@ export default function Dropdown({
 
   return (
     <div className="relative inline-block w-full">
-      {/* Button */}
       <button
         onClick={() => setOpen(!open)}
         className={className}

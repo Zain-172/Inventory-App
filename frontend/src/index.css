@@ -18,13 +18,14 @@
 }
 ::-webkit-scrollbar {
   position: absolute;
-  width: 4px;
+  width: 2px;
 }
 ::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 10px;
 }
 ::-webkit-scrollbar-track {
+  position: absolute;
   background: transparent;
 }
 @media print {
@@ -75,7 +76,7 @@ li {
   transition: all 0.3s ease;
 }
 li:hover {
-  background-color: #333;
+  background-color: #222;
   cursor: pointer;
   transition: all 0.3s ease;
 }

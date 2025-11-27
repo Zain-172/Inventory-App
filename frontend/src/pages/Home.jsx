@@ -8,20 +8,36 @@ import {
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
+import { useEffect, useState } from "react";
 const Home = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/product");
+        const result = await response.json();
+        if (isMounted) setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   const headers = ["ID", "Name", "Stock", "Price"];
-  const data = [
-    { id: 1, name: "Product A", stock: 50, price: 500 },
-    { id: 2, name: "Product B", stock: 20, price: 1500 },
-    { id: 3, name: "Product C", stock: 5, price: 2500 },
-    { id: 4, name: "Product D", stock: 0, price: 3000 },
-  ];
   return (
-    <div className="grid grid-cols-[70px_1fr] min-h-screen">
+    <div className="grid  min-h-screen">
       <nav>
         <Navigation />
       </nav>
-      <main className="flex flex-col">
+      <main className="flex flex-col my-12">
         <TopBar />
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6 px-2">
           <MetricsCard

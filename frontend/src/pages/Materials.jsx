@@ -16,11 +16,11 @@ const Material = () => {
     ];
     const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <div className="grid grid-cols-[70px_1fr] min-h-screen">
+    <div className="grid">
       <nav>
         <Navigation />
       </nav>
-      <main className="flex flex-col">
+      <main className="flex flex-col my-12">
         <TopBar screen="Raw Materials" />
         <div className="px-2 py-6">
             <div className="flex justify-between items-center">

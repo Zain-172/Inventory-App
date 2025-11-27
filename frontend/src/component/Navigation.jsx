@@ -1,5 +1,3 @@
-"use client";
-import { useState } from "react";
 import {
   FaChartPie,
   FaStar,
@@ -16,43 +14,15 @@ import {
 import { Link } from "react-router-dom";
 
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
 
   return (
     <nav
-      className={`fixed left-0 top-0 flex flex-col px-[10px] h-full ${
-        isOpen ? "w-[250px]" : "w-[70px]"
-      } overflow-hidden transition-all duration-300 z-100 dark:bg-black border-r border-white bg-gray-200`}
+      className={`fixed left-0 bottom-0 right-0 flex overflow-hidden transition-all duration-300 z-100 dark:bg-black border-t border-white bg-gray-200`}
     >
-      <button
-        onClick={toggleMenu}
-        className="absolute flex flex-col items-center gap-1 top-2 right-3 left-3 py-3 rounded-full bg-white transition-all duration-300"
-      >
-        <div
-          className={`w-[30px] bg-black h-1 rounded-2xl transition-all duration-300 ${
-            isOpen ? "rotate-45 translate-y-2" : ""
-          }`}
-        ></div>
-        <div
-          className={`w-[30px] bg-black h-1 rounded-2xl transition-all duration-300 ${
-            isOpen ? "opacity-0" : ""
-          }`}
-        ></div>
-        <div
-          className={`w-[30px] bg-black h-1 rounded-2xl transition-all duration-300 ${
-            isOpen ? "-rotate-45 -translate-y-2" : ""
-          }`}
-        ></div>
-      </button>
-      <ul className="flex flex-col gap-2" style={{ margin: "6rem 0" }}>
+      <ul className="grid grid-cols-3 items-center w-full">
         <li>
           <Link
-            className="flex gap-4 border-b border-white/30 items-center"
-            style={{ padding: "0.5rem 0" }}
+            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
             to="/"
           >
             <FaThLarge style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -61,8 +31,7 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex gap-4 border-b border-white/30 items-center"
-            style={{ padding: "0.5rem 0" }}
+            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
             to="/materials"
           >
             <FaWarehouse style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -71,8 +40,7 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex gap-4 border-b border-white/30 items-center"
-            style={{ padding: "0.5rem 0" }}
+            className="flex flex-col justify-center gap-1 items-center my-2"
             to="/sales"
           >
             <FaMoneyCheckAlt style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -80,10 +48,6 @@ const Navigation = () => {
           </Link>
         </li>
       </ul>
-      <button className="flex gap-4 absolute bottom-2 right-2 left-2 border-t border-b border-white/30 hover:bg-[#333] transition-all duration-300 items-center py-2">
-        <FaDoorClosed style={{ fontSize: "1.5rem", minWidth: "50px" }} />
-        <p className="text-sm font-bold text-nowrap">Sign Out</p>
-      </button>
     </nav>
   );
 };
