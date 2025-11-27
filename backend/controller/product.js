@@ -22,9 +22,48 @@ export default class Product {
     }
   };
 
+  insertProduct = (req, res) => {
+    const { name, price, stock } = req.body;
+    try {
+      const stmt = db.prepare(
+        "INSERT INTO products (name, price, stock) VALUES (?, ?, ?)"
+      );
+      const info = stmt.run(name, price, stock);
+      res
+        .status(201)
+        .json({ message: "Product created", productId: info.lastInsertRowid });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
 
-  incrementCounter = (req, res) => {
-    counter += 1;
-    res.json({ counter });
-  }
-  }
+  deleteProduct = (req, res) => {
+    const { id } = req.params;
+    try {
+      const stmt = db.prepare("DELETE FROM products WHERE id = ?");
+      const info = stmt.run(id);
+      if (info.changes === 0) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+      res.json({ message: "Product deleted" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+
+  updateProduct = (req, res) => {
+    const { id } = req.params;
+    const { name, price, stock } = req.body;
+    try {
+      const stmt = db.prepare(
+        "UPDATE products SET name = ?, price = ?, stock = ? WHERE id = ?"
+      );
+      const info = stmt.run(name, price, stock, id);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+}

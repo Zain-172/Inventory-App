@@ -1,15 +1,7 @@
 import {
-  FaChartPie,
-  FaStar,
+  FaBroom,
   FaThLarge,
-  FaUserCircle,
-  FaWallet,
-  FaDoorClosed,
-  FaPaperPlane,
-  FaArrowLeft,
-  FaWarehouse,
-  FaMoneyCheck,
-  FaMoneyCheckAlt,
+  FaReceipt,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -34,7 +26,7 @@ const Navigation = () => {
             className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
             to="/materials"
           >
-            <FaWarehouse style={{ minWidth: "50px", fontSize: "1.5rem" }} />
+            <FaBroom style={{ minWidth: "50px", fontSize: "1.5rem" }} />
             <p className="text-sm font-bold">Materials</p>
           </Link>
         </li>
@@ -43,7 +35,7 @@ const Navigation = () => {
             className="flex flex-col justify-center gap-1 items-center my-2"
             to="/sales"
           >
-            <FaMoneyCheckAlt style={{ minWidth: "50px", fontSize: "1.5rem" }} />
+            <FaReceipt style={{ minWidth: "50px", fontSize: "1.5rem" }} />
             <p className="text-sm font-bold">Sales</p>
           </Link>
         </li>

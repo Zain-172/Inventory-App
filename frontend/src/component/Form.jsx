@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaWarehouse } from "react-icons/fa";
 import Dropdown from "./DropDown";
 export default function Form({ onSubmit }) {
   const [formData, setFormData] = useState({
@@ -22,7 +22,7 @@ export default function Form({ onSubmit }) {
 
   return (
     <form onSubmit={handleSubmit} className="bg-[#181818] border border-white/40 p-6 rounded-xl shadow-[0px_0px_10px] shadow-white/20 w-[90vw] max-w-3xl">
-      <h2 className="text-3xl font-semibold text-center mb-4">Production</h2>
+      <h2 className="text-3xl font-semibold text-center mb-4 flex justify-center items-end gap-4"><FaWarehouse size={36} />Production</h2>
       <div className="flex gap-4 w-full">
         <div className="w-full mb-4">
           <label className="block text-sm font-medium mb-1">Material</label>

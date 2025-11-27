@@ -6,6 +6,6 @@ const counter_router = express.Router();
 const productInstance = new Product();
 
 counter_router.get("/", productInstance.getProduct);
-counter_router.post("/increment", productInstance.incrementCounter);
+counter_router.delete("/:id", productInstance.deleteProduct)
 
 export default counter_router;
