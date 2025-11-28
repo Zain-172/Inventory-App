@@ -98,6 +98,20 @@ export default function Form({ onSubmit }) {
           />
         </div>
       </div>
+      
+      <div className="flex gap-4 w-full">
+        <div className="w-full mb-4">
+          <label className="block text-sm font-medium mb-1">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            placeholder="Material X"
+            className="w-full px-3 py-2 rounded-md focus:outline-none bg-[#222] border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+      </div>
       <button
         type="submit"
         className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"

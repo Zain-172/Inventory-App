@@ -8,9 +8,12 @@ import {
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
+
 import { useEffect, useState } from "react";
 const Home = () => {
   const [data, setData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -33,7 +36,7 @@ const Home = () => {
   }, []);
   const headers = ["ID", "Name", "Stock", "Price"];
   return (
-    <div className="grid  min-h-screen">
+    <div className="grid  min-h-screen" onClick={() => setOpen(false)}>
       <nav>
         <Navigation />
       </nav>
@@ -66,8 +69,8 @@ const Home = () => {
           />
         </div>
         <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
-          <Table headers={headers} data={data} />
-          <Table headers={headers} data={data} accent="bg-yellow-500/40" />
+          <Table headers={headers} open={open} setOpen={setOpen} data={data} />
+          <Table headers={headers} open={open2} setOpen={setOpen2} data={data} accent="bg-yellow-500/40" />
         </div>
       </main>
     </div>

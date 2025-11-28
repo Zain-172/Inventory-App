@@ -8,6 +8,7 @@ import Modal from "../component/Modal";
 import Form from "../component/SalesForm";
 
 const Material = () => {
+  const [open, setOpen] = useState(false);
   const headers = ["ID", "Name", "Stock", "Price"];
   const data = [
         { id: 1, name: "Material X", stock: 100, price: 200 },
@@ -16,18 +17,18 @@ const Material = () => {
     ];
     const [isModalOpen, setIsModalOpen] = useState(false);
   return (
-    <div className="grid">
+    <div className="grid h-screen place-content-start" onClick={() => setOpen(false)}>
       <nav>
         <Navigation />
       </nav>
-      <main className="flex flex-col my-12">
+      <main className="flex flex-col my-12 w-screen">
         <TopBar screen="Sales" />
         <div className="px-2 py-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold mb-4">Sales & Purchase</h2>
                 <button onClick={() => setIsModalOpen(true)} className="mb-4 px-4 py-2 bg-blue-500/40 text-white rounded font-bold flex items-center gap-2"><FaPlusCircle /> Sale</button>
             </div>
-          <Table headers={headers} data={data} accent="bg-blue-500/40" />
+          <Table headers={headers} open={open} setOpen={setOpen} data={data} accent="bg-blue-500/40" />
         </div>
       </main>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add New Material">

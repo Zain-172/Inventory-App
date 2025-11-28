@@ -46,7 +46,8 @@ export default function SalesForm({ onSubmit }) {
     setEntry((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const tableData = entry.map((item) => ({
+  const tableData = entry.map((item, index) => ({
+    ID: index + 1,
     Product: item.product,
     Quantity: item.quantity,
     Price: item.price,
