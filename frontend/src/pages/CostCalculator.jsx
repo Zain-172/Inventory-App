@@ -4,15 +4,16 @@ import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import { FaBroom } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function CostCalculator() {
 
-  const data = [
-    { ID: 1, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01" },
-    { ID: 2, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01" },
-    { ID: 3, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01" },
-    { ID: 4, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01" },
-  ];
+  const [data, setData] = useState([
+    { ID: 1, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
+    { ID: 2, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
+    { ID: 3, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
+    { ID: 4, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
+  ]);
 
   return (
     <>
@@ -24,7 +25,7 @@ export default function CostCalculator() {
         </div>
         <Table data={data} accent="bg-green-500/40" />
         <hr className="my-12" />
-        <Form onSubmit={() => {}} />
+        <Form onSubmit={(newData) => setData(prevData => [...prevData, newData])} />
       </main>
       <Navigation />
     </>

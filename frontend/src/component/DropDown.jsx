@@ -3,7 +3,7 @@ import { motion as Motion, AnimatePresence } from "framer-motion";
 import { FaChevronCircleDown } from "react-icons/fa";
 
 export default function Dropdown({
-  label = "Select",
+  label = { value: 0, key: "Select" },
   options = [],
   onChange,
   className = "w-full px-4 py-2 bg-white dark:bg-[#222] border border-gray-300 dark:border-gray-600 rounded-lg flex justify-between items-center cursor-pointer",
@@ -25,7 +25,7 @@ export default function Dropdown({
         className={className}
         type="button"
       >
-        {selected}
+        {selected.key}
         <span className={`transition-transform ${open ? "rotate-180" : ""}`}>
           <FaChevronCircleDown />
         </span>
@@ -40,16 +40,20 @@ export default function Dropdown({
             transition={{ duration: 0.15 }}
             className="absolute mt-2 w-full border rounded-xl shadow-lg z-20 px-1 py-2 bg-[#181818] border-white/20"
           >
-            <div className="px-4 py-1 border-b">{label}</div>
-            {options.map((option, index) => (
-              <div
-                key={index}
-                className={optionClassName}
-                onClick={() => handleSelect(option)}
-              >
-                {option}
-              </div>
-            ))}
+            <div className="px-4 py-1 border-b">{label.key}</div>
+
+            {options.map((option, index) => {
+
+              return (
+                <div
+                  key={index}
+                  className={optionClassName}
+                  onClick={() => handleSelect(option)}
+                >
+                  {option.key}
+                </div>
+              );
+            })}
           </Motion.div>
         )}
       </AnimatePresence>

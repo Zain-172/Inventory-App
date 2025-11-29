@@ -4,9 +4,12 @@ import Dropdown from "./DropDown";
 export default function Form({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
-    stock: "",
-    price: "",
-    category: "",
+    stock: 0,
+    price: 0,
+    machinery: 0,
+    labour: 0,
+    date: new Date().toISOString().split("T")[0],
+    description: "",
   });
 
   const handleChange = (e) => {
@@ -16,8 +19,16 @@ export default function Form({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit && onSubmit(formData);
-    setFormData({ name: "", stock: "", price: "", category: "" });
+    const data = {
+      ID: 5,
+      Material: formData.name,
+      Cost_Price:
+        Number(formData.price) + Number(formData.machinery) + Number(formData.labour),
+      Date: formData.date,
+      Description: formData.description,
+    }
+    onSubmit && onSubmit(data);
+    setFormData({ name: "", stock: 0, price: 0, machinery: 0, labour: 0, date: new Date().toISOString().split("T")[0], description: "" });
   };
 
   return (
@@ -73,8 +84,8 @@ export default function Form({ onSubmit }) {
           <label className="block text-sm font-medium mb-1">Machinery *</label>
           <input
             type="number"
-            name="price"
-            value={formData.price}
+            name="machinery"
+            value={formData.machinery}
             onChange={handleChange}
             placeholder="200"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -86,9 +97,9 @@ export default function Form({ onSubmit }) {
         <div className="w-full mb-4">
           <label className="block text-sm font-medium mb-1">Labour *</label>
           <input
-            type="text"
-            name="name"
-            value={formData.name}
+            type="number"
+            name="labour"
+            value={formData.labour}
             onChange={handleChange}
             placeholder="Material X"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -101,7 +112,7 @@ export default function Form({ onSubmit }) {
           <input
             type="date"
             name="date"
-            value={formData.stock}
+            value={formData.date}
             onChange={handleChange}
             placeholder="100"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
