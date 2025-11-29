@@ -3,7 +3,7 @@ import MessageBox from "./MessageBox";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import SelectMenu from "../component/SelectMenu";
 
-export default function Table({ data, headers, accent = "bg-blue-500/40", open, setOpen }) {
+export default function Table({ data, accent = "bg-blue-500/40", open, setOpen }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [enable, setEnable] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
@@ -38,7 +38,7 @@ export default function Table({ data, headers, accent = "bg-blue-500/40", open, 
             {data.map((row, rowIndex) => (
               <tr key={rowIndex} className="border" onDoubleClick={() => {setOpen(true); setDeleteId(row.id)}}>
                 {Object.keys(row).map((col, colIndex) => (
-                  <td key={colIndex} className={`border p-0 ${accent} ${headers[colIndex] == "Action" || colIndex == 0 ? "w-6" : ""}`}>
+                  <td key={colIndex} className={`border p-0 ${accent} ${colIndex == 0 ? "w-6" : ""}`}>
                     { colIndex ? enable ? <input className="bg-transparent w-full rounded-none h-100 border-none focus:ring-0" type="text" defaultValue={row[col]} /> : <p className="p-2">{row[col]}</p>  : <p className="text-center w-8">{row[col]}</p>}
                   </td>
                 ))}
