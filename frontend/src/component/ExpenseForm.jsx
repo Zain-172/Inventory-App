@@ -57,7 +57,7 @@ export default function AddExpenseForm({ onSubmit }) {
 
       <button 
         type="submit" 
-        className="w-full bg-red-500/60 text-white py-2 rounded font-bold"
+        className="w-full bg-yellow-500/60 text-white py-2 rounded font-bold"
       >
         Save
       </button>

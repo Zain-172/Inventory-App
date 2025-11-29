@@ -7,10 +7,15 @@ import Receipt from "./Receipt";
 
 export default function SalesForm({ onSubmit }) {
   const product = [
-    {product: "Product A", price: 100},
-    {product: "Product B", price: 200},
-    {product: "Product C", price: 300},
+    {key: "Product A", value: 100},
+    {key: "Product B", value: 200},
+    {key: "Product C", value: 300},
   ]
+  const salesmen = [
+    { key: "John Doe", value: "John Doe" },
+    { key: "Jane Smith", value: "Jane Smith" },
+    { key: "Mike Johnson", value: "Mike Johnson" },
+  ]; 
   const receiptRef = useRef(null);
   const [formData, setFormData] = useState({
     product: "",
@@ -30,7 +35,7 @@ export default function SalesForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit && onSubmit(formData);
-
+    console.log("Submitted Data:", entry);
     setIsModalOpen(true);
   };
     const addEntry = () => {
@@ -45,9 +50,21 @@ export default function SalesForm({ onSubmit }) {
   const deleteEntry = (id) => {
     setEntry((prev) => prev.filter((item) => item.id !== id));
   };
+  function generateInvoiceId() {
+    const d = new Date();
 
-  const tableData = entry.map((item, index) => ({
-    ID: index + 1,
+    const id = 
+      d.getFullYear() +
+      String(d.getMonth() + 1).padStart(2, "0") +
+      String(d.getDate()).padStart(2, "0") +
+      String(d.getHours()).padStart(2, "0") +
+      String(d.getMinutes()).padStart(2, "0") +
+      String(d.getSeconds()).padStart(2, "0");
+
+    return "INV-" + id;
+  }
+  const tableData = entry.map((item) => ({
+    ID: generateInvoiceId(),
     Product: item.product,
     Quantity: item.quantity,
     Price: item.price,
@@ -71,7 +88,7 @@ export default function SalesForm({ onSubmit }) {
       <div className="flex gap-4 w-full justify-center items-end mb-4">
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Product</label>
-          <Dropdown options={product.map(p => p.product)} value={formData.product} onChange={(value) => setFormData((prev) => ({ ...prev, product: value, price: product.find(p => p.product === value)?.price || 0 }))} />
+          <Dropdown options={product} value={formData.product} onChange={(value) => setFormData((prev) => ({ ...prev, product: value.key, price: value.value }))} />
         </div>
 
         <div className="w-full">
@@ -96,7 +113,7 @@ export default function SalesForm({ onSubmit }) {
       <div className="flex gap-4 w-full my-4">
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Salesman</label>
-          <Dropdown options={["1", "2", "3"]} />
+          <Dropdown options={salesmen} onChange={(d) => setFormData((prev) => ({...prev, salesman: d}))} />
         </div>
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Date</label>
@@ -119,7 +136,7 @@ export default function SalesForm({ onSubmit }) {
         <FaPlusCircle /> Add Sale
       </button>
       <Modal onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} title="Sales Receipt">
-        <Receipt ref={receiptRef} saleData={{date: formData.date, salesman: formData.salesman, items: entry }} />
+        <Receipt ref={receiptRef} saleData={{date: formData.date, salesman: formData.salesman.key, items: entry }} />
       </Modal>
     </form>
   );
