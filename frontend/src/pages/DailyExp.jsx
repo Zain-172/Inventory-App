@@ -3,8 +3,6 @@ import Navigation from "../component/Navigation";
 import Modal from "../component/Modal";
 import Table from "../component/Table";
 import AddExpenseForm from "../component/ExpenseForm";
-import Dropdown from "../component/DropDown";
-import { Link } from "react-router-dom";
 
 const Daily = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -43,7 +41,7 @@ const Daily = () => {
         </div>
 
         <div className="px-2 mb-8 w-full">
-          <Table data={tableData} accent="bg-yellow-500/40" />
+          <Table data={tableData.filter(item => item.Date === date)} accent="bg-yellow-500/40" />
         </div>
         
           <button 

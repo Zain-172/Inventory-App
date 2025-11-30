@@ -6,10 +6,10 @@ const Receipt = forwardRef(({ saleData }, ref) => {
   };
   return (
     <>
-    <div ref={ref} className="p-4 bg-white text-black w-[450px] print:bg-white print:text-black print:h-full print:w-full print:absolute print:top-0 print:left-0 print:right-0">
+    <div ref={ref} className="p-4 bg-white text-black w-[550px] print:bg-white print:text-black print:h-full print:w-full print:absolute print:top-0 print:left-0 print:right-0">
       <h2 className="text-xl font-bold mb-2 text-center">Sales Receipt</h2>
       <div className="grid grid-cols-2 justify-between w-full">
-        <p>Salesman: {saleData.salesman}</p>
+        <p>Invoice ID: {saleData.id}</p>
         <p className="text-right">Date: {saleData.date}</p>
         <p>Salesman: {saleData.salesman}</p>
         <p className="text-right">Time: {new Date().toLocaleTimeString()}</p>
@@ -17,9 +17,9 @@ const Receipt = forwardRef(({ saleData }, ref) => {
       <hr className="my-2" />
       <table className="w-full text-left">
         <thead>
-          <tr className="text-white print:bg-black">
+          <tr className="print:text-white print:bg-black">
             <th className="border border-black print:bg-black px-2 py-1">Product</th>
-            <th className="border border-black print:bg-black px-2 py-1">Qty</th>
+            <th className="border border-black print:bg-black px-2 py-1">Quantity</th>
             <th className="border border-black print:bg-black px-2 py-1">Price</th>
             <th className="border border-black print:bg-black px-2 py-1">Total</th>
           </tr>
@@ -45,7 +45,7 @@ const Receipt = forwardRef(({ saleData }, ref) => {
       </p>
       </div>
     </div>
-    <button onClick={handleClick} className="bg-blue-900 rounded-sm py-1 font-bold grid place-self-center w-[450px] mt-6 no-print">Print</button>
+    <button onClick={handleClick} className="bg-blue-900 rounded-sm py-1 font-bold grid place-self-center w-[550px] mt-6 no-print">Print</button>
     </>
   );
 });

@@ -63,8 +63,8 @@ export default function SalesForm({ onSubmit }) {
 
     return "INV-" + id;
   }
-  const tableData = entry.map((item) => ({
-    ID: generateInvoiceId(),
+  const tableData = entry.map((item, index) => ({
+    ID: index + 1,
     Product: item.product,
     Quantity: item.quantity,
     Price: item.price,
@@ -136,7 +136,7 @@ export default function SalesForm({ onSubmit }) {
         <FaPlusCircle /> Add Sale
       </button>
       <Modal onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} title="Sales Receipt">
-        <Receipt ref={receiptRef} saleData={{date: formData.date, salesman: formData.salesman.key, items: entry }} />
+        <Receipt ref={receiptRef} saleData={{date: formData.date, salesman: formData.salesman.key, id: generateInvoiceId(), items: entry }} />
       </Modal>
     </form>
   );
