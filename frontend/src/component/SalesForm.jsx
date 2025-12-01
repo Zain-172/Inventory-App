@@ -15,11 +15,13 @@ export default function SalesForm({ onSubmit }) {
     { key: "John Doe", value: "John Doe" },
     { key: "Jane Smith", value: "Jane Smith" },
     { key: "Mike Johnson", value: "Mike Johnson" },
-  ]; 
+  ];
+  const [invoiceId, setInvoiceId] = useState("");
   const receiptRef = useRef(null);
   const [formData, setFormData] = useState({
     product: "",
     price: "",
+    sales_price: "",
     quantity: "",
     salesman: "Default Salesman",
     date: new Date().toISOString().split("T")[0],
@@ -34,15 +36,24 @@ export default function SalesForm({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit && onSubmit(formData);
-    console.log("Submitted Data:", entry);
+    const newInvoiceId = generateInvoiceId();
+  setInvoiceId(newInvoiceId);
+    const data = {
+      invoice_id: newInvoiceId,
+      sale_date: formData.date,
+      salesman: formData.salesman.key,
+      total_amount: entry.reduce((sum, i) => sum + i.quantity * i.sale_price, 0),
+      total_items: entry.reduce((sum, i) => sum + Number(i.quantity), 0),
+      items: entry,
+    };
+    onSubmit && onSubmit(data);
     setIsModalOpen(true);
   };
     const addEntry = () => {
     if (formData.product && formData.quantity) {
       setEntry((prev) => [
         ...prev,
-        { id: Date.now(), product: formData.product, quantity: formData.quantity, price: formData.price },
+        { id: Date.now(), product: formData.product, quantity: formData.quantity, sale_price: formData.sales_price },
       ]);
     }
   };
@@ -53,7 +64,7 @@ export default function SalesForm({ onSubmit }) {
   function generateInvoiceId() {
     const d = new Date();
 
-    const id = 
+    const id =
       d.getFullYear() +
       String(d.getMonth() + 1).padStart(2, "0") +
       String(d.getDate()).padStart(2, "0") +
@@ -67,10 +78,11 @@ export default function SalesForm({ onSubmit }) {
     ID: index + 1,
     Product: item.product,
     Quantity: item.quantity,
-    Price: item.price,
+    Price: item.sale_price,
     Action: (
       <button
         onClick={() => deleteEntry(item.id)}
+        type="button"
         className="p-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
       >
         <FaTrashAlt />
@@ -85,31 +97,6 @@ export default function SalesForm({ onSubmit }) {
     >
       <h2 className="text-3xl font-semibold text-center">Sales</h2>
 
-      <div className="flex gap-4 w-full justify-center items-end mb-4">
-        <div className="w-full">
-          <label className="block text-sm font-medium mb-1">Product</label>
-          <Dropdown options={product} value={formData.product} onChange={(value) => setFormData((prev) => ({ ...prev, product: value.key, price: value.value }))} />
-        </div>
-
-        <div className="w-full">
-          <label className="block text-sm font-medium mb-1">Quantity</label>
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity}
-            onChange={handleChange}
-            placeholder="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <button
-          onClick={addEntry}
-          type="button"
-          className="flex items-center justify-center p-2 mb-1 bg-blue-500/40 text-white rounded-sm hover:bg-blue-700 transition-colors"
-        >
-          <FaPlus />
-        </button>
-      </div>
       <div className="flex gap-4 w-full my-4">
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Salesman</label>
@@ -128,7 +115,44 @@ export default function SalesForm({ onSubmit }) {
         </div>
       </div>
 
-      { entry.length > 0 ? <Table data={tableData} headers={["Product", "Quantity", "Price", "Action"]} /> : <div className="h-24"></div> }
+      <div className="flex gap-4 w-full justify-center items-end mb-8">
+        <div className="w-full relative">
+          <label className="block text-sm font-medium mb-1">Product</label>
+          <Dropdown options={product} value={formData.product} onChange={(value) => setFormData((prev) => ({ ...prev, product: value.key, price: value.value }))} />
+          { formData.price && <span className="absolute -bottom-5 left-1 text-sm text-gray-400">Cost Price: {formData.price}</span> }
+        </div>
+
+        <div className="w-full">
+          <label className="block text-sm font-medium mb-1">Quantity</label>
+          <input
+            type="number"
+            name="quantity"
+            value={formData.quantity}
+            onChange={handleChange}
+            placeholder="1"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="w-full">
+          <label className="block text-sm font-medium mb-1">Sales Price</label>
+          <input
+            type="number"
+            name="sales_price"
+            value={formData.sales_price}
+            onChange={handleChange}
+            placeholder="1"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <button
+          onClick={addEntry}
+          type="button"
+          className="flex items-center justify-center p-2 mb-1 bg-blue-500/40 text-white rounded-sm hover:bg-blue-700 transition-colors"
+        >
+          <FaPlus />
+        </button>
+      </div>
+      { entry.length > 0 ? <Table data={tableData} headers={["Product", "Quantity", "Price", "Action"]} /> : <div className="h-20"></div> }
       <button
         type="submit"
         className="w-full flex items-center mt-4 justify-center gap-2 bg-blue-500/40 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
@@ -136,7 +160,7 @@ export default function SalesForm({ onSubmit }) {
         <FaPlusCircle /> Add Sale
       </button>
       <Modal onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} title="Sales Receipt">
-        <Receipt ref={receiptRef} saleData={{date: formData.date, salesman: formData.salesman.key, id: generateInvoiceId(), items: entry }} />
+        <Receipt ref={receiptRef} saleData={{date: formData.date, salesman: formData.salesman.key, id: invoiceId, items: entry }} />
       </Modal>
     </form>
   );

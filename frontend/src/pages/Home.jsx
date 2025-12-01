@@ -20,7 +20,7 @@ const Home = () => {
 
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:5000/product");
+        const response = await fetch("http://localhost:5000/sale/");
         const result = await response.json();
         if (isMounted) setData(result);
       } catch (error) {

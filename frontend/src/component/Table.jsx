@@ -19,7 +19,7 @@ export default function Table({ data, accent = "bg-blue-500/40", open, setOpen }
     }
     setOpen(false)
   }
-  if (data.length <= 0) return
+  if (data.length <= 0) return null;
   return (
     <div className="flex flex-col w-full" onClick={() => setOpen(false)}>
       <div className="overflow-x-auto">

@@ -13,12 +13,13 @@ const Material = () => {
   const [formData, setFormData] = useState({
     name: "",
     stock: 0,
-    price: 0
+    cost_price: 0,
+    sale_price: 0,
   });
   const [data, setData] = useState([
-        { id: 1, name: "Material X", stock: 100, price: 200 },
-        { id: 2, name: "Material Y", stock: 50,  price: 500 },
-        { id: 3, name: "Material Z", stock: 0,   price: 800 },
+        { id: 1, name: "Material X", stock: 100, cost_price: 200, sale_price: 1000 },
+        { id: 2, name: "Material Y", stock: 50,  cost_price: 500, sale_price: 1000 },
+        { id: 3, name: "Material Z", stock: 0,   cost_price: 800, sale_price: 1000 },
     ]);
   const options = [
     {key: "A", value: 1000},
@@ -58,7 +59,7 @@ const Material = () => {
                 setFormData((prev) => ({
                   ...prev,
                   name: d.key,
-                  price: d.value
+                  cost_price: d.value
                 }))
               }
             />
@@ -70,11 +71,11 @@ const Material = () => {
             <input
               type="number"
               name="costPrice"
-              value={formData.price}
+              value={formData.cost_price}
               onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
-                  price: e.target.value,
+                  cost_price: e.target.value,
                 }))
               }
               className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"

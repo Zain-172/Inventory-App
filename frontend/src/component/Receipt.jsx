@@ -17,11 +17,11 @@ const Receipt = forwardRef(({ saleData }, ref) => {
       <hr className="my-2" />
       <table className="w-full text-left">
         <thead>
-          <tr className="print:text-white print:bg-black">
-            <th className="border border-black print:bg-black px-2 py-1">Product</th>
-            <th className="border border-black print:bg-black px-2 py-1">Quantity</th>
-            <th className="border border-black print:bg-black px-2 py-1">Price</th>
-            <th className="border border-black print:bg-black px-2 py-1">Total</th>
+          <tr className="">
+            <th className="border border-black bg-white px-2 py-1">Product</th>
+            <th className="border border-black bg-white px-2 py-1">Quantity</th>
+            <th className="border border-black bg-white px-2 py-1">Price</th>
+            <th className="border border-black bg-white px-2 py-1">Total</th>
           </tr>
         </thead>
         <tbody>
@@ -29,8 +29,8 @@ const Receipt = forwardRef(({ saleData }, ref) => {
             <tr key={idx}>
               <td className="border border-black px-2 py-1">{item.product}</td>
               <td className="border border-black px-2 py-1">{item.quantity}</td>
-              <td className="border border-black px-2 py-1">{item.price}</td>
-              <td className="border border-black px-2 py-1">{item.quantity * item.price}</td>
+              <td className="border border-black px-2 py-1">{item.sale_price}</td>
+              <td className="border border-black px-2 py-1">{item.quantity * item.sale_price}</td>
             </tr>
           ))}
         </tbody>
@@ -41,7 +41,7 @@ const Receipt = forwardRef(({ saleData }, ref) => {
         Total Items: {saleData.items.reduce((sum, i) => sum + Number(i.quantity), 0)}
       </p>
       <p className="text-right font-bold">
-        Total Price: {saleData.items.reduce((sum, i) => sum + i.quantity * i.price, 0)}
+        Total Price: {saleData.items.reduce((sum, i) => sum + i.quantity * i.sale_price, 0)}
       </p>
       </div>
     </div>
