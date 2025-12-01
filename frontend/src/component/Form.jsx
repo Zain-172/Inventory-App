@@ -1,23 +1,15 @@
 import { useState } from "react";
 import { FaCalculator, FaPlusCircle, FaWarehouse } from "react-icons/fa";
-import Dropdown from "./DropDown";
+import RawMaterial from "../models/RawMaterial";
 export default function Form({ onSubmit }) {
-  const [formData, setFormData] = useState({
-    name: "",
-    stock: 0,
-    price: 0,
-    machinery: 0,
-    labour: 0,
-    date: new Date().toISOString().split("T")[0],
-    description: "",
-  });
+  const [formData, setFormData] = useState(new RawMaterial());
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = {
       ID: 5,
@@ -27,8 +19,18 @@ export default function Form({ onSubmit }) {
       Date: formData.date,
       Description: formData.description,
     }
+    console.log("Submitting:", formData);
+    const res = await fetch("http://localhost:5000/raw-material/add-raw-material", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+    const result = await res.json();
+    console.log(result);
     onSubmit && onSubmit(data);
-    setFormData({ name: "", stock: 0, price: 0, machinery: 0, labour: 0, date: new Date().toISOString().split("T")[0], description: "" });
+    setFormData(new RawMaterial());
   };
 
   return (
@@ -43,7 +45,7 @@ export default function Form({ onSubmit }) {
           <input
             type="text"
             name="name"
-            value={formData.name}
+            value={formData.name || ""}
             onChange={handleChange}
             placeholder="Material X"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -57,8 +59,8 @@ export default function Form({ onSubmit }) {
           </label>
           <input
             type="number"
-            name="stock"
-            value={formData.stock}
+            name="quantity"
+            value={formData.quantity || 0}
             onChange={handleChange}
             placeholder="100"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -72,7 +74,7 @@ export default function Form({ onSubmit }) {
           <input
             type="number"
             name="price"
-            value={formData.price}
+            value={formData.price || 0}
             onChange={handleChange}
             placeholder="200"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -85,7 +87,7 @@ export default function Form({ onSubmit }) {
           <input
             type="number"
             name="machinery"
-            value={formData.machinery}
+            value={formData.machinery || 0}
             onChange={handleChange}
             placeholder="200"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -99,7 +101,7 @@ export default function Form({ onSubmit }) {
           <input
             type="number"
             name="labour"
-            value={formData.labour}
+            value={formData.labour || 0}
             onChange={handleChange}
             placeholder="Material X"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -111,8 +113,8 @@ export default function Form({ onSubmit }) {
           <label className="block text-sm font-medium mb-1">Date *</label>
           <input
             type="date"
-            name="date"
-            value={formData.date}
+            name="date_added"
+            value={formData.date_added || ""}
             onChange={handleChange}
             placeholder="100"
             className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
@@ -125,7 +127,7 @@ export default function Form({ onSubmit }) {
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
             name="description"
-            value={formData.description}
+            value={formData.description || ""}
             onChange={handleChange}
             placeholder="Material X"
             className="w-full px-3 py-2 rounded-md focus:outline-none bg-[#111] border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"

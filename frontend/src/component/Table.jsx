@@ -18,6 +18,7 @@ export default function Table({ data, accent = "bg-blue-500/40", open, setOpen }
       console.error(err);
     }
     setOpen(false)
+    setModalOpen(false);
   }
   if (data.length <= 0) return null;
   return (

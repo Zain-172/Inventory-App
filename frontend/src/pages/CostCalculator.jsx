@@ -5,16 +5,15 @@ import TopBar from "../component/TopBar";
 import { FaBroom } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useAppData } from "../context/AppDataContext";
 
 export default function CostCalculator() {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([
-    { ID: 1, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
-    { ID: 2, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
-    { ID: 3, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
-    { ID: 4, Material: "Material A", Cost_Price: 1000, Date: "2023-10-01", description: "A Material" },
-  ]);
+  const { rawMaterials, loading } = useAppData();
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <>
       <TopBar screen="Cost Calculator" />
@@ -23,9 +22,9 @@ export default function CostCalculator() {
           <h2 className="text-2xl font-bold mb-4">Production Cost</h2>
           <Link to="/materials" className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"><FaBroom /> Materials</Link>
         </div>
-        <Table data={data} open={open} setOpen={setOpen} accent="bg-green-500/40" />
+        <Table data={rawMaterials} open={open} setOpen={setOpen} accent="bg-green-500/40" />
         <hr className="my-12" />
-        <Form onSubmit={(newData) => setData(prevData => [...prevData, newData])} />
+        <Form />
       </main>
       <Navigation />
     </>

@@ -5,19 +5,22 @@ import Sales from "./pages/Sales";
 import Report from "./pages/Report";
 import CostCalculator from "./pages/CostCalculator";
 import Expense from "./pages/Expense";
+import { AppDataProvider } from "./context/AppDataContext";
 
 function App() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/materials" element={<Materials />} />
-        <Route path="/sales" element={<Sales />} />
-        <Route path="/report" element={<Report />} />
-        <Route path="/cost-calculator" element={<CostCalculator />} />
-        <Route path="/expense" element={<Expense />} />
-      </Routes>
-    </HashRouter>
+    <AppDataProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/materials" element={<Materials />} />
+          <Route path="/sales" element={<Sales />} />
+          <Route path="/report" element={<Report />} />
+          <Route path="/cost-calculator" element={<CostCalculator />} />
+          <Route path="/expense" element={<Expense />} />
+        </Routes>
+      </HashRouter>
+    </AppDataProvider>
   );
 }
 

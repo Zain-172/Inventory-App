@@ -3,7 +3,7 @@ import SaleItem from "./SaleItems.js";
 import { Mutex } from "async-mutex";
 
 const saleItemModel = new SaleItem();
-const saleMutex = new Mutex(); // single writer lock
+const saleMutex = new Mutex();
 
 export default class Sale {
   insertSale = async (req, res) => {
@@ -76,7 +76,6 @@ export default class Sale {
         )
         .all();
 
-      // Group by invoice
       const groupedSales = [];
 
       const map = new Map();

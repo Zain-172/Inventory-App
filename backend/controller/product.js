@@ -1,5 +1,4 @@
-import Database from "better-sqlite3";
-const db = new Database("./Database/Database.db");
+import db from "../Database/DB.js";
 
 export default class Product {
   constructor(id, name, price, stock) {
@@ -23,12 +22,12 @@ export default class Product {
   };
 
   insertProduct = (req, res) => {
-    const { name, price, stock } = req.body;
+    const { name, cost_price, stock } = req.body;
     try {
       const stmt = db.prepare(
-        "INSERT INTO products (name, price, stock) VALUES (?, ?, ?)"
+        "INSERT INTO products (name, cost_price, stock) VALUES (?, ?, ?)"
       );
-      const info = stmt.run(name, price, stock);
+      const info = stmt.run(name, cost_price, stock);
       res
         .status(201)
         .json({ message: "Product created", productId: info.lastInsertRowid });
@@ -58,7 +57,7 @@ export default class Product {
     const { name, price, stock } = req.body;
     try {
       const stmt = db.prepare(
-        "UPDATE products SET name = ?, price = ?, stock = ? WHERE id = ?"
+        "UPDATE products SET name = ?, cost_price = ?, stock = ? WHERE id = ?"
       );
       const info = stmt.run(name, price, stock, id);
     } catch (err) {
