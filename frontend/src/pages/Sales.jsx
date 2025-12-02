@@ -2,14 +2,15 @@ import { useState, useEffect } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaEllipsisH, FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import Dropdown from "../component/DropDown";
 import Modal from "../component/Modal";
 import Form from "../component/SalesForm";
 
-const Material = () => {
+const Sales = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState([]);
+  const [openMenuIndex, setOpenMenuIndex] = useState(null);
   useEffect(() => {
     let isMounted = true;
 
@@ -17,9 +18,9 @@ const Material = () => {
       try {
         const response = await fetch("http://localhost:5000/sale/with-items");
         const result = await response.json();
+        console.log("Fetched Sales Data:", result);
         if (isMounted) {
           setData(result);
-          console.log("Fetched Sales Data:", data);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -32,6 +33,23 @@ const Material = () => {
       isMounted = false;
     };
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/sale/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        console.log("Sale deleted successfully");
+        setData(data.filter((sale) => sale.id !== id));
+      } else {
+        console.error("Failed to delete sale");
+      }
+    } catch (error) {
+      console.error("Error deleting sale:", error);
+    }
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleSubmit = (data) => {
     const res = fetch("http://localhost:5000/sale/add-sale", {
@@ -47,7 +65,7 @@ const Material = () => {
   
   if (data.length <= 0) return null;
   return (
-    <div className="grid" onClick={() => setOpen(false)}>
+    <div className="grid" onClick={() => setOpenMenuIndex(null)}>
       <nav>
         <Navigation />
       </nav>
@@ -67,9 +85,33 @@ const Material = () => {
           {data.map((group, index) => (
             <div key={index}>
               <div className="grid grid-cols-2 mb-2">
-                <p className="text-lg col-span-2">
+                <p className="text-lg">
                   <strong>Invoice:</strong> {group.invoice_id}
                 </p>
+                <div className="flex justify-end">
+                  <button className="p-2 rounded bg-[#111] hover:bg-gray-700"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setOpenMenuIndex(openMenuIndex === index ? null : index);
+                  }}
+                  >
+                    <FaEllipsisV />
+                  </button>
+                  {openMenuIndex === index && (
+                  <div className="absolute right-0 mt-10 w-40 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
+                    <button
+                      className="flex items-center justify-center gap-2 hover:bg-gray-700 px-4 py-2 rounded"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(group.id);
+                      }}
+                    >
+                      <FaTrashAlt />
+                      Delete
+                    </button>
+                  </div>
+                )}
+                </div>
                 <p className="text-lg">
                   <strong>Salesman:</strong> {group.salesman}
                 </p>
@@ -107,4 +149,4 @@ const Material = () => {
   );
 };
 
-export default Material;
+export default Sales;

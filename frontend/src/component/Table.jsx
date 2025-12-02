@@ -3,26 +3,14 @@ import MessageBox from "./MessageBox";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import SelectMenu from "../component/SelectMenu";
 
-export default function Table({ data, accent = "bg-blue-500/40", open, setOpen }) {
+export default function Table({ data, accent = "bg-blue-500/40", open, setOpen, onDelete }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [enable, setEnable] = useState(false)
   const [deleteId, setDeleteId] = useState(null)
-  const handleDelete = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/product/${deleteId}`, {
-      method: "DELETE",
-    });
-    const data = await res.json();
-    console.log(data);
-    } catch (err) {
-      console.error(err);
-    }
-    setOpen(false)
-    setModalOpen(false);
-  }
+
   if (data.length <= 0) return null;
   return (
-    <div className="flex flex-col w-full" onClick={() => setOpen(false)}>
+    <div className="flex flex-col w-full">
       <div className="overflow-x-auto">
         <table className="min-w-full border rounded-lg">
           <thead className="">
@@ -47,8 +35,8 @@ export default function Table({ data, accent = "bg-blue-500/40", open, setOpen }
             ))}
           </tbody>
         </table>
-        <SelectMenu isOpen={open} onSave={() => {setEnable(false); setOpen(false)}} onDiscard={() => {setEnable(false); setOpen(false)}} onModify={() => setEnable(true)} onDelete={() => { setModalOpen(true); setOpen(false); }} />
-        <MessageBox isOpen={modalOpen} onClose={() => setModalOpen(false)} message="Delete" onConfirm={handleDelete}>
+        <SelectMenu open={open} setOpen={setOpen} onSave={() => {setEnable(false); setOpen(false)}} onDiscard={() => {setEnable(false); setOpen(false)}} onModify={() => setEnable(true)} onDelete={() => { setModalOpen(true); setOpen(false); }} />
+        <MessageBox isOpen={modalOpen} onClose={() => setModalOpen(false)} message="Delete" onConfirm={() => {onDelete(deleteId); setModalOpen(false);}}>
           <div className="w-[300px] mb-2">
             <h2 className="text-xl font-bold flex items-center justify-center gap-2 w-full mb-4"><FaTrashAlt />DELETE</h2>
             <p className="text-center text-sm" >

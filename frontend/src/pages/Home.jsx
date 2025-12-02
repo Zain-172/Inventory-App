@@ -13,9 +13,8 @@ import { useState, useMemo, useEffect } from "react";
 
 const Home = () => {
   const { sales, loading, inventory } = useAppData();
-  const [open, setOpen] = useState(false);
-  const [open2, setOpen2] = useState(false);
   const [salesByDate, setSalesByDate] = useState(0);
+
   const ordersToday = useMemo(() => {
     if (!sales || sales.length === 0) return 0;
     const today = new Date();
@@ -42,15 +41,17 @@ const Home = () => {
       const data = await res.json();
       const res2 = await fetch(`http://localhost:5000/product/stock-by-date?date=${today}`);
       const stockData = await res2.json();
-      setSalesByDate(data.length > 0 ? data[0]["sum(total_amount)"] - (stockData.length > 0 ? stockData[0]["sum(stock * cost_price)"] : 0) : 0);
-      console.log("Sales by date: ", data, "Stock data: ", stockData);
+      const res3 = await fetch(`http://localhost:5000/expense/by-date?date=${today}`);
+      const expenseData = await res3.json()
+      setSalesByDate(data.length > 0 ? data[0]["sum(total_amount)"] - (stockData.length > 0 ? stockData[0]["sum(stock * cost_price)"] : 0) - (expenseData.length > 0 ? expenseData[0]["total"] : 0) : 0);
+      console.log("Sales by date: ", data, "Stock data: ", stockData, "Expense data: ", expenseData);
     };
     fetchData();
   }, []);
 
   if (loading) return <div>Loading...</div>;
   return (
-    <div className="grid min-h-screen" onClick={() => setOpen(false)}>
+    <div className="grid min-h-screen">
       <nav>
         <Navigation />
       </nav>
@@ -83,13 +84,8 @@ const Home = () => {
           />
         </div>
         <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
-          <Table open={open} setOpen={setOpen} data={sales} />
-          <Table
-            open={open2}
-            setOpen={setOpen2}
-            data={inventory}
-            accent="bg-yellow-500/40"
-          />
+          <Table data={sales} />
+          <Table data={inventory} accent="bg-yellow-500/40" />
         </div>
       </main>
     </div>

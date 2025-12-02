@@ -19,6 +19,20 @@ export default class Expense {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+  getDailyExpenses = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare(
+          "SELECT sum(amount) as total FROM expense WHERE expense_date = ? group by expense_date"
+        )
+        .all(date);
+      res.json(rows);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
   insertExpense = (req, res) => {
     const { title, description, amount, date } = req.body;
     try {
