@@ -8,33 +8,28 @@ import {
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
-
-import { useEffect, useState } from "react";
+import { useAppData } from "../context/AppDataContext";
+import { useState, useMemo } from "react";
 const Home = () => {
-  const [data, setData] = useState([]);
+  const { sales, loading, products } = useAppData();
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const ordersToday = useMemo(() => {
+    if (!sales || sales.length === 0) return 0;
+    const today = new Date();
+    return sales.filter((sale) => {
+      if (!sale.sale_date) return false;
+      const saleDate = new Date(sale.sale_date);
+      if (isNaN(saleDate)) return false;
+      return (
+        saleDate.getFullYear() === today.getFullYear() &&
+        saleDate.getMonth() === today.getMonth() &&
+        saleDate.getDate() === today.getDate()
+      );
+    }).length;
+  }, [sales]);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/sale/");
-        const result = await response.json();
-        if (isMounted) setData(result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-  const headers = ["ID", "Name", "Stock", "Price"];
+  if (loading) return <div>Loading...</div>;
   return (
     <div className="grid  min-h-screen" onClick={() => setOpen(false)}>
       <nav>
@@ -45,7 +40,7 @@ const Home = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6 px-2">
           <MetricsCard
             title="Total Products"
-            value="120"
+            value={products.length}
             icon={<FaBox size={20} />}
             bgColor="bg-blue-500/40"
           />
@@ -56,21 +51,26 @@ const Home = () => {
             bgColor="bg-red-500/40"
           />
           <MetricsCard
-            title="Revenue"
+            title="Profit"
             value="Rs. 15,200"
             icon={<FaDollarSign size={20} />}
             bgColor="bg-green-500/40"
           />
           <MetricsCard
             title="Orders Today"
-            value="24"
+            value={ordersToday}
             icon={<FaShoppingCart size={20} />}
             bgColor="bg-yellow-500/40"
           />
         </div>
         <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
-          <Table headers={headers} open={open} setOpen={setOpen} data={data} />
-          <Table headers={headers} open={open2} setOpen={setOpen2} data={data} accent="bg-yellow-500/40" />
+          <Table open={open} setOpen={setOpen} data={sales} />
+          <Table
+            open={open2}
+            setOpen={setOpen2}
+            data={products}
+            accent="bg-yellow-500/40"
+          />
         </div>
       </main>
     </div>

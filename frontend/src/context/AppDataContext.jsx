@@ -29,10 +29,11 @@ export const AppDataProvider = ({ children }) => {
         const productsData = await resProducts.json();
         setProducts(productsData);
 
-        // // SALES
-        // const resSales = await fetch("http://localhost:5000/sales/");
-        // const salesData = await resSales.json();
-        // setSales(salesData);
+        // SALES
+        const resSales = await fetch("http://localhost:5000/sale/");
+        const salesData = await resSales.json();
+
+        setSales(salesData);
 
       } catch (err) {
         console.error(err);
