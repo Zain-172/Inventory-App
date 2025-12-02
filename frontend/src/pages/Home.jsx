@@ -9,11 +9,13 @@ import {
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
 import { useAppData } from "../context/AppDataContext";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+
 const Home = () => {
-  const { sales, loading, products } = useAppData();
+  const { sales, loading, inventory } = useAppData();
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
+  const [salesByDate, setSalesByDate] = useState(0);
   const ordersToday = useMemo(() => {
     if (!sales || sales.length === 0) return 0;
     const today = new Date();
@@ -29,9 +31,26 @@ const Home = () => {
     }).length;
   }, [sales]);
 
+  const lowStockItems = useMemo(() => {
+    return inventory.filter((item) => item.total_stock < 10).length;
+  }, [inventory]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const today = new Date().toISOString().split("T")[0];
+      const res = await fetch(`http://localhost:5000/sale/by-date?date=${today}`);
+      const data = await res.json();
+      const res2 = await fetch(`http://localhost:5000/product/stock-by-date?date=${today}`);
+      const stockData = await res2.json();
+      setSalesByDate(data.length > 0 ? data[0]["sum(total_amount)"] - (stockData.length > 0 ? stockData[0]["sum(stock * cost_price)"] : 0) : 0);
+      console.log("Sales by date: ", data, "Stock data: ", stockData);
+    };
+    fetchData();
+  }, []);
+
   if (loading) return <div>Loading...</div>;
   return (
-    <div className="grid  min-h-screen" onClick={() => setOpen(false)}>
+    <div className="grid min-h-screen" onClick={() => setOpen(false)}>
       <nav>
         <Navigation />
       </nav>
@@ -40,19 +59,19 @@ const Home = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6 px-2">
           <MetricsCard
             title="Total Products"
-            value={products.length}
+            value={inventory.length}
             icon={<FaBox size={20} />}
             bgColor="bg-blue-500/40"
           />
           <MetricsCard
             title="Low Stock Items"
-            value="8"
+            value={lowStockItems}
             icon={<FaExclamationTriangle size={20} />}
             bgColor="bg-red-500/40"
           />
           <MetricsCard
             title="Profit"
-            value="Rs. 15,200"
+            value={`Rs. ${salesByDate}`}
             icon={<FaDollarSign size={20} />}
             bgColor="bg-green-500/40"
           />
@@ -68,7 +87,7 @@ const Home = () => {
           <Table
             open={open2}
             setOpen={setOpen2}
-            data={products}
+            data={inventory}
             accent="bg-yellow-500/40"
           />
         </div>

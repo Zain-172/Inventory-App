@@ -7,16 +7,13 @@ import Modal from "../component/Modal";
 import { Link } from "react-router-dom";
 import Dropdown from "../component/DropDown";
 import { useAppData } from "../context/AppDataContext";
+import Product from "../models/Product";
 
 const Material = () => {
   const [open, setOpen] = useState(false);
-  const { rawMaterials, products, loading } = useAppData();
+  const { rawMaterials, inventory, loading } = useAppData();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    stock: 0,
-    cost_price: 0,
-  });
+  const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
@@ -56,7 +53,7 @@ const Material = () => {
                   <Link to="/cost-calculator" className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"><FaCalculator /> Calculate Cost</Link>
                 </div>
             </div>
-          <Table open={open} setOpen={setOpen} data={products} accent="bg-green-500/40" />
+          <Table open={open} setOpen={setOpen} data={inventory} accent="bg-green-500/40" />
         </div>
       </main>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add New Material">
@@ -108,6 +105,24 @@ const Material = () => {
                 setFormData((prev) => ({
                   ...prev,
                   stock: e.target.value,
+                }))
+              }
+              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="w-full mb-4">
+            <label className="block text-sm font-medium mb-1">
+              Date
+            </label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  date: e.target.value,
                 }))
               }
               className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"

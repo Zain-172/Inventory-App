@@ -9,7 +9,7 @@ import { useAppData } from "../context/AppDataContext";
 
 export default function CostCalculator() {
   const [open, setOpen] = useState(false);
-  const { rawMaterials, loading } = useAppData();
+  const { products, loading } = useAppData();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -22,7 +22,7 @@ export default function CostCalculator() {
           <h2 className="text-2xl font-bold mb-4">Production Cost</h2>
           <Link to="/materials" className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"><FaBroom /> Materials</Link>
         </div>
-        <Table data={rawMaterials} open={open} setOpen={setOpen} accent="bg-green-500/40" />
+        <Table data={products} open={open} setOpen={setOpen} accent="bg-green-500/40" />
         <hr className="my-12" />
         <Form />
       </main>

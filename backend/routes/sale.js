@@ -13,5 +13,8 @@ sale_router.get("/", (req, res) => {
 sale_router.get("/with-items", (req, res) => {
     saleInstance.getSaleWithItems(req, res);
 });
+sale_router.get("/by-date", (req, res) => {
+    saleInstance.getSaleByDate(req, res);
+});
 
 export default sale_router;

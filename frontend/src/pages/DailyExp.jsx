@@ -3,32 +3,25 @@ import Navigation from "../component/Navigation";
 import Modal from "../component/Modal";
 import Table from "../component/Table";
 import AddExpenseForm from "../component/ExpenseForm";
+import { useAppData } from "../context/AppDataContext";
 
 const Daily = () => {
   const [openModal, setOpenModal] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [expenseList, setExpenseList] = useState([
-    { id: 1, title: "Raw Material", amount: 1200, description: "Material", date: "2025-11-26" },
-    { id: 2, title: "Worker Wages", amount: 800, description: "Labor", date: "2025-11-26" },
-  ]);
-
-  const handleAddExpense = (expense) => {
-    setExpenseList(prev => [
-      ...prev,
-      { id: prev.length + 1, ...expense }
-    ]);
-    setOpenModal(false);
-  };
+  const { loading, expenses } = useAppData();
 
 
-  const tableData = expenseList.map((item, index) => ({
-    ID: index + 1,
+  const tableData = expenses.map((item) => ({
+    ID: item.id,
     Title: item.title,
     Description: item.description,
     Amount: `Rs. ${item.amount}`,
     Date: item.date
   }));
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="grid w-full">
       <main className="flex flex-col w-full">
@@ -43,9 +36,9 @@ const Daily = () => {
         <div className="px-2 mb-8 w-full">
           <Table data={tableData.filter(item => item.Date === date)} accent="bg-yellow-500/40" />
         </div>
-        
-          <button 
-            onClick={() => setOpenModal(true)} 
+
+          <button
+            onClick={() => setOpenModal(true)}
             className="px-4 py-2 w-56 grid place-self-center bg-yellow-500/40 rounded text-white font-bold"
           >
             + Add Expense
@@ -57,7 +50,7 @@ const Daily = () => {
 
       {/* Modal */}
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <AddExpenseForm onSubmit={handleAddExpense} />
+        <AddExpenseForm />
       </Modal>
     </div>
   );

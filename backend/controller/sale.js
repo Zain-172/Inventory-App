@@ -109,4 +109,16 @@ export default class Sale {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+  getSaleByDate = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare("SELECT sum(total_amount) FROM sales WHERE sale_date = ? group by sale_date")
+        .all(date);
+      res.json(rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
 }

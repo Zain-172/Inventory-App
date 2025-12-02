@@ -1,12 +1,15 @@
-import { useState } from "react";
 import Navigation from "../component/Navigation";
 import Modal from "../component/Modal";
 import Table from "../component/Table";
 import AddExpenseForm from "../component/ExpenseForm";
 import Dropdown from "../component/DropDown";
+import Expense from "../models/Expense";
+import { useAppData } from "../context/AppDataContext";
+import { useState } from "react";
 
 const Monthly = () => {
   const [openModal, setOpenModal] = useState(false);
+  const { loading, expenses } = useAppData();
   const month = [
     { key: "January", value: "01" },
     { key: "February", value: "02" },
@@ -22,28 +25,11 @@ const Monthly = () => {
     { key: "December", value: "12" },
   ]
   const [selectedMonth, setSelectedMonth] = useState("November");
-  const [expenseList, setExpenseList] = useState([
-    { id: 1, title: "Raw Material", amount: 1200, category: "Material", date: "2025-11-26" },
-    { id: 2, title: "Worker Wages", amount: 800, category: "Labor", date: "2025-11-26" },
-  ]);
-
-  const handleAddExpense = (expense) => {
-    setExpenseList(prev => [
-      ...prev,
-      { id: prev.length + 1, ...expense }
-    ]);
-    setOpenModal(false);
-  };
 
 
-  const tableData = expenseList.map((item, index) => ({
-    ID: index + 1,
-    Title: item.title,
-    Category: item.category,
-    Amount: `Rs. ${item.amount}`,
-    Date: item.date
-  }));
-
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className="grid w-full">
       <main className="flex flex-col w-full">
@@ -58,9 +44,9 @@ const Monthly = () => {
         </div>
 
         <div className="px-2 mb-8">
-          <Table data={tableData.filter(item => item.Date.startsWith(`2025-${month.find(m => m.key === selectedMonth)?.value}`))} accent="bg-yellow-500/40" />
+          <Table data={expenses.filter(item => item.date.startsWith(`2025-${month.find(m => m.key === selectedMonth)?.value}`))} accent="bg-yellow-500/40" />
         </div>
-        
+
           <button 
             onClick={() => setOpenModal(true)} 
             className="px-4 py-2 w-56 grid place-self-center bg-yellow-500/40 rounded text-white font-bold"
@@ -72,7 +58,7 @@ const Monthly = () => {
       <Navigation />
 
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <AddExpenseForm onSubmit={handleAddExpense} />
+        <AddExpenseForm />
       </Modal>
     </div>
   );

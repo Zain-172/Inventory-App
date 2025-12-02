@@ -6,23 +6,29 @@ export const AppDataProvider = ({ children }) => {
   const [rawMaterials, setRawMaterials] = useState([]);
   const [products, setProducts] = useState([]);
   const [sales, setSales] = useState([]);
+  const [inventory, setInventory] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAllData = async () => {
       setLoading(true);
       try {
-        // RAW MATERIALS
-        const resMaterials = await fetch("http://localhost:5000/raw-material/");
-        const materialsData = await resMaterials.json();
-        const formattedMaterials = materialsData.map(item => ({
-          id: item.id,
-          name: item.name,
-          cost_price: (Number(item.price) + Number(item.machinery) + Number(item.labour)) / Number(item.quantity),
-          date_added: item.date_added,
-          description: item.description
-        }));
-        setRawMaterials(formattedMaterials);
+        // // RAW MATERIALS
+        // const resMaterials = await fetch("http://localhost:5000/raw-material/");
+        // const materialsData = await resMaterials.json();
+        // const formattedMaterials = materialsData.map(item => ({
+        //   id: item.id,
+        //   name: item.name,
+        //   cost_price: (Number(item.price) + Number(item.machinery) + Number(item.labour)) / Number(item.quantity),
+        //   date_added: item.date_added,
+        //   description: item.description
+        // }));
+        // setRawMaterials(formattedMaterials);
+
+        const resInventory = await fetch("http://localhost:5000/product/inventory");
+        const inventoryData = await resInventory.json();
+        setInventory(inventoryData);
 
         // PRODUCTS
         const resProducts = await fetch("http://localhost:5000/product/");
@@ -34,6 +40,20 @@ export const AppDataProvider = ({ children }) => {
         const salesData = await resSales.json();
 
         setSales(salesData);
+
+        // EXPENSES
+        const resExpenses = await fetch("http://localhost:5000/expense/");
+        const expensesData = await resExpenses.json();
+        console.log("Fetched expenses: ", expensesData);
+        const formattedExpenses = expensesData.map(item => ({
+          id: item.expense_id,
+          title: item.title,
+          description: item.description,
+          amount: item.amount,
+          date: item.expense_date
+        }));
+        console.log("Formatted expenses: ", formattedExpenses);
+        setExpenses(formattedExpenses);
 
       } catch (err) {
         console.error(err);
@@ -54,6 +74,10 @@ export const AppDataProvider = ({ children }) => {
         setProducts,
         sales,
         setSales,
+        inventory,
+        setInventory,
+        expenses,
+        setExpenses,
         loading
       }}
     >

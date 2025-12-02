@@ -1,21 +1,28 @@
 import { useState } from "react";
+import Expense from "../models/Expense";
 
 export default function AddExpenseForm({ onSubmit }) {
-  const [form, setForm] = useState({
-    title: "",
-    description: "",
-    amount: "",
-    date: new Date().toISOString().split("T")[0],
-  });
+  const [form, setForm] = useState(new Expense());
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(form);
+    const res = fetch("http://localhost:5000/expense/add-expense", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+    if (res.ok) {
+      onSubmit(form);
+    } else {
+      console.error("Failed to add expense");
+    }
   };
 
   return (
-    <form 
-      onSubmit={handleSubmit} 
+    <form
+      onSubmit={handleSubmit}
       className="bg-white dark:bg-[#222] p-6 rounded-lg max-w-lg border border-white/30 shadow-lg"
     >
       <h2 className="text-xl font-bold mb-4 text-center">Add Expense</h2>
