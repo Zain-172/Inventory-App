@@ -48,4 +48,35 @@ export default class Expense {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+
+  deleteExpense = (req, res) => {
+    const { id } = req.params;
+    try {
+      const stmt = db.prepare("DELETE FROM expense WHERE expense_id = ?");
+      stmt.run(id);
+      res.status(200).json({ message: "Expense deleted" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+
+  updateExpense = (req, res) => {
+    const { id } = req.params;
+    const { title, description, amount, date } = req.body;
+    try {
+      const stmt = db.prepare(
+        "UPDATE expense SET title = ?, description = ?, amount = ?, expense_date = ? WHERE expense_id = ?"
+      );
+      const info = stmt.run(title, description, amount, date, id);
+      if (info.changes === 0) {
+        res.status(404).json({ message: "Expense not found" });
+      } else {
+        res.json({ message: "Expense updated" });
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
 }

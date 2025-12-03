@@ -16,6 +16,9 @@ sale_router.get("/with-items", (req, res) => {
 sale_router.get("/by-date", (req, res) => {
     saleInstance.getSaleByDate(req, res);
 });
+sale_router.get("/cost-by-date", (req, res) => {
+    saleInstance.getCostByDate(req, res)
+})
 sale_router.delete("/:id", (req, res) => {
     saleInstance.deleteSale(req, res);
 });

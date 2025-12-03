@@ -7,5 +7,7 @@ const RawMaterialInstance = new RawMaterial();
 
 raw_material_router.get("/", RawMaterialInstance.getRawMaterials);
 raw_material_router.post("/add-raw-material", RawMaterialInstance.insertRawMaterial);
+raw_material_router.delete("/:id", RawMaterialInstance.deleteRawMaterial);
+raw_material_router.put("/:id", RawMaterialInstance.updateRawMaterial);
 
 export default raw_material_router;

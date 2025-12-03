@@ -1,38 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
-import { FaEllipsisH, FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
-import Dropdown from "../component/DropDown";
+import { FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import Modal from "../component/Modal";
 import Form from "../component/SalesForm";
+import { useAppData } from "../context/AppDataContext";
 
 const Sales = () => {
   const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/sale/with-items");
-        const result = await response.json();
-        console.log("Fetched Sales Data:", result);
-        if (isMounted) {
-          setData(result);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
+  const { salesWithItems, setSalesWithItems } = useAppData();
 
   const handleDelete = async (id) => {
     try {
@@ -41,13 +19,14 @@ const Sales = () => {
       });
       if (response.ok) {
         console.log("Sale deleted successfully");
-        setData(data.filter((sale) => sale.id !== id));
+        setSalesWithItems((prevData) => prevData.filter((sale) => sale.id !== id));
       } else {
         console.error("Failed to delete sale");
       }
     } catch (error) {
       console.error("Error deleting sale:", error);
     }
+    setOpenMenuIndex(null);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,11 +38,14 @@ const Sales = () => {
       },
       body: JSON.stringify(data),
     });
-    console.log("Submitted Data:", data);
-    console.log("Response:", res);
+    if (res.ok) {
+      setSalesWithItems((prevData) => [...prevData, data]);
+    } else {
+      console.error("Failed to add sale");
+    }
   };
-  
-  if (data.length <= 0) return null;
+
+  if (salesWithItems.length <= 0) return null;
   return (
     <div className="grid" onClick={() => setOpenMenuIndex(null)}>
       <nav>
@@ -82,14 +64,14 @@ const Sales = () => {
             </button>
           </div>
           <hr className="mb-4" />
-          {data.map((group, index) => (
+          {salesWithItems.map((group, index) => (
             <div key={index}>
               <div className="grid grid-cols-2 mb-2">
                 <p className="text-lg">
                   <strong>Invoice:</strong> {group.invoice_id}
                 </p>
                 <div className="flex justify-end">
-                  <button className="p-2 rounded bg-[#111] hover:bg-gray-700"
+                  <button className="p-2 rounded bg-blue-500/40 hover:bg-gray-700"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenMenuIndex(openMenuIndex === index ? null : index);

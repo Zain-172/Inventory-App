@@ -24,7 +24,11 @@ export default class Product {
 
   getInventory = (req, res) => {
     try {
-      const rows = db.prepare("SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated from products GROUP by name").all();
+      const rows = db
+        .prepare(
+          "SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated from products GROUP by name"
+        )
+        .all();
       res.json(rows);
     } catch (err) {
       console.error(err);
@@ -36,25 +40,36 @@ export default class Product {
     const { date } = req.query;
     try {
       const rows = db
-      .prepare("SELECT sum(stock * cost_price) from products WHERE date = ? group by date")
-      .all(date);
+        .prepare(
+          "SELECT sum(stock * cost_price) from products WHERE date = ? group by date"
+        )
+        .all(date);
       res.json(rows);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
-
   insertProduct = (req, res) => {
     const { name, cost_price, stock, date } = req.body;
     try {
-      const stmt = db.prepare(
-        "INSERT INTO products (name, cost_price, stock, date) VALUES (?, ?, ?, ?)"
-      );
-      const info = stmt.run(name, cost_price, stock, date);
-      res
-        .status(201)
-        .json({ message: "Product created", productId: info.lastInsertRowid });
+      const stmt1 = db.prepare(`
+      INSERT INTO products (name, cost_price, stock, date)
+      VALUES (?, ?, ?, ?)
+      ON CONFLICT(name) DO UPDATE
+      SET stock = stock + excluded.stock,
+          cost_price = excluded.cost_price,
+          date = excluded.date
+    `);
+      stmt1.run(name, cost_price, stock, date);
+
+      const stmt2 = db.prepare(`
+      INSERT INTO products_history (name, cost_price, stock, date, action)
+      VALUES (?, ?, ?, ?, ?)
+    `);
+      stmt2.run(name, cost_price, stock, date, "INSERT on products");
+
+      res.status(201).json({ message: "Product created/updated" });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });

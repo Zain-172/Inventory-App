@@ -6,6 +6,7 @@ export const AppDataProvider = ({ children }) => {
   const [rawMaterials, setRawMaterials] = useState([]);
   const [products, setProducts] = useState([]);
   const [sales, setSales] = useState([]);
+  const [salesWithItems, setSalesWithItems] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,17 +15,20 @@ export const AppDataProvider = ({ children }) => {
     const fetchAllData = async () => {
       setLoading(true);
       try {
-        // // RAW MATERIALS
-        // const resMaterials = await fetch("http://localhost:5000/raw-material/");
-        // const materialsData = await resMaterials.json();
-        // const formattedMaterials = materialsData.map(item => ({
-        //   id: item.id,
-        //   name: item.name,
-        //   cost_price: (Number(item.price) + Number(item.machinery) + Number(item.labour)) / Number(item.quantity),
-        //   date_added: item.date_added,
-        //   description: item.description
-        // }));
-        // setRawMaterials(formattedMaterials);
+        // RAW MATERIALS
+        const resMaterials = await fetch("http://localhost:5000/raw-material/");
+        const materialsData = await resMaterials.json();
+        const formattedMaterials = materialsData.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          machinery: item.machinery,
+          labour: item.labour,
+          cost_price: (Number(item.price) + Number(item.machinery) + Number(item.labour)) / Number(item.quantity),
+          date_added: item.date_added,
+        }));
+        setRawMaterials(formattedMaterials);
 
         const resInventory = await fetch("http://localhost:5000/product/inventory");
         const inventoryData = await resInventory.json();
@@ -55,6 +59,11 @@ export const AppDataProvider = ({ children }) => {
         console.log("Formatted expenses: ", formattedExpenses);
         setExpenses(formattedExpenses);
 
+        // SALES WITH ITEMS
+        const response = await fetch("http://localhost:5000/sale/with-items");
+        const result = await response.json();
+        setSalesWithItems(result);
+
       } catch (err) {
         console.error(err);
       } finally {
@@ -78,6 +87,8 @@ export const AppDataProvider = ({ children }) => {
         setInventory,
         expenses,
         setExpenses,
+        salesWithItems,
+        setSalesWithItems,
         loading
       }}
     >

@@ -9,7 +9,7 @@ import { useState } from "react";
 
 const Monthly = () => {
   const [openModal, setOpenModal] = useState(false);
-  const { loading, expenses } = useAppData();
+  const { loading, expenses, setExpenses } = useAppData();
   const month = [
     { key: "January", value: "01" },
     { key: "February", value: "02" },
@@ -24,8 +24,39 @@ const Monthly = () => {
     { key: "November", value: "11" },
     { key: "December", value: "12" },
   ]
-  const [selectedMonth, setSelectedMonth] = useState("November");
+  const [selectedMonth, setSelectedMonth] = useState(month[new Date().getMonth()].key);
+  const [open, setOpen] = useState(false);
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/expense/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+      } else {
+        console.error("Failed to delete expense");
+      }
+    } catch (err) {
+      console.error("Failed to delete expense:", err);
+    }
+  }
+
+  const handleModify = async (editedData, deleteId) => {
+    console.log(editedData)
+    const res = await fetch(`http://localhost:5000/expense/${deleteId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(new Expense(editedData))
+    });
+    if (res.ok) {
+      console.log("Modified successfully");
+    } else {
+      console.error("Failed to modify");
+    }
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -34,7 +65,6 @@ const Monthly = () => {
     <div className="grid w-full">
       <main className="flex flex-col w-full">
 
-        {/* Tabs */}
         <div className="px-2 py-6 flex justify-between items-center">
           <h2 className="text-2xl font-bold">Expense</h2>
           <div>
@@ -44,11 +74,11 @@ const Monthly = () => {
         </div>
 
         <div className="px-2 mb-8">
-          <Table data={expenses.filter(item => item.date.startsWith(`2025-${month.find(m => m.key === selectedMonth)?.value}`))} accent="bg-yellow-500/40" />
+          <Table data={expenses.filter(item => item.date.startsWith(`2025-${month.find(m => m.key === selectedMonth)?.value}`))} onDelete={handleDelete} accent="bg-yellow-500/40" open={open} setOpen={setOpen} onUpdate={handleModify} />
         </div>
 
-          <button 
-            onClick={() => setOpenModal(true)} 
+          <button
+            onClick={() => setOpenModal(true)}
             className="px-4 py-2 w-56 grid place-self-center bg-yellow-500/40 rounded text-white font-bold"
           >
             + Add Expense

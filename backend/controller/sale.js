@@ -15,6 +15,7 @@ export default class Sale {
         salesman,
         total_amount,
         total_items,
+        total_cost,
         items,
       } = req.body;
 
@@ -23,8 +24,8 @@ export default class Sale {
       }
 
       const insertSaleStmt = db.prepare(`
-        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items, total_cost)
+        VALUES (?, ?, ?, ?, ?, ?)
       `);
 
       const transaction = db.transaction(() => {
@@ -33,7 +34,8 @@ export default class Sale {
           sale_date,
           salesman,
           total_amount,
-          total_items
+          total_items,
+          total_cost
         );
         const sale_id = saleInfo.lastInsertRowid;
 
@@ -115,6 +117,18 @@ export default class Sale {
     try {
       const rows = db
         .prepare("SELECT sum(total_amount) FROM sales WHERE sale_date = ? group by sale_date")
+        .all(date);
+      res.json(rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  getCostByDate = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare("SELECT sum(total_cost) FROM sales WHERE sale_date = ? group by sale_date")
         .all(date);
       res.json(rows);
     } catch (err) {
