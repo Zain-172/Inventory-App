@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Expense from "../models/Expense";
+import { useAppData } from "../context/AppDataContext";
 
-export default function AddExpenseForm({ onSubmit }) {
+export default function ExpenseForm() {
   const [form, setForm] = useState(new Expense());
+  const { setExpenses } = useAppData();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = fetch("http://localhost:5000/expense/add-expense", {
+    const res = await fetch("http://localhost:5000/expense/add-expense", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -14,7 +16,9 @@ export default function AddExpenseForm({ onSubmit }) {
       body: JSON.stringify(form),
     });
     if (res.ok) {
-      onSubmit(form);
+      const data = await res.json();
+      setExpenses((prevExpenses) => [...prevExpenses, { id: data.expenseId, title: form.title, description: form.description, amount: form.amount, date: form.date }]);
+      setForm(new Expense());
     } else {
       console.error("Failed to add expense");
     }
@@ -59,7 +63,6 @@ export default function AddExpenseForm({ onSubmit }) {
         className="w-full p-2 bg-[#222] border border-white/20 resize-none rounded mb-3"
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
-        required
       />
 
       <button 

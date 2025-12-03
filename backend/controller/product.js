@@ -51,7 +51,7 @@ export default class Product {
     }
   };
   insertProduct = (req, res) => {
-    const { name, cost_price, stock, date } = req.body;
+    const { name, cost_price, stock, date, action } = req.body;
     try {
       const stmt1 = db.prepare(`
       INSERT INTO products (name, cost_price, stock, date)
@@ -67,7 +67,7 @@ export default class Product {
       INSERT INTO products_history (name, cost_price, stock, date, action)
       VALUES (?, ?, ?, ?, ?)
     `);
-      stmt2.run(name, cost_price, stock, date, "INSERT on products");
+      stmt2.run(name, cost_price, stock, date, action);
 
       res.status(201).json({ message: "Product created/updated" });
     } catch (err) {

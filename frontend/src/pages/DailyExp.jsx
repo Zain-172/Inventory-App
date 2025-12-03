@@ -4,20 +4,45 @@ import Modal from "../component/Modal";
 import Table from "../component/Table";
 import AddExpenseForm from "../component/ExpenseForm";
 import { useAppData } from "../context/AppDataContext";
+import Expense from "../models/Expense";
 
 const Daily = () => {
   const [openModal, setOpenModal] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const { loading, expenses } = useAppData();
+  const { loading, expenses, setExpenses } = useAppData();
+  const [open, setOpen] = useState(false);
 
+  const handleDelete = async (id) => {
+    console.log("Deleting expense with id:", id);
+    try {
+      const response = await fetch(`http://localhost:5000/expense/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+      } else {
+        console.error("Failed to delete expense");
+      }
+    } catch (err) {
+      console.error("Failed to delete expense:", err);
+    }
+  }
 
-  const tableData = expenses.map((item) => ({
-    ID: item.id,
-    Title: item.title,
-    Description: item.description,
-    Amount: `Rs. ${item.amount}`,
-    Date: item.date
-  }));
+  const handleModify = async (editedData, deleteId) => {
+    console.log(editedData)
+    const res = await fetch(`http://localhost:5000/expense/${deleteId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(new Expense(editedData))
+    });
+    if (res.ok) {
+      console.log("Modified successfully");
+    } else {
+      console.error("Failed to modify");
+    }
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -34,7 +59,7 @@ const Daily = () => {
         </div>
 
         <div className="px-2 mb-8 w-full">
-          <Table data={tableData.filter(item => item.Date === date)} accent="bg-yellow-500/40" />
+          <Table data={expenses.filter(item => item.date === date)} accent="bg-yellow-500/40" open={open} setOpen={setOpen} onDelete={handleDelete} onModify={handleModify} />
         </div>
 
           <button
@@ -45,12 +70,10 @@ const Daily = () => {
           </button>
       </main>
 
-      {/* Bottom Navigation */}
       <Navigation />
 
-      {/* Modal */}
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <AddExpenseForm />
+        <AddExpenseForm onChange={() => setOpen(false)} />
       </Modal>
     </div>
   );

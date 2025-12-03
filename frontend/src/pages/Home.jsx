@@ -15,7 +15,7 @@ import { useState, useMemo, useEffect } from "react";
 
 const Home = () => {
   const { sales, loading, products } = useAppData();
-  const [salesByDate, setSalesByDate] = useState(0);
+  const [expense, setExpense] = useState(0);
   const [profit, setProfit] = useState(0);
 
   const ordersToday = useMemo(() => {
@@ -39,7 +39,10 @@ const Home = () => {
       const today = new Date().toISOString().split("T")[0];
       const res = await fetch(`http://localhost:5000/sale/by-date?date=${today}`);
       const data = await res.json();
-      setSalesByDate((data.length > 0 ? data[0]["sum(total_amount)"] : 0));
+      
+      const res2 = await fetch(`http://localhost:5000/sale/cost-by-date?date=${today}`);
+      const data2 = await res2.json();
+      setProfit((data.length > 0 ? data[0]["sum(total_amount)"] : 0) - (data2.length > 0 ? data2[0]["sum(total_cost)"] : 0));
       console.log("Sales by date: ", data);
     };
     fetchData();
@@ -48,17 +51,15 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       const today = new Date().toISOString().split("T")[0];
-      const res = await fetch(`http://localhost:5000/sale/cost-by-date?date=${today}`);
-      const data = await res.json();
       const res2 = await fetch(`http://localhost:5000/product/stock-by-date?date=${today}`);
       const stockData = await res2.json();
       const res3 = await fetch(`http://localhost:5000/expense/by-date?date=${today}`);
       const expenseData = await res3.json()
-      setProfit((salesByDate) - (data.length > 0 ? data[0]["sum(total_cost)"] : 0) - (stockData.length > 0 ? stockData[0]["sum(stock * cost_price)"] : 0) - (expenseData.length > 0 ? expenseData[0]["total"] : 0));
-      console.log("Sales by date: ", data, "Stock data: ", stockData, "Expense data: ", expenseData);
+      setExpense((stockData.length > 0 ? stockData[0]["sum(stock * cost_price)"] : 0) + (expenseData.length > 0 ? expenseData[0]["total"] : 0));
+      console.log("Stock data: ", stockData, "Expense data: ", expenseData);
     };
     fetchData();
-  }, [salesByDate]);
+  }, []);
 
   if (loading) return <div>Loading...</div>;
   return (
@@ -76,10 +77,10 @@ const Home = () => {
             bgColor="bg-blue-500/40"
           />
           <MetricsCard
-            title="Today Sales"
-            value={salesByDate}
-            icon={<FaHandshake size={20} />}
-            bgColor="bg-orange-500/40"
+            title="Expense"
+            value={"Rs. " + expense}
+            icon={<FaExclamationTriangle size={20} />}
+            bgColor="bg-red-500/40"
           />
           <MetricsCard
             title="Profit"

@@ -5,7 +5,7 @@ import AddExpenseForm from "../component/ExpenseForm";
 import Dropdown from "../component/DropDown";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Monthly = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -26,6 +26,10 @@ const Monthly = () => {
   ]
   const [selectedMonth, setSelectedMonth] = useState(month[new Date().getMonth()].key);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    console.log("Selected month changed to:", expenses);
+  }, [expenses]);
 
   const handleDelete = async (id) => {
     try {

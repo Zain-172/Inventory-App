@@ -7,9 +7,9 @@ import Receipt from "./Receipt";
 import { useAppData } from "../context/AppDataContext";
 
 export default function SalesForm({ onSubmit }) {
-  const { inventory } = useAppData();
+  const { products } = useAppData();
   const product = [
-    ...inventory.map((item) => ({ key: item.name, value: item.cost_price })),
+    ...products.map((item) => ({ key: item.name, value: item.cost_price })),
   ];
   const salesmen = [
     { key: "John Doe", value: "John Doe" },
@@ -48,7 +48,10 @@ export default function SalesForm({ onSubmit }) {
       invoice_id: newInvoiceId,
       sale_date: formData.date,
       salesman: formData.salesman.key,
-      total_cost: entry.reduce((sum, i) => sum + i.quantity * formData.price, 0),
+      total_cost: entry.reduce(
+        (sum, i) => sum + i.quantity * formData.price,
+        0
+      ),
       total_amount: entry.reduce(
         (sum, i) => sum + i.quantity * i.sale_price,
         0
@@ -60,6 +63,13 @@ export default function SalesForm({ onSubmit }) {
     setIsModalOpen(true);
   };
   const addEntry = () => {
+    if (
+      products.find((p) => p.name === formData.product)?.stock <
+      formData.quantity
+    ) {
+      alert("Not enough stock for the selected product.");
+      return;
+    }
     if (formData.product && formData.quantity && formData.sales_price) {
       setEntry((prev) => [
         ...prev,
@@ -149,13 +159,13 @@ export default function SalesForm({ onSubmit }) {
             }
           />
           {formData.price && (
-            <span className="absolute -bottom-5 left-1 text-sm text-gray-400">
+            <span className="absolute -bottom-5 left-1 text-sm text-gray-400 italic">
               Cost Price: {formData.price}
             </span>
           )}
         </div>
 
-        <div className="w-full">
+        <div className="w-full relative">
           <label className="block text-sm font-medium mb-1">Quantity</label>
           <input
             type="number"
@@ -166,6 +176,12 @@ export default function SalesForm({ onSubmit }) {
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
+          {formData.quantity >
+            products.find((p) => p.name === formData.product)?.stock && (
+            <span className="absolute -bottom-5 left-1 text-sm text-red-600 italic">
+              *The Quantity exceeds the available stock!
+            </span>
+          )}
         </div>
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Sales Price</label>

@@ -10,7 +10,7 @@ import { useAppData } from "../context/AppDataContext";
 const Sales = () => {
   const [open, setOpen] = useState(false);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
-  const { salesWithItems, setSalesWithItems } = useAppData();
+  const { salesWithItems, setSalesWithItems, loading } = useAppData();
 
   const handleDelete = async (id) => {
     try {
@@ -45,7 +45,8 @@ const Sales = () => {
     }
   };
 
-  if (salesWithItems.length <= 0) return null;
+  if (loading) 
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
   return (
     <div className="grid" onClick={() => setOpenMenuIndex(null)}>
       <nav>

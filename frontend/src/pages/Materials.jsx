@@ -11,20 +11,22 @@ import Product from "../models/Product";
 
 const Material = () => {
   const [open, setOpen] = useState(false);
-  const { rawMaterials, products, loading } = useAppData();
+  const { rawMaterials, products, setProducts, loading } = useAppData();
   const [openMenuIndex, setOpenMenuIndex] = useState(false);
   const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [removeModal, setRemoveModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const data = { ...formData, action: "ADD" };
     try {
       const res = await fetch("http://localhost:5000/product/add-product", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
       const result = await res.json();
       if (res.ok) {
@@ -36,6 +38,50 @@ const Material = () => {
       console.log("Error: ", err);
     }
     setIsModalOpen(false);
+  };
+
+  const handleRemove = async (e) => {
+    e.preventDefault();
+    console.log("Form Data: ", formData);
+    if (formData.stock > products.find(product => product.name === formData.name)?.stock) {
+      alert("Cannot remove more stock than available!");
+      return;
+    }
+    const data = new Product(0, formData.name, formData.cost_price, -formData.stock, formData.date);
+    data.action = "REMOVE";
+    try {
+      const res = await fetch("http://localhost:5000/product/add-product", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        console.error("Failed to add product:", result.message);
+      }
+    } catch (err) {
+      console.log("Error: ", err);
+    }
+    setIsModalOpen(false);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/product/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setProducts((prevData) => prevData.filter((product) => product.id !== id));
+      } else {
+        console.error("Failed to delete product");
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   if (loading) {
@@ -79,7 +125,7 @@ const Material = () => {
                     >
                       <FaPlusCircle /> Add Stock
                     </button><button
-                      onClick={() => setIsModalOpen(true)}
+                      onClick={() => setRemoveModal(true)}
                       className="px-4 py-2  hover:bg-green-500/40 text-white rounded-b font-bold flex items-center gap-2"
                     >
                       <FaTrashAlt /> Remove Stock
@@ -92,6 +138,7 @@ const Material = () => {
             open={open}
             setOpen={setOpen}
             data={products}
+            onDelete={handleDelete}
             accent="bg-green-500/40"
           />
         </div>
@@ -184,12 +231,12 @@ const Material = () => {
       </Modal>
       
       <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Add New Material"
+        isOpen={removeModal}
+        onClose={() => setRemoveModal(false)}
+        title="Remove Stock"
       >
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleRemove}
           className="bg-[#222] rounded-lg p-6 flex flex-col border border-white/40 w-96"
         >
           <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
@@ -213,23 +260,7 @@ const Material = () => {
               }
             />
           </div>
-          <div className="w-full mb-4">
-            <label className="block text-sm font-medium mb-1">Cost Price</label>
-            <input
-              type="number"
-              name="costPrice"
-              value={formData.cost_price}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  cost_price: e.target.value,
-                }))
-              }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="w-full mb-4">
+          <div className="w-full mb-4 relative">
             <label className="block text-sm font-medium mb-1">Quantity</label>
             <input
               type="number"
@@ -244,6 +275,11 @@ const Material = () => {
               className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
               required
             />
+            { formData.stock > products.find(product => product.name === formData.name)?.stock && 
+            (<span className="absolute -bottom-4 left-1 text-[10px] text-red-600 italic">
+              *The Quantity exceeds the available stock!
+            </span>
+            ) }
           </div>
           <div className="w-full mb-4">
             <label className="block text-sm font-medium mb-1">Date</label>
