@@ -105,8 +105,19 @@ export default class Sale {
         });
       }
 
-      console.log(groupedSales);
       res.json(groupedSales);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  getProductsSoldByName = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare("SELECT product_name, sum(quantity) as total_quantity, price FROM sale_items join sales on sale_items.sale_id = sales.id WHERE sale_date = ? GROUP BY product_name")
+        .all(date);
+      res.json(rows);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });

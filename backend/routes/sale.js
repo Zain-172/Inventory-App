@@ -22,5 +22,8 @@ sale_router.get("/cost-by-date", (req, res) => {
 sale_router.delete("/:id", (req, res) => {
     saleInstance.deleteSale(req, res);
 });
+sale_router.get("/products-sold-by-name", (req, res) => {
+    saleInstance.getProductsSoldByName(req, res);
+});
 
 export default sale_router;

@@ -39,7 +39,7 @@ export const generateReport = (req, res) => {
     // ------------------ Table ------------------
     const tableHeaders = Object.keys(data[0]); // dynamic headers
     const colCount = tableHeaders.length;
-    const colWidth = (pageWidth - 20) / (colCount - 1);
+    const colWidth = tableHeaders[0] === "#" ? (pageWidth - 20) / (colCount - 1) : pageWidth / colCount;
     const rowHeight = 25;
     let y = 170;
 
@@ -107,7 +107,7 @@ export const generateReport = (req, res) => {
 
     if (total.length) {
       doc.font("Helvetica-Bold");
-      let labelWidth = colWidth * (colCount - 1 - total.length) + 20;
+      let labelWidth = tableHeaders[0] === "#" ? colWidth * (colCount - 1 - total.length) + 20 : colWidth * (colCount - total.length);
       doc.text("Total:", x, y, { width: labelWidth - 20, align: "right" });
       x += labelWidth;
 
@@ -138,7 +138,7 @@ export const generateReport = (req, res) => {
       .fontSize(12)
       .fillColor("#666")
       .text(
-        `${new Date().toLocaleString().split(",")[0]}`,
+        `${new Date().toISOString().split("T")[0]}`,
         doc.page.margins.left,
         doc.page.height - doc.page.margins.bottom - 20,
         { align: "left", width: pageWidth }

@@ -6,10 +6,12 @@ import Report from "./pages/Report";
 import CostCalculator from "./pages/CostCalculator";
 import Expense from "./pages/Expense";
 import { AppDataProvider } from "./context/AppDataContext";
+import { AlertProvider } from "./component/Alerts";
 
 function App() {
   return (
     <AppDataProvider>
+      <AlertProvider>
       <HashRouter>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -20,6 +22,7 @@ function App() {
           <Route path="/expense" element={<Expense />} />
         </Routes>
       </HashRouter>
+      </AlertProvider>
     </AppDataProvider>
   );
 }
