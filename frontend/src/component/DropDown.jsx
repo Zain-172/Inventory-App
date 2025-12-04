@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import { FaChevronCircleDown } from "react-icons/fa";
 
@@ -6,11 +6,13 @@ export default function Dropdown({
   label = { value: 0, key: "Select" },
   options = [],
   onChange,
-  className = "w-full px-4 py-2 bg-white dark:bg-[#222] border border-gray-300 dark:border-gray-600 rounded-lg flex justify-between items-center cursor-pointer",
-  optionClassName = "px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors",
+  className = "w-full px-4 py-2 bg-[#181818] border border-gray-600 rounded-lg flex justify-between items-center cursor-pointer",
+  optionClassName = "flex items-center gap-4 px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors",
+  value,
 }) {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(label);
+  const [selected, setSelected] = useState(value || label);
+  const dropdownRef = useRef(null);
 
   const handleSelect = (option) => {
     setSelected(option);
@@ -18,8 +20,23 @@ export default function Dropdown({
     onChange && onChange(option);
   };
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative inline-block w-full">
+    <div className="relative inline-block w-full" ref={dropdownRef}>
       <button
         onClick={() => setOpen(!open)}
         className={className}
@@ -42,18 +59,15 @@ export default function Dropdown({
           >
             <div className="px-4 py-1 border-b">{label.key}</div>
 
-            {options.map((option, index) => {
-
-              return (
-                <div
-                  key={index}
-                  className={optionClassName}
-                  onClick={() => handleSelect(option)}
-                >
-                  {option.key}
-                </div>
-              );
-            })}
+            {options.map((option, index) => (
+              <div
+                key={index}
+                className={optionClassName}
+                onClick={() => handleSelect(option)}
+              >
+                <div className={`border p-1 rounded-full ${selected.key === option.key ? "bg-white" : ""}`}></div>{option.key}
+              </div>
+            ))}
           </Motion.div>
         )}
       </AnimatePresence>

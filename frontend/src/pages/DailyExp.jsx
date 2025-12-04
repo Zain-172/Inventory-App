@@ -59,7 +59,7 @@ const Daily = () => {
         </div>
 
         <div className="px-2 mb-8 w-full">
-          <Table data={expenses.filter(item => item.date === date)} accent="bg-yellow-500/40" open={open} setOpen={setOpen} onDelete={handleDelete} onModify={handleModify} />
+          <Table data={expenses.filter(item => item.date === date)} accent="bg-yellow-500/40" open={open} setOpen={setOpen} onDelete={handleDelete} onUpdate={handleModify} />
         </div>
 
           <button
