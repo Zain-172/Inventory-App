@@ -5,6 +5,7 @@ import Table from "./Table";
 import Modal from "./Modal";
 import Receipt from "./Receipt";
 import { useAppData } from "../context/AppDataContext";
+import { useAlertBox } from "./Alerts";
 
 export default function SalesForm({ onSubmit }) {
   const { products } = useAppData();
@@ -28,9 +29,11 @@ export default function SalesForm({ onSubmit }) {
   });
   const [entry, setEntry] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { alertBox } = useAlertBox();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "quantity" && value < 0 || name === "price" && value < 0 || name === "sales_price" && value < 0) return;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -49,7 +52,7 @@ export default function SalesForm({ onSubmit }) {
       sale_date: formData.date,
       salesman: formData.salesman.key,
       total_cost: entry.reduce(
-        (sum, i) => sum + i.quantity * formData.price,
+        (sum, i) => sum + i.quantity * products.find((p) => p.id === i.id)?.cost_price,
         0
       ),
       total_amount: entry.reduce(
@@ -65,21 +68,38 @@ export default function SalesForm({ onSubmit }) {
   const addEntry = () => {
     if (
       products.find((p) => p.name === formData.product)?.stock <
-      formData.quantity
+      Number(formData.quantity) + Number(entry.find((item) => item.product === formData.product)?.quantity || 0)
     ) {
-      alert("Not enough stock for the selected product.");
+      alertBox("Not enough stock for the selected product.");
       return;
     }
     if (formData.product && formData.quantity && formData.sales_price) {
-      setEntry((prev) => [
-        ...prev,
-        {
-          id: formData.id,
-          product: formData.product,
-          quantity: formData.quantity,
-          sale_price: formData.sales_price,
-        },
-      ]);
+      setEntry((prev) => {
+        const exists = prev.find((item) => item.id === formData.id);
+
+        if (exists) {
+          return prev.map((item) =>
+            item.id === formData.id
+              ? {
+                  ...item,
+                  product: formData.product,
+                  quantity: Number(item.quantity) + Number(formData.quantity),
+                  sale_price: formData.sales_price,
+                }
+              : item
+          );
+        }
+
+        return [
+          ...prev,
+          {
+            id: formData.id,
+            product: formData.product,
+            quantity: formData.quantity,
+            sale_price: formData.sales_price,
+          },
+        ];
+      });
     }
   };
 
@@ -138,7 +158,7 @@ export default function SalesForm({ onSubmit }) {
             value={formData.date}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
             required
           />
         </div>
@@ -160,7 +180,8 @@ export default function SalesForm({ onSubmit }) {
           />
           {formData.id && (
             <span className="absolute -bottom-5 left-1 text-sm text-gray-400 italic">
-              Cost Price: {products.find((p) => p.id === formData.id)?.cost_price}
+              Cost Price:{" "}
+              {products.find((p) => p.id === formData.id)?.cost_price}
             </span>
           )}
         </div>
@@ -173,13 +194,13 @@ export default function SalesForm({ onSubmit }) {
             value={formData.quantity}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
             required
           />
           {formData.quantity >
             products.find((p) => p.id === formData.id)?.stock && (
             <span className="absolute -bottom-5 left-1 text-sm text-red-600 italic">
-              *The Quantity exceeds the available stock!
+              *Exceeds the available stock!
             </span>
           )}
         </div>
@@ -191,7 +212,7 @@ export default function SalesForm({ onSubmit }) {
             value={formData.sales_price}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
             required
           />
         </div>

@@ -44,17 +44,7 @@ const Sales = () => {
       body: JSON.stringify(data),
     });
     if (res.ok) {
-      setSalesWithItems((prevData) => [...prevData, data]);
-      setInventory((prevData) => {
-        const updatedInventory = { ...prevData };
-        data.items.forEach((item) => {
-          if (updatedInventory[item.id]) {
-            updatedInventory[item.id].stock -= item.quantity;
-          }
-        });
-        console.log("Updated Inventory after Sale:", updatedInventory);
-        return updatedInventory;
-      });
+      window.location.reload();
     } else {
       console.error("Failed to add sale");
     }

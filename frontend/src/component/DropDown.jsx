@@ -6,8 +6,8 @@ export default function Dropdown({
   label = { value: 0, key: "Select" },
   options = [],
   onChange,
-  className = "w-full px-4 py-2 bg-[#181818] border border-gray-600 rounded-lg flex justify-between items-center cursor-pointer",
-  optionClassName = "flex items-center gap-4 px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors",
+  className = "w-full px-4 py-2 bg-[#111] border border-gray-600 rounded-lg flex justify-between items-center cursor-pointer",
+  optionClassName = "flex items-center gap-4 px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-600 transition-colors",
   value,
 }) {
   const [open, setOpen] = useState(false);
