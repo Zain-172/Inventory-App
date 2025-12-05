@@ -22,8 +22,14 @@ sale_router.get("/cost-by-date", (req, res) => {
 sale_router.delete("/:id", (req, res) => {
     saleInstance.deleteSale(req, res);
 });
-sale_router.get("/products-sold-by-name", (req, res) => {
-    saleInstance.getProductsSoldByName(req, res);
+sale_router.get("/products-sold-by-date", (req, res) => {
+    saleInstance.getProductsSoldByDate(req, res);
+});
+sale_router.get("/products-sold-by-month", (req, res) => {
+    saleInstance.getProductsSoldByMonth(req, res);
+});
+sale_router.get("/products-sold-by-year", (req, res) => {
+    saleInstance.getProductsSoldByYear(req, res);
 });
 
 export default sale_router;

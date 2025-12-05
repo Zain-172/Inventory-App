@@ -6,7 +6,7 @@ import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "../component/Alerts";
 import { useEffect, useState } from "react";
 const Report = () => {
-  const { expenses, sales, salesWithItems } = useAppData();
+  const { expenses, sales } = useAppData();
   const { alertBox } = useAlertBox();
   const period = [
     { value: "daily", key: "Daily" },
@@ -64,6 +64,10 @@ const Report = () => {
         title = "Annual Expense Report " + selectedYear.key;
         return expDate.getFullYear() === parseInt(selectedYear.value);
       });
+    }
+    if (filteredExpenses.length === 0) {
+      await alertBox("No data found for the selected period.", "Data Not Found");
+      return;
     }
     try {
       const response = await fetch("http://localhost:5000/report/generate", {
@@ -128,7 +132,7 @@ const Report = () => {
       });
     }
     if (filteredSales.length === 0) {
-      await alertBox("No sales data found for the selected period.", "No Data Found !");
+      await alertBox("No data found for the selected period.", "Data Not Found");
       return;
     }
     try {
@@ -172,30 +176,27 @@ const Report = () => {
     }
   };
 
-  const GenerateInventoryReport = async () => {
-    console.log("Generating sales report...", sales );
-    let filteredSales = [];
-    let title = "Sales Report";
+  const GenerateProductionReport = async () => {
+    let filteredProduction = [];
+    let title = "Production Report";
     if (selectedPeriod.value === "daily") {
-      filteredSales = sales.filter((sale) => sale.sale_date === selectedDate);
-      title = "Sales " + selectedDate;
-    } else if (selectedPeriod.value === "monthly") {
-      filteredSales = sales.filter((sale) => {
-        const saleDate = new Date(sale.sale_date);
-        title = "Monthly Sales " + selectedMonth.key + " " + selectedYear.key;
-        return saleDate.getMonth() + 1 === parseInt(selectedMonth.value);
-      });
+        const res = await fetch("http://localhost:5000/product/stock-history-date?date=" + selectedDate);
+        filteredProduction = await res.json();
+        title = "Production " + selectedDate;
+      } else if (selectedPeriod.value === "monthly") {
+        const res = await fetch("http://localhost:5000/product/stock-history-month?date=" + new Date().getFullYear() + "-" + selectedMonth.value );
+        filteredProduction = await res.json();
+        title = "Monthly Production " + selectedMonth.key + " " + new Date().getFullYear();
     } else if (selectedPeriod.value === "annually") {
-      filteredSales = sales.filter((sale) => {
-        const saleDate = new Date(sale.sale_date);
-        title = "Annual Sales Report " + selectedYear.key;
-        return saleDate.getFullYear() === parseInt(selectedYear.value);
-      });
+        const res = await fetch("http://localhost:5000/product/stock-history-year?date=" + selectedYear.value);
+        filteredProduction = await res.json();
+        title = "Annual Production Report " + selectedYear.key;
     }
-    if (filteredSales.length === 0) {
-      await alertBox("No sales data found for the selected period.", "No Data Found !");
+    if (filteredProduction.length === 0) {
+      await alertBox("No data found for the selected period.", "Data Not Found");
       return;
     }
+    console.log("Filtered production: ", filteredProduction);
     try {
       const response = await fetch("http://localhost:5000/report/generate", {
         method: "POST",
@@ -203,19 +204,13 @@ const Report = () => {
         body: JSON.stringify({
           title: title,
           company: "My Company",
-          data: filteredSales.map((sale) => ({
-            Invoice: sale.invoice_id,
-            Salesman: sale.salesman,
-            Quantity: sale.total_items,
-            Amount: "Rs. " + sale.total_amount,
-          })),
-          total: [
-            filteredSales.reduce((sum, sale) => sum + sale.total_items, 0),
-            "Rs. " +
-              Number(
-                filteredSales.reduce((sum, sale) => sum + sale.total_amount, 0)
-              ),
-          ],
+          data: filteredProduction.map((p, i) => ({
+            "#": i + 1,
+            Product: p.name,
+            "Stock Added": p.stock,
+            "Cost Price": "Rs. " + p.cost_price,
+            Date: p.date,
+          }))
         }),
       });
 
@@ -242,21 +237,17 @@ const Report = () => {
     let filteredSales = [];
     let title = "Sales Report";
     if (selectedPeriod.value === "daily") {
-      const res = await fetch("http://localhost:5000/sale/products-sold-by-name?date=" + selectedDate);
+      const res = await fetch("http://localhost:5000/sale/products-sold-by-date?date=" + selectedDate);
       filteredSales = await res.json();
       title = "Sales " + selectedDate;
     } else if (selectedPeriod.value === "monthly") {
-      filteredSales = salesWithItems.filter((sale) => {
-        const saleDate = new Date(sale.sale_date);
-        title = "Monthly Sales " + selectedMonth.key + " " + selectedYear.key;
-        return saleDate.getMonth() + 1 === parseInt(selectedMonth.value);
-      });
+      const res = await fetch("http://localhost:5000/sale/products-sold-by-month?date=" + new Date().getFullYear() + "-" + selectedMonth.value);
+      filteredSales = await res.json();
+      title = "Monthly Sales " + selectedMonth.key + " " + new Date().getFullYear();
     } else if (selectedPeriod.value === "annually") {
-      filteredSales = salesWithItems.filter((sale) => {
-        const saleDate = new Date(sale.sale_date);
-        title = "Annual Sales Report " + selectedYear.key;
-        return saleDate.getFullYear() === parseInt(selectedYear.value);
-      });
+      const res = await fetch("http://localhost:5000/sale/products-sold-by-year?date=" + selectedYear.value);
+      filteredSales = await res.json();
+      title = "Annual Sales " + selectedYear.key;
     }
     console.log("Filtered sales: ", filteredSales);
     if (filteredSales.length === 0) {
@@ -270,7 +261,8 @@ const Report = () => {
         body: JSON.stringify({
           title: title,
           company: "My Company",
-          data: filteredSales.map((sale) => ({
+          data: filteredSales.map((sale, index) => ({
+            "#": index + 1,
             Product: sale.product_name,
             Salesman: sale.salesman,
             Quantity: sale.total_quantity,
@@ -393,13 +385,13 @@ const Report = () => {
               </p>
             </button>
             <button
-              onClick={GenerateExpensesReport}
+              onClick={GenerateProductionReport}
               className="flex flex-col items-center justify-center bg-yellow-500/40 p-4 rounded-lg w-full"
             >
               <FaBroom className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
               <p className="text-md text-center flex gap-1">
-                Inventory Report
+                Production Report
                 {selectedPeriod.value === "daily" && (
                   <span className="italic font-bold">{selectedDate}</span>
                 )}

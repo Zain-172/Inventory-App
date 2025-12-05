@@ -48,7 +48,6 @@ export const AppDataProvider = ({ children }) => {
         // EXPENSES
         const resExpenses = await fetch("http://localhost:5000/expense/");
         const expensesData = await resExpenses.json();
-        console.log("Fetched expenses: ", expensesData);
         const formattedExpenses = expensesData.map(item => ({
           id: item.expense_id,
           title: item.title,
@@ -56,14 +55,12 @@ export const AppDataProvider = ({ children }) => {
           amount: item.amount,
           date: item.expense_date
         }));
-        console.log("Formatted expenses: ", formattedExpenses);
         setExpenses(formattedExpenses);
 
         // SALES WITH ITEMS
         const response = await fetch("http://localhost:5000/sale/with-items");
         const result = await response.json();
         setSalesWithItems(result);
-        console.log("Fetched sales with items: ", result);
       } catch (err) {
         console.error(err);
       } finally {

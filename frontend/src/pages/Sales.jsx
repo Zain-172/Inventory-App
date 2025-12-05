@@ -2,15 +2,19 @@ import { useState } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
-import { FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
+import { FaCheckCircle, FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import Modal from "../component/Modal";
 import Form from "../component/SalesForm";
 import { useAppData } from "../context/AppDataContext";
+import { useAlertBox } from "../component/Alerts";
+import MessageBox from "../component/MessageBox";
 
 const Sales = () => {
+  const { alertBox } = useAlertBox();
   const [open, setOpen] = useState(false);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
-  const { salesWithItems, setSalesWithItems, loading } = useAppData();
+  const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
+  const { salesWithItems, setSalesWithItems, setInventory, loading } = useAppData();
 
   const handleDelete = async (id) => {
     try {
@@ -18,8 +22,8 @@ const Sales = () => {
         method: "DELETE",
       });
       if (response.ok) {
-        console.log("Sale deleted successfully");
         setSalesWithItems((prevData) => prevData.filter((sale) => sale.id !== id));
+        alertBox("The Sale is deleted successfully", "Success", <FaCheckCircle />);
       } else {
         console.error("Failed to delete sale");
       }
@@ -27,11 +31,12 @@ const Sales = () => {
       console.error("Error deleting sale:", error);
     }
     setOpenMenuIndex(null);
+    setIsMessageBoxOpen(false);
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleSubmit = (data) => {
-    const res = fetch("http://localhost:5000/sale/add-sale", {
+  const handleSubmit = async (data) => {
+    const res = await fetch("http://localhost:5000/sale/add-sale", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,12 +45,22 @@ const Sales = () => {
     });
     if (res.ok) {
       setSalesWithItems((prevData) => [...prevData, data]);
+      setInventory((prevData) => {
+        const updatedInventory = { ...prevData };
+        data.items.forEach((item) => {
+          if (updatedInventory[item.id]) {
+            updatedInventory[item.id].stock -= item.quantity;
+          }
+        });
+        console.log("Updated Inventory after Sale:", updatedInventory);
+        return updatedInventory;
+      });
     } else {
       console.error("Failed to add sale");
     }
   };
 
-  if (loading) 
+  if (loading)
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   return (
     <div className="grid" onClick={() => setOpenMenuIndex(null)}>
@@ -86,12 +101,20 @@ const Sales = () => {
                       className="flex items-center justify-center gap-2 hover:bg-gray-700 px-4 py-2 rounded"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDelete(group.id);
+                        setIsMessageBoxOpen(true);
                       }}
                     >
                       <FaTrashAlt />
                       Delete
                     </button>
+                    {isMessageBoxOpen && openMenuIndex === index && <MessageBox isOpen={isMessageBoxOpen} onClose={() => setIsMessageBoxOpen(false)} message="Delete" onConfirm={() => handleDelete(group.id)}>
+                      <div className="w-[300px] mb-2">
+                        <h2 className="text-xl font-bold flex items-center justify-center gap-2 w-full mb-4"><FaTrashAlt />DELETE</h2>
+                        <p className="text-center text-sm" >
+                          Do you want to delete this <strong>Sale Record</strong> from your sales records?. <br /> <strong> Warning: </strong> If you delete this the quantity is added to stock.
+                        </p>
+                      </div>
+                    </MessageBox>}
                   </div>
                 )}
                 </div>

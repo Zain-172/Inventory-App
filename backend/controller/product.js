@@ -11,7 +11,6 @@ export default class Product {
   getProduct = (req, res) => {
     try {
       const row = db.prepare("SELECT * FROM products").all();
-      console.log(row);
       if (!row) {
         return res.status(404).json({ message: "Product not found" });
       }
@@ -50,6 +49,49 @@ export default class Product {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+
+  getStockHistoryDate = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare(
+          "SELECT name, stock, cost_price FROM products_history WHERE stock > 0 and date = ? "
+        )
+        .all(date);
+        res.json(rows);
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ message: "Internal Server Error"})
+    }
+  }
+  getStockHistoryMonth = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare(
+          "SELECT name, stock, cost_price, date FROM products_history WHERE stock > 0 and strftime('%Y-%m', date) = ? "
+        )
+        .all(date);
+        res.json(rows);
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ message: "Internal Server Error"})
+    }
+  }
+  getStockHistoryYear = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare(
+          "SELECT name, stock, cost_price, date FROM products_history WHERE stock > 0 and strftime('%Y', date) = ? "
+        )
+        .all(date);
+        res.json(rows);
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ message: "Internal Server Error"})
+    }
+  }
   insertProduct = (req, res) => {
     const { name, cost_price, stock, date, action } = req.body;
     try {

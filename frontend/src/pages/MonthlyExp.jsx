@@ -6,6 +6,8 @@ import Dropdown from "../component/DropDown";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
 import { useEffect, useState } from "react";
+import { FaCheckCircle } from "react-icons/fa";
+import { useAlertBox } from "../component/Alerts";
 
 const Monthly = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -26,6 +28,7 @@ const Monthly = () => {
   ]
   const [selectedMonth, setSelectedMonth] = useState(month[new Date().getMonth()].key);
   const [open, setOpen] = useState(false);
+  const { alertBox } = useAlertBox();
 
   useEffect(() => {
     console.log("Selected month changed to:", expenses);
@@ -38,6 +41,7 @@ const Monthly = () => {
       });
       if (response.ok) {
         setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+        alertBox("The Expense is deleted successfully", "Success", <FaCheckCircle />);
       } else {
         console.error("Failed to delete expense");
       }
@@ -57,6 +61,7 @@ const Monthly = () => {
     });
     if (res.ok) {
       console.log("Modified successfully");
+      alertBox("The Expense is modified successfully", "Success", <FaCheckCircle />);
     } else {
       console.error("Failed to modify");
     }

@@ -4,8 +4,8 @@ export default class SaleItem {
   constructor() {
     this.insertStmt = db.prepare(`
       INSERT INTO sale_items
-      (sale_id, product_name, quantity, price)
-      VALUES (?, ?, ?, ?)
+      (sale_id, product_name, quantity, price, product_id)
+      VALUES (?, ?, ?, ?, ?)
     `);
     this.getBySaleIdStmt = db.prepare(`
       SELECT * FROM sale_items WHERE sale_id = ?
@@ -16,11 +16,13 @@ export default class SaleItem {
   }
 
   insertItem(sale_id, item) {
+    console.log("Inserting Sale Item:", { sale_id, ...item });
     return this.insertStmt.run(
       sale_id,
       item.product,
       item.quantity,
-      item.sale_price
+      item.sale_price,
+      item.id
     );
   }
 

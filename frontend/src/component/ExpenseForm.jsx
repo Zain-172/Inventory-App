@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
-
+import { useAlertBox } from "./Alerts";
+import { FaCheckCircle } from "react-icons/fa";
 export default function ExpenseForm() {
   const [form, setForm] = useState(new Expense());
   const { setExpenses } = useAppData();
+  const { alertBox } = useAlertBox();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +21,7 @@ export default function ExpenseForm() {
       const data = await res.json();
       setExpenses((prevExpenses) => [...prevExpenses, { id: data.expenseId, title: form.title, description: form.description, amount: form.amount, date: form.date }]);
       setForm(new Expense());
+      alertBox("The Expense is recorded successfully", "Success", <FaCheckCircle />);
     } else {
       console.error("Failed to add expense");
     }

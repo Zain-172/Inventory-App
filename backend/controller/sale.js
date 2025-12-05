@@ -111,11 +111,37 @@ export default class Sale {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
-  getProductsSoldByName = (req, res) => {
+  getProductsSoldByDate = (req, res) => {
     const { date } = req.query;
     try {
       const rows = db
         .prepare("SELECT product_name, sum(quantity) as total_quantity, price FROM sale_items join sales on sale_items.sale_id = sales.id WHERE sale_date = ? GROUP BY product_name")
+        .all(date);
+      res.json(rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+
+  getProductsSoldByMonth = (req, res) => {
+    const { date } = req.query;
+    console.log("Received date for month query: ", date);
+    try {
+      const rows = db
+        .prepare("SELECT product_name, sum(quantity) as total_quantity, price FROM sale_items join sales on sale_items.sale_id = sales.id WHERE strftime('%Y-%m', sale_date) = ? GROUP BY product_name")
+        .all(date);
+      res.json(rows);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  getProductsSoldByYear = (req, res) => {
+    const { date } = req.query;
+    try {
+      const rows = db
+        .prepare("SELECT product_name, sum(quantity) as total_quantity, price FROM sale_items join sales on sale_items.sale_id = sales.id WHERE strf('%Y', sale_date) = ? GROUP BY product_name")
         .all(date);
       res.json(rows);
     } catch (err) {

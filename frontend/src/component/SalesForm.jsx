@@ -9,7 +9,7 @@ import { useAppData } from "../context/AppDataContext";
 export default function SalesForm({ onSubmit }) {
   const { products } = useAppData();
   const product = [
-    ...products.map((item) => ({ key: item.name, value: item.cost_price })),
+    ...products.map((item) => ({ key: item.name, value: item.id })),
   ];
   const salesmen = [
     { key: "John Doe", value: "John Doe" },
@@ -74,7 +74,7 @@ export default function SalesForm({ onSubmit }) {
       setEntry((prev) => [
         ...prev,
         {
-          id: Date.now(),
+          id: formData.id,
           product: formData.product,
           quantity: formData.quantity,
           sale_price: formData.sales_price,
@@ -99,8 +99,8 @@ export default function SalesForm({ onSubmit }) {
 
     return "INV-" + id;
   }
-  const tableData = entry.map((item, index) => ({
-    ID: index + 1,
+  const tableData = entry.map((item) => ({
+    ID: item.id,
     Product: item.product,
     Quantity: item.quantity,
     Price: item.sale_price,
@@ -154,13 +154,13 @@ export default function SalesForm({ onSubmit }) {
               setFormData((prev) => ({
                 ...prev,
                 product: value.key,
-                price: value.value,
+                id: value.value,
               }))
             }
           />
-          {formData.price && (
+          {formData.id && (
             <span className="absolute -bottom-5 left-1 text-sm text-gray-400 italic">
-              Cost Price: {formData.price}
+              Cost Price: {products.find((p) => p.id === formData.id)?.cost_price}
             </span>
           )}
         </div>
@@ -177,7 +177,7 @@ export default function SalesForm({ onSubmit }) {
             required
           />
           {formData.quantity >
-            products.find((p) => p.name === formData.product)?.stock && (
+            products.find((p) => p.id === formData.id)?.stock && (
             <span className="absolute -bottom-5 left-1 text-sm text-red-600 italic">
               *The Quantity exceeds the available stock!
             </span>

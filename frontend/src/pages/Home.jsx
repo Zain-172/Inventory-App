@@ -39,11 +39,9 @@ const Home = () => {
       const today = new Date().toISOString().split("T")[0];
       const res = await fetch(`http://localhost:5000/sale/by-date?date=${today}`);
       const data = await res.json();
-      
       const res2 = await fetch(`http://localhost:5000/sale/cost-by-date?date=${today}`);
       const data2 = await res2.json();
       setProfit((data.length > 0 ? data[0]["sum(total_amount)"] : 0) - (data2.length > 0 ? data2[0]["sum(total_cost)"] : 0));
-      console.log("Sales by date: ", data);
     };
     fetchData();
   }, []);
@@ -56,7 +54,6 @@ const Home = () => {
       const res3 = await fetch(`http://localhost:5000/expense/by-date?date=${today}`);
       const expenseData = await res3.json()
       setExpense((stockData.length > 0 ? stockData[0]["sum(stock * cost_price)"] : 0) + (expenseData.length > 0 ? expenseData[0]["total"] : 0));
-      console.log("Stock data: ", stockData, "Expense data: ", expenseData);
     };
     fetchData();
   }, []);

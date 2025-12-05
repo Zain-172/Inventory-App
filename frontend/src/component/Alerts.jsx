@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import OkCloseMessageBox from "./OkClose.jsx";
+import { FaExclamationCircle } from "react-icons/fa";
 const AlertContext = createContext();
 
 export function AlertProvider({ children }) {
@@ -7,12 +8,13 @@ export function AlertProvider({ children }) {
     open: false,
     message: "",
     resolve: null,
-    title: "Alert"
+    title: "Alert",
+    icon: <FaExclamationCircle />,
   });
 
-  function alertBox(message, title = "Alert") {
+  function alertBox(message, title = "Alert", icon = <FaExclamationCircle />) {
     return new Promise((resolve) => {
-      setAlertState({ open: true, message, resolve, title });
+      setAlertState({ open: true, message, resolve, title, icon });
     });
   }
 
@@ -29,6 +31,7 @@ export function AlertProvider({ children }) {
         open={alertState.open}
         title={alertState.title}
         message={alertState.message}
+        icon={alertState.icon}
         hideCloseButton={true}
         onOk={handleOk}
       />

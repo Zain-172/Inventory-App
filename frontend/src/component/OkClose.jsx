@@ -1,21 +1,11 @@
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion as Motion, AnimatePresence } from "framer-motion";
+import { FaExclamationTriangle } from "react-icons/fa";
 
-/**
- * ModalMessageBox
- * A reusable message box made using a clean modal design.
- * Props:
- * - open: boolean (controls visibility)
- * - title: string
- * - message: string / JSX
- * - onOk: function
- * - onCancel: function (optional)
- * - okLabel: string
- * - cancelLabel: string
- */
 export default function ModalMessageBox({
   open,
   title = "Alert",
+  icon= <FaExclamationTriangle />,
   message = "Your message goes here...",
   onOk = () => {},
   onCancel = null,
@@ -25,7 +15,7 @@ export default function ModalMessageBox({
   return (
     <AnimatePresence>
       {open && (
-        <motion.div
+        <Motion.div
           className="fixed inset-0 z-50 flex items-center justify-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -38,23 +28,23 @@ export default function ModalMessageBox({
           />
 
           {/* Modal box */}
-          <motion.div
+          <Motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="relative w-full max-w-md p-6 bg-[#111] border-white/40 border shadow-white/5 rounded-2xl shadow-xl z-10"
+            className="relative w-full max-w-[370px] p-6 bg-[#111] border-white/40 border shadow-white/5 rounded-2xl shadow-md z-10"
           >
             {/* Title */}
-            <h2 className="text-2xl text-center font-semibold mb-3">{title}</h2>
+              <h2 className={`flex items-center gap-2 text-xl font-semibold mb-3 ${title === "Success" ? "text-green-500" : "text-yellow-500"}`}>{icon}{title}</h2>
 
             {/* Message */}
-            <p className="text-center mb-6 leading-relaxed">
+            <p className=" mb-6 leading-relaxed">
               {message}
             </p>
 
             {/* Buttons */}
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-end gap-3">
               {onCancel && (
                 <button
                   onClick={onCancel}
@@ -71,40 +61,9 @@ export default function ModalMessageBox({
                 {okLabel}
               </button>
             </div>
-          </motion.div>
-        </motion.div>
+          </Motion.div>
+        </Motion.div>
       )}
     </AnimatePresence>
   );
 }
-
-/* Usage Example:
---------------------------------------------------
-import React, { useState } from "react";
-import ModalMessageBox from "./ModalMessageBox";
-
-export default function Demo() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="p-6">
-      <button
-        className="px-4 py-2 bg-blue-600 text-white rounded"
-        onClick={() => setOpen(true)}
-      >
-        Open Message Box
-      </button>
-
-      <ModalMessageBox
-        open={open}
-        title="Information"
-        message="This is a clean modal-based message box."
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-        okLabel="OK"
-        cancelLabel="Close"
-      />
-    </div>
-  );
-}
-*/

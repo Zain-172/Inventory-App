@@ -31,7 +31,7 @@ export default function Table({ data, accent = "bg-blue-500/40", open, setOpen, 
 
           <tbody className="divide-y" onClick={(e) => e.stopPropagation()}>
             {data.map((row, rowIndex) => (
-              <tr key={rowIndex} className="border" onClick={() => {setOpen(true); setDeleteId(row.id); console.log("Selected row id:", row.id);}}>
+              <tr key={rowIndex} className="border" onClick={() => {setOpen(true); setDeleteId(row.id);}}>
                 {Object.keys(row).map((col, colIndex) => (
                   <td key={colIndex} className={`border p-0 ${accent} ${colIndex == 0 ? "w-6" : ""}`}>
                     { colIndex ? enable && col !== nonEditable && deleteId === row.id ? <input className="bg-transparent w-full rounded-none h-100 border-none focus:ring-0" type="text" name={col} value={editedData[col] || row[col]} onChange={handleChange} /> : <p className="p-2 min-w-[150px]">{row[col]}</p>  : <p className="text-center w-8">{row[col]}</p>}

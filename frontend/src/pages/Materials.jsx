@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import Dropdown from "../component/DropDown";
 import { useAppData } from "../context/AppDataContext";
 import Product from "../models/Product";
+import { useAlertBox } from "../component/Alerts";
 
 const Material = () => {
   const [open, setOpen] = useState(false);
@@ -16,6 +17,7 @@ const Material = () => {
   const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [removeModal, setRemoveModal] = useState(false);
+  const { alertBox } = useAlertBox();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -76,6 +78,7 @@ const Material = () => {
       });
       if (response.ok) {
         setProducts((prevData) => prevData.filter((product) => product.id !== id));
+        alertBox("The Product is deleted successfully", "Success", <FaCheckCircle />);
       } else {
         console.error("Failed to delete product");
       }

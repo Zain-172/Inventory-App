@@ -5,12 +5,14 @@ import Table from "../component/Table";
 import AddExpenseForm from "../component/ExpenseForm";
 import { useAppData } from "../context/AppDataContext";
 import Expense from "../models/Expense";
+import { useAlertBox } from "../component/Alerts";
 
 const Daily = () => {
   const [openModal, setOpenModal] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const { loading, expenses, setExpenses } = useAppData();
   const [open, setOpen] = useState(false);
+  const { alertBox } = useAlertBox();
 
   const handleDelete = async (id) => {
     console.log("Deleting expense with id:", id);
@@ -20,6 +22,7 @@ const Daily = () => {
       });
       if (response.ok) {
         setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+        alertBox("The Expense is deleted successfully", "Success", <FaCheckCircle />);
       } else {
         console.error("Failed to delete expense");
       }
@@ -29,7 +32,6 @@ const Daily = () => {
   }
 
   const handleModify = async (editedData, deleteId) => {
-    console.log(editedData)
     const res = await fetch(`http://localhost:5000/expense/${deleteId}`, {
       method: "PUT",
       headers: {
