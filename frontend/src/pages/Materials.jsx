@@ -2,7 +2,15 @@ import { useState } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
-import { FaBroom, FaCalculator, FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
+import {
+  FaArrowsAltH,
+  FaBroom,
+  FaCalculator,
+  FaEllipsisV,
+  FaPlusCircle,
+  FaTrashAlt,
+  FaWarehouse,
+} from "react-icons/fa";
 import Modal from "../component/Modal";
 import { Link } from "react-router-dom";
 import Dropdown from "../component/DropDown";
@@ -17,6 +25,12 @@ const Material = () => {
   const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [removeModal, setRemoveModal] = useState(false);
+  const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
+  const [from, setFrom] = useState(
+    new Date(new Date().setMonth(new Date().getMonth() - 1))
+      .toISOString()
+      .split("T")[0]
+  );
   const { alertBox } = useAlertBox();
 
   const handleSubmit = async (e) => {
@@ -45,11 +59,20 @@ const Material = () => {
   const handleRemove = async (e) => {
     e.preventDefault();
     console.log("Form Data: ", formData);
-    if (formData.stock > products.find(product => product.name === formData.name)?.stock) {
+    if (
+      formData.stock >
+      products.find((product) => product.name === formData.name)?.stock
+    ) {
       alert("Cannot remove more stock than available!");
       return;
     }
-    const data = new Product(0, formData.name, formData.cost_price, -formData.stock, formData.date);
+    const data = new Product(
+      0,
+      formData.name,
+      formData.cost_price,
+      -formData.stock,
+      formData.date
+    );
     data.action = "REMOVE";
     try {
       const res = await fetch("http://localhost:5000/product/add-product", {
@@ -77,8 +100,14 @@ const Material = () => {
         method: "DELETE",
       });
       if (response.ok) {
-        setProducts((prevData) => prevData.filter((product) => product.id !== id));
-        alertBox("The Product is deleted successfully", "Success", <FaCheckCircle />);
+        setProducts((prevData) =>
+          prevData.filter((product) => product.id !== id)
+        );
+        alertBox(
+          "The Product is deleted successfully",
+          "Success",
+          <FaCheckCircle />
+        );
       } else {
         console.error("Failed to delete product");
       }
@@ -98,8 +127,33 @@ const Material = () => {
       <nav>
         <Navigation />
       </nav>
-      <main className="flex flex-col my-12 w-screen">
-        <TopBar screen="Inventory" />
+      <TopBar>
+        <div>
+          <h1 className="text-2xl font-bold flex items-center gap-2"><FaWarehouse />Inventory</h1>
+        </div>
+        <div className="flex flex-row justify-end items-center gap-2 py-2">
+          <div className="flex flex-col items-center">
+            <p className="gap-2 font-semibold">From</p>
+          </div>
+          <input
+            type="date"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            className="border px-2 py-1 rounded-md"
+          />
+          <FaArrowsAltH />
+          <div className="flex flex-col items-center">
+            <p className="gap-2 font-semibold">To</p>
+          </div>
+          <input
+            type="date"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="border px-2 py-1 rounded-md "
+          />
+        </div>
+      </TopBar>
+      <main className="flex flex-col my-16 w-screen">
         <div className="px-2 py-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold mb-4">Inventory</h2>
@@ -111,30 +165,31 @@ const Material = () => {
                 <FaCalculator /> Calculate Cost
               </Link>
 
-                <button
-                  className="py-3 px-2 rounded bg-green-500/40 hover:bg-gray-700"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setOpenMenuIndex((prev) => !prev);
-                  }}
-                >
-                  <FaEllipsisV />
-                </button>
-                {openMenuIndex && (
-                  <div className="absolute right-0 mt-32 w-48 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
-                    <button
-                      onClick={() => setIsModalOpen(true)}
-                      className="px-4 py-2  hover:bg-green-500/40 text-white rounded-t border-b font-bold flex items-center gap-2"
-                    >
-                      <FaPlusCircle /> Add Stock
-                    </button><button
-                      onClick={() => setRemoveModal(true)}
-                      className="px-4 py-2  hover:bg-green-500/40 text-white rounded-b font-bold flex items-center gap-2"
-                    >
-                      <FaTrashAlt /> Remove Stock
-                    </button>
-                  </div>
-                )}
+              <button
+                className="py-3 px-2 rounded bg-green-500/40 hover:bg-gray-700"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setOpenMenuIndex((prev) => !prev);
+                }}
+              >
+                <FaEllipsisV />
+              </button>
+              {openMenuIndex && (
+                <div className="absolute right-0 mt-32 w-48 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
+                  <button
+                    onClick={() => setIsModalOpen(true)}
+                    className="px-4 py-2  hover:bg-green-500/40 text-white rounded-t border-b font-bold flex items-center gap-2"
+                  >
+                    <FaPlusCircle /> Add Stock
+                  </button>
+                  <button
+                    onClick={() => setRemoveModal(true)}
+                    className="px-4 py-2  hover:bg-green-500/40 text-white rounded-b font-bold flex items-center gap-2"
+                  >
+                    <FaTrashAlt /> Remove Stock
+                  </button>
+                </div>
+              )}
             </div>
           </div>
           <Table
@@ -232,7 +287,7 @@ const Material = () => {
           </button>
         </form>
       </Modal>
-      
+
       <Modal
         isOpen={removeModal}
         onClose={() => setRemoveModal(false)}
@@ -278,11 +333,13 @@ const Material = () => {
               className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
               required
             />
-            { formData.stock > products.find(product => product.name === formData.name)?.stock && 
-            (<span className="absolute -bottom-4 left-1 text-[10px] text-red-600 italic">
-              *The Quantity exceeds the available stock!
-            </span>
-            ) }
+            {formData.stock >
+              products.find((product) => product.name === formData.name)
+                ?.stock && (
+              <span className="absolute -bottom-4 left-1 text-[10px] text-red-600 italic">
+                *The Quantity exceeds the available stock!
+              </span>
+            )}
           </div>
           <div className="w-full mb-4">
             <label className="block text-sm font-medium mb-1">Date</label>

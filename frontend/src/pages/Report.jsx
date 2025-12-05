@@ -145,15 +145,18 @@ const Report = () => {
           data: filteredSales.map((sale) => ({
             Invoice: sale.invoice_id,
             Salesman: sale.salesman,
-            Quantity: sale.total_items,
             Amount: "Rs. " + sale.total_amount,
+            Earnings: "Rs. " + (sale.total_amount - sale.total_cost),
           })),
           total: [
-            filteredSales.reduce((sum, sale) => sum + sale.total_items, 0),
             "Rs. " +
-              Number(
-                filteredSales.reduce((sum, sale) => sum + sale.total_amount, 0)
-              ),
+            Number(
+              filteredSales.reduce((sum, sale) => sum + sale.total_amount, 0)
+            ),
+            "Rs. " +
+            Number(
+              filteredSales.reduce((sum, sale) => sum + (sale.total_amount - sale.total_cost), 0)
+            )
           ],
         }),
       });

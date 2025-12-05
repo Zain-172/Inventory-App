@@ -131,7 +131,6 @@ export default function Form({ onSubmit }) {
             onChange={handleChange}
             placeholder="Material X"
             className="w-full px-3 py-2 rounded-md focus:outline-none bg-[#111] border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"
-            required
           />
         </div>
       </div>

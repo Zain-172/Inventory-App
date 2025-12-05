@@ -7,6 +7,12 @@ import {
   FaShoppingCart,
   FaHandHolding,
   FaHandshake,
+  FaFunnelDollar,
+  FaFilter,
+  FaLine,
+  FaArrowsAlt,
+  FaArrowsAltH,
+  FaThLarge,
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
@@ -41,6 +47,7 @@ const Home = () => {
       const data = await res.json();
       const res2 = await fetch(`http://localhost:5000/sale/cost-by-date?date=${today}`);
       const data2 = await res2.json();
+      console.log(data, data2);
       setProfit((data.length > 0 ? data[0]["sum(total_amount)"] : 0) - (data2.length > 0 ? data2[0]["sum(total_cost)"] : 0));
     };
     fetchData();
@@ -60,12 +67,16 @@ const Home = () => {
 
   if (loading) return <div>Loading...</div>;
   return (
-    <div className="grid min-h-screen">
+    <div className="grid">
       <nav>
         <Navigation />
       </nav>
-      <main className="flex flex-col my-12">
-        <TopBar />
+      <TopBar>
+        <div className="flex items-center gap-4 py-2">
+          <h1 className="text-2xl font-bold flex gap-2 items-center"><FaThLarge />Dashboard</h1>
+        </div>
+      </TopBar>
+      <main className="flex flex-col my-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6 px-2">
           <MetricsCard
             title="Total Products"
@@ -97,9 +108,9 @@ const Home = () => {
             ID: item.id,
             Invoice: item.invoice_id,
             Salesman: item.salesman,
-            Date: item.sale_date,
+            Quantity: item.total_items,
             Amount: `Rs. ${item.total_amount}`,
-            Quantity: item.total_items
+            Earning: `Rs. ${item.total_amount - item.total_cost}`,
           }))} />
           <Table data={products} accent="bg-yellow-500/40" />
         </div>

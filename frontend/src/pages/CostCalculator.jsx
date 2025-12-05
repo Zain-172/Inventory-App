@@ -47,8 +47,7 @@ export default function CostCalculator() {
   }
   return (
     <>
-      <TopBar screen="Cost Calculator" />
-      <main className="my-16 p-6 flex flex-col gap-2">
+      <main className="p-6 flex flex-col gap-2">
         <div className="flex justify-between items-center w-full">
           <h2 className="text-2xl font-bold mb-4">Production Cost</h2>
           <Link to="/materials" className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"><FaBroom /> Materials</Link>

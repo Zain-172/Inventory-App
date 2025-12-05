@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
-import { FaCheckCircle, FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
+import { FaArrowsAltH, FaCheckCircle, FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import Modal from "../component/Modal";
 import Form from "../component/SalesForm";
 import { useAppData } from "../context/AppDataContext";
@@ -14,7 +14,9 @@ const Sales = () => {
   const [open, setOpen] = useState(false);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
-  const { salesWithItems, setSalesWithItems, setInventory, loading } = useAppData();
+  const [from, SetFrom] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split("T")[0]);
+  const [to, SetTo] = useState(new Date().toISOString().split("T")[0]);
+  const { salesWithItems, setSalesWithItems, loading } = useAppData();
 
   const handleDelete = async (id) => {
     try {
@@ -57,8 +59,27 @@ const Sales = () => {
       <nav>
         <Navigation />
       </nav>
-      <main className="flex flex-col my-12 w-full">
-        <TopBar screen="Sales" />
+        <TopBar>
+          <div>
+            <h1 className="text-2xl font-bold">Sales & Purchase</h1>
+          </div>
+          <div className="flex flex-row justify-end items-center gap-2 py-2">
+            <div className="flex flex-col items-center">
+              <p className="gap-2 font-semibold">
+                From
+              </p>
+            </div>
+            <input type="date" value={from} onChange={(e) => SetFrom(e.target.value)} className="border px-2 py-1 rounded-md" />
+            <FaArrowsAltH />
+            <div className="flex flex-col items-center">
+              <p className="gap-2 font-semibold">
+                To
+              </p>
+            </div>
+            <input type="date" value={to} onChange={(e) => SetTo(e.target.value)} className="border px-2 py-1 rounded-md " />
+          </div>
+        </TopBar>
+      <main className="flex flex-col my-16 w-full">
         <div className="px-2 py-6">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold mb-4">Sales & Purchase</h2>
