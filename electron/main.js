@@ -10,20 +10,15 @@ const __dirname = path.dirname(__filename);
 let backendProcess = null;
 let mainWindow = null;
 
-// Function to start backend
+// Only production mode
+const isDev = false;
+
+// Start backend in production
 function startBackend() {
-  const isDev = process.env.NODE_ENV === "development";
+  const backendPath = path.join(process.resourcesPath, "backend", "server.js");
 
-  const backendPath = isDev
-    ? path.join(__dirname, "../backend/server.js")
-    : path.join(process.resourcesPath, "backend", "server.js");
-
-  // Use Node executable to spawn backend
-  const nodeExec = process.execPath.includes("electron")
-    ? process.execPath.replace("electron.exe", "node.exe")
-    : process.execPath;
-
-  backendProcess = spawn(nodeExec, [backendPath], {
+  // Use system Node
+  backendProcess = spawn("node", [backendPath], {
     cwd: path.dirname(backendPath),
     stdio: "pipe"
   });
@@ -41,7 +36,7 @@ function startBackend() {
   );
 }
 
-// Function to create main Electron window
+// Create main window
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -54,19 +49,15 @@ function createWindow() {
     }
   });
 
-  const isDev = process.env.NODE_ENV === "development";
-  const indexPath = isDev
-    ? "http://localhost:5173"
-    : path.join(process.resourcesPath, "dist-frontend", "index.html");
-
-  mainWindow.loadURL(isDev ? indexPath : `file://${indexPath}`);
+  const indexPath = path.join(process.resourcesPath, "dist-frontend", "index.html");
+  mainWindow.loadFile(indexPath);
 
   mainWindow.once("ready-to-show", () => mainWindow.show());
 }
 
 // App events
 app.on("ready", () => {
-  startBackend();
+  startBackend(); // only in production
   createWindow();
 });
 
@@ -78,3 +69,47 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
+
+// // Fix __dirname for ES modules
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// let backendProcess = null;
+// let mainWindow = null;
+
+// // Function to create main Electron window
+// function createWindow() {
+//   mainWindow = new BrowserWindow({
+//     width: 1200,
+//     height: 800,
+//     show: false,
+//     webPreferences: {
+//       nodeIntegration: false,
+//       contextIsolation: true,
+//       preload: path.join(__dirname, "preload.js") // optional
+//     }
+//   });
+
+//   const isDev = true; //process.env.NODE_ENV === "development";
+//   const indexPath = isDev
+//     ? "http://localhost:5173"
+//     : path.join(process.resourcesPath, "dist-frontend", "index.html");
+
+//   mainWindow.loadURL(isDev ? indexPath : `file://${indexPath}`);
+
+//   mainWindow.once("ready-to-show", () => mainWindow.show());
+// }
+
+// // App events
+// app.on("ready", () => {
+//   // startBackend();
+//   createWindow();
+// });
+
+// app.on("window-all-closed", () => {
+//   if (process.platform !== "darwin") app.quit();
+// });
+
+// app.on("activate", () => {
+//   if (BrowserWindow.getAllWindows().length === 0) createWindow();
+// });
