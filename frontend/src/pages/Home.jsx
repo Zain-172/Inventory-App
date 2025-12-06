@@ -72,9 +72,7 @@ const Home = () => {
         <Navigation />
       </nav>
       <TopBar>
-        <div className="flex items-center gap-4 py-2">
-          <h1 className="text-2xl font-bold flex gap-2 items-center"><FaThLarge />Dashboard</h1>
-        </div>
+        <h1 className="text-2xl font-bold flex gap-2 items-center py-2"><FaThLarge />Dashboard</h1>
       </TopBar>
       <main className="flex flex-col my-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6 px-2">
@@ -82,7 +80,7 @@ const Home = () => {
             title="Total Products"
             value={products.length}
             icon={<FaBox size={20} />}
-            bgColor="bg-blue-500/40"
+            bgColor="bg-green-500/40"
           />
           <MetricsCard
             title="Expense"
@@ -100,7 +98,7 @@ const Home = () => {
             title="Orders Today"
             value={ordersToday}
             icon={<FaShoppingCart size={20} />}
-            bgColor="bg-yellow-500/40"
+            bgColor="bg-green-500/40"
           />
         </div>
         <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
@@ -112,7 +110,7 @@ const Home = () => {
             Amount: `Rs. ${item.total_amount}`,
             Earning: `Rs. ${item.total_amount - item.total_cost}`,
           }))} />
-          <Table data={products} accent="bg-yellow-500/40" />
+          <Table data={products} accent="bg-green-500/40" />
         </div>
       </main>
     </div>

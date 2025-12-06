@@ -10,6 +10,7 @@ export const AppDataProvider = ({ children }) => {
   const [inventory, setInventory] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [employees, setEmployees] = useState([])
+  const [customers, setCustomers] = useState([])
   const [loading, setLoading] = useState(true);
   const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
   const [from, setFrom] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split("T")[0]);
@@ -53,10 +54,10 @@ export const AppDataProvider = ({ children }) => {
         const expensesData = await resExpenses.json();
         console.log("Fetched expenses:", expensesData);
         const formattedExpenses = expensesData.map(item => ({
-          id: item.expense_id,
+          id: item.id,
           title: item.title,
           amount: item.amount,
-          date: item.expense_date,
+          date: item.date,
           description: item.description ? item.description : "",
         }));
         setExpenses(formattedExpenses);
@@ -64,6 +65,10 @@ export const AppDataProvider = ({ children }) => {
         const resEmployees = await fetch("http://localhost:5000/employee/");
         const employeesData = await resEmployees.json();
         setEmployees(employeesData);
+
+        const resCustomers = await fetch("http://localhost:5000/customer/");
+        const customersData = await resCustomers.json();
+        setCustomers(customersData);
 
       } catch (err) {
         console.error(err);
@@ -80,6 +85,7 @@ export const AppDataProvider = ({ children }) => {
       try {
         const res = await fetch(`http://localhost:5000/sale/with-items?to=${to}&from=${from}`);
         const data = await res.json();
+        console.log("Fetched sales with items:", data);
         setSalesWithItems(data);
       } catch (err) {
         console.error(err);
@@ -105,6 +111,8 @@ export const AppDataProvider = ({ children }) => {
         setSalesWithItems,
         employees,
         setEmployees,
+        customers,
+        setCustomers,
         loading,
         to,
         setTo,

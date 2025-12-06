@@ -17,6 +17,7 @@ export default class Sale {
         total_items,
         total_cost,
         items,
+        customer
       } = req.body;
 
       if (!items || items.length === 0) {
@@ -24,8 +25,8 @@ export default class Sale {
       }
 
       const insertSaleStmt = db.prepare(`
-        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items, total_cost)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items, total_cost, customer_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `);
 
       const transaction = db.transaction(() => {
@@ -35,7 +36,8 @@ export default class Sale {
           salesman,
           total_amount,
           total_items,
-          total_cost
+          total_cost,
+          customer
         );
         const sale_id = saleInfo.lastInsertRowid;
 
@@ -72,9 +74,10 @@ export default class Sale {
         .prepare(
           `
   SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, si.item_id,
-         si.product_name, si.quantity, si.price as price
+         si.product_name, si.quantity, si.price as price, c.customer, c.shop
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
+  JOIN customers c ON s.customer_id = c.id
   WHERE s.sale_date BETWEEN ? AND ?
   ORDER BY s.id DESC
 `
@@ -93,6 +96,8 @@ export default class Sale {
             salesman: row.salesman,
             total_amount: row.total_amount,
             total_items: row.total_items,
+            customer: row.customer,
+            shop: row.shop,
             items: [],
           };
           map.set(row.invoice_id, saleObj);

@@ -11,7 +11,7 @@ export default class Expense {
   getExpenses = (req, res) => {
     try {
       const rows = db
-        .prepare("SELECT expense_id, title, description, amount, expense_date FROM expense")
+        .prepare("SELECT id, title, description, amount, date FROM expense")
         .all();
       res.json(rows);
     } catch (err) {
@@ -24,7 +24,7 @@ export default class Expense {
     try {
       const rows = db
         .prepare(
-          "SELECT sum(amount) as total FROM expense WHERE expense_date = ? group by expense_date"
+          "SELECT sum(amount) as total FROM expense WHERE date = ? group by date"
         )
         .all(date);
       res.json(rows);
@@ -37,7 +37,7 @@ export default class Expense {
     const { title, description, amount, date } = req.body;
     try {
       const stmt = db.prepare(
-        "INSERT INTO expense (title, description, amount, expense_date) VALUES (?, ?, ?, ?)"
+        "INSERT INTO expense (title, description, amount, date) VALUES (?, ?, ?, ?)"
       );
       const info = stmt.run(title, description, amount, date);
       res
@@ -52,7 +52,7 @@ export default class Expense {
   deleteExpense = (req, res) => {
     const { id } = req.params;
     try {
-      const stmt = db.prepare("DELETE FROM expense WHERE expense_id = ?");
+      const stmt = db.prepare("DELETE FROM expense WHERE id = ?");
       stmt.run(id);
       res.status(200).json({ message: "Expense deleted" });
     } catch (err) {
@@ -66,7 +66,7 @@ export default class Expense {
     const { title, description, amount, date } = req.body;
     try {
       const stmt = db.prepare(
-        "UPDATE expense SET title = ?, description = ?, amount = ?, expense_date = ? WHERE expense_id = ?"
+        "UPDATE expense SET title = ?, description = ?, amount = ?, date = ? WHERE id = ?"
       );
       const info = stmt.run(title, description, amount, date, id);
       if (info.changes === 0) {

@@ -5,14 +5,15 @@ node_modules/
 **/node_modules/
 
 # --------------------
-# Build outputs
+# Build outputs (local, not release)
 # --------------------
-dist/
+dist-frontend/
 frontend/dist/
 backend/dist/
 electron/dist/
 build/
 out/
+.vite/
 
 # --------------------
 # Logs
@@ -22,6 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 *.log
+
 
 # --------------------
 # Environment variables
@@ -37,32 +39,31 @@ pnpm-debug.log*
 Thumbs.db
 
 # --------------------
-# Vite specific
-# --------------------
-.vite/
-
-# --------------------
 # VSCode
 # --------------------
 .vscode/
 .vscode/settings.json
 
 # --------------------
-# Electron specific
+# Electron packaging artifacts
 # --------------------
 *.asar
 electron-out/
 
 # --------------------
-# Others
+# TypeScript / cache
 # --------------------
 *.tsbuildinfo
 *.cache
 
 
 # --------------------
-# Build outputs
+# Keep the dist folder
 # --------------------
-dist-frontend/
-dist-backend/
 dist/
+
+# --------------------
+# Keep only the installer in dist
+# --------------------
+# !dist/*.exe
+# !dist/*latest.yml

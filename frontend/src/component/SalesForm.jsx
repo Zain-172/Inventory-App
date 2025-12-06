@@ -1,34 +1,35 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { FaPlus, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import Dropdown from "./DropDown";
-import Table from "./Table";
-import Modal from "./Modal";
-import Receipt from "./Receipt";
+import Table from "./Table"
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "./Alerts";
 
 export default function SalesForm({ onSubmit }) {
-  const { products } = useAppData();
+  const { products, customers } = useAppData();
   const product = [
     ...products.map((item) => ({ key: item.name, value: item.id })),
   ];
+  const customerOptions = customers.map((cust) => ({
+    key: cust.customer,
+    value: cust.id,
+  }));
   const salesmen = [
     { key: "John Doe", value: "John Doe" },
     { key: "Jane Smith", value: "Jane Smith" },
     { key: "Mike Johnson", value: "Mike Johnson" },
   ];
-  const [invoiceId, setInvoiceId] = useState("");
-  const receiptRef = useRef(null);
   const [formData, setFormData] = useState({
-    product: "",
+    id: product[0].value,
+    product: product[0].key,
     price: "",
     sales_price: "",
     quantity: "",
-    salesman: "Default Salesman",
+    salesman: salesmen[0],
+    customer: customerOptions[0],
     date: new Date().toISOString().split("T")[0],
   });
   const [entry, setEntry] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { alertBox } = useAlertBox();
 
   const handleChange = (e) => {
@@ -46,7 +47,6 @@ export default function SalesForm({ onSubmit }) {
       );
       return;
     }
-    setInvoiceId(newInvoiceId);
     const data = {
       invoice_id: newInvoiceId,
       sale_date: formData.date,
@@ -60,10 +60,11 @@ export default function SalesForm({ onSubmit }) {
         0
       ),
       total_items: entry.reduce((sum, i) => sum + Number(i.quantity), 0),
+      customer: formData.customer.value,
       items: entry,
     };
+    console.log("Submitting Sale:", data);
     onSubmit && onSubmit(data);
-    setIsModalOpen(true);
   };
   const addEntry = () => {
     if (
@@ -147,6 +148,7 @@ export default function SalesForm({ onSubmit }) {
           <label className="block text-sm font-medium mb-1">Salesman</label>
           <Dropdown
             options={salesmen}
+            value={salesmen[0]}
             onChange={(d) => setFormData((prev) => ({ ...prev, salesman: d }))}
           />
         </div>
@@ -164,12 +166,30 @@ export default function SalesForm({ onSubmit }) {
         </div>
       </div>
 
+      <div className="flex gap-4 w-full my-4">
+        <div className="w-full">
+          <label className="block text-sm font-medium mb-1">Customer</label>
+          <Dropdown
+            options={customerOptions}
+            value={customerOptions[0]}
+            onChange={(d) => setFormData((prev) => ({ ...prev, customer: d }))}
+          />
+        </div>
+        <div className="w-full">
+          <label className="block text-sm font-medium mb-1">Shop</label>
+          <p
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
+          >
+            {customers.find((c) => c.id === formData.customer?.value)?.shop || ""}
+          </p>
+        </div>
+      </div>
       <div className="flex gap-4 w-full justify-center items-end mb-8">
         <div className="w-full relative">
           <label className="block text-sm font-medium mb-1">Product</label>
           <Dropdown
             options={product}
-            value={formData.product}
+            value={product[0]}
             onChange={(value) =>
               setFormData((prev) => ({
                 ...prev,
@@ -219,7 +239,7 @@ export default function SalesForm({ onSubmit }) {
         <button
           onClick={addEntry}
           type="button"
-          className="flex items-center justify-center p-2 mb-1 bg-blue-500/40 text-white rounded-sm hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center p-2 mb-1 bg-green-500/40 text-white rounded-sm hover:bg-blue-700 transition-colors"
         >
           <FaPlus />
         </button>
@@ -234,25 +254,10 @@ export default function SalesForm({ onSubmit }) {
       )}
       <button
         type="submit"
-        className="w-full flex items-center mt-4 justify-center gap-2 bg-blue-500/40 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
       >
         <FaPlusCircle /> Add Sale
       </button>
-      <Modal
-        onClose={() => setIsModalOpen(false)}
-        isOpen={isModalOpen}
-        title="Sales Receipt"
-      >
-        <Receipt
-          ref={receiptRef}
-          saleData={{
-            date: formData.date,
-            salesman: formData.salesman.key,
-            id: invoiceId,
-            items: entry,
-          }}
-        />
-      </Modal>
     </form>
   );
 }

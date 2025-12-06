@@ -61,12 +61,12 @@ const Daily = () => {
         </div>
 
         <div className="px-2 mb-8 w-full">
-          <Table data={expenses.filter(item => item.date === date)} accent="bg-yellow-500/40" open={open} setOpen={setOpen} onDelete={handleDelete} onUpdate={handleModify} />
+          <Table data={expenses.filter(item => item.date === date)} accent="bg-green-500/40" open={open} setOpen={setOpen} onDelete={handleDelete} onUpdate={handleModify} />
         </div>
 
           <button
             onClick={() => setOpenModal(true)}
-            className="px-4 py-2 w-56 grid place-self-center bg-yellow-500/40 rounded text-white font-bold"
+            className="px-4 py-2 w-56 grid place-self-center bg-green-500/40 rounded text-white font-bold"
           >
             + Add Expense
           </button>

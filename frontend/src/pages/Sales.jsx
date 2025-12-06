@@ -57,9 +57,7 @@ const Sales = () => {
         <Navigation />
       </nav>
         <TopBar>
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2"><FaReceipt />Sales & Purchase</h1>
-          </div>
+            <h1 className="text-2xl font-bold flex items-center py-2 gap-2"><FaReceipt />Sales & Purchase</h1>
           <div className="flex flex-row justify-end items-center gap-2 py-2">
             <div className="flex flex-col items-center">
               <p className="gap-2 font-semibold">
@@ -82,7 +80,7 @@ const Sales = () => {
             <h2 className="text-2xl font-bold mb-4">Sales & Purchase</h2>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mb-4 px-4 py-2 bg-blue-500/40 text-white rounded font-bold flex items-center gap-2"
+              className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"
             >
               <FaPlusCircle /> Sale Items
             </button>
@@ -95,7 +93,7 @@ const Sales = () => {
                   <strong>Invoice:</strong> {group.invoice_id}
                 </p>
                 <div className="flex justify-end">
-                  <button className="p-2 rounded bg-blue-500/40 hover:bg-gray-700"
+                  <button className="p-2 rounded bg-green-500/40 hover:bg-gray-700"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenMenuIndex(openMenuIndex === index ? null : index);
@@ -132,10 +130,16 @@ const Sales = () => {
                 <p className="text-lg text-right">
                   <strong>Date:</strong> {group.sale_date}
                 </p>
+                <p className="text-lg">
+                  <strong>Customer:</strong> {group.customer}
+                </p>
+                <p className="text-lg text-right">
+                  <strong>Shop:</strong> {group.shop}
+                </p>
               </div>
               <Table
                 data={group.items}
-                accent="bg-blue-500/40"
+                accent="bg-green-500/40"
               />
               <div className="flex justify-between items-center my-4">
                 <p className="text-lg font-bold">

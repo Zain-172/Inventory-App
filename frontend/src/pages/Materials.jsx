@@ -5,9 +5,11 @@ import TopBar from "../component/TopBar";
 import {
   FaArrowsAltH,
   FaBroom,
+  FaBrush,
   FaCalculator,
   FaEllipsisV,
   FaPlusCircle,
+  FaShopware,
   FaTrashAlt,
   FaWarehouse,
 } from "react-icons/fa";
@@ -122,9 +124,7 @@ const Material = () => {
         <Navigation />
       </nav>
       <TopBar>
-        <div>
-          <h1 className="text-3xl font-bold flex items-center justify-center gap-2"><FaWarehouse />Inventory</h1>
-        </div>
+          <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaWarehouse />Inventory</h1>
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
         <div className="px-2 py-6">
@@ -137,7 +137,12 @@ const Material = () => {
               >
                 <FaCalculator /> Calculate Cost
               </Link>
-
+              <Link
+                to="/cost-calculator"
+                className="px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"
+              >
+                <FaBrush /> Raw Materials
+              </Link>
               <button
                 className="py-3 px-2 rounded bg-green-500/40 hover:bg-gray-700"
                 onClick={(e) => {

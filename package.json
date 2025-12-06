@@ -4,30 +4,33 @@
   "private": true,
   "type": "module",
   "main": "electron/main.js",
-
   "scripts": {
     "dev": "concurrently -k \"npm:dev:frontend\" \"npm:dev:backend\" \"npm:dev:electron\"",
-    "dev:frontend": "cd frontend && vite",
+    "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && nodemon server.js",
     "dev:electron": "wait-on http://localhost:5173 && electron electron/main.js",
-
     "build:frontend": "cd frontend && npm run build",
     "build": "npm run build:frontend",
     "dist": "npm run build && electron-builder"
   },
-
   "devDependencies": {
     "concurrently": "^9.2.1",
     "electron": "^39.2.3",
-    "wait-on": "^9.0.3",
     "electron-builder": "^24.6.4",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "wait-on": "^9.0.3"
   },
-
   "build": {
     "asar": false,
     "appId": "com.desktop.app",
-    "productName": "DesktopApp",
+    "productName": "Inventory Manager",
+      "publish": [
+      {
+        "provider": "github",
+        "owner": "Zain-172",
+        "repo": "Inventory-App"
+      }
+    ],
     "directories": {
       "output": "dist",
       "buildResources": "resources"
@@ -42,12 +45,16 @@
       {
         "from": "backend/",
         "to": "backend/",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       },
       {
         "from": "dist-frontend/",
         "to": "dist-frontend/",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "win": {
@@ -60,5 +67,9 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     }
+  },
+  "dependencies": {
+    "@electron/get": "^4.0.2",
+    "electron-updater": "^6.6.2"
   }
 }

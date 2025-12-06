@@ -304,13 +304,13 @@ const Report = () => {
         <Navigation />
       </nav>
       <TopBar>
-        <div className="text-3xl font-bold flex items-center gap-2" >
+        <div className="text-2xl py-2 font-bold flex items-center gap-2" >
           <FaBook /> Reports
         </div>
       </TopBar>
       <main className="flex flex-col my-20">
         <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
-          <h1 className="text-4xl font-bold flex items-center justify-center gap-4">
+          <h1 className="text-3xl font-bold flex items-center justify-center py-2 gap-4">
             <FaBook /> Reports
           </h1>
           <div className="flex gap-6 w-full">
@@ -355,7 +355,7 @@ const Report = () => {
           <div className="grid grid-cols-4 gap-4 w-full">
             <button
               onClick={GenerateSalesReport}
-              className="flex flex-col items-center justify-center bg-blue-500/40 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center bg-green-500/40 p-4 rounded-lg w-full"
             >
               <FaReceipt className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
@@ -393,7 +393,7 @@ const Report = () => {
             </button>
             <button
               onClick={GenerateProductionReport}
-              className="flex flex-col items-center justify-center bg-yellow-500/40 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center bg-green-500/40 p-4 rounded-lg w-full"
             >
               <FaBroom className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>

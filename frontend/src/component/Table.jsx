@@ -3,7 +3,7 @@ import MessageBox from "./MessageBox";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import SelectMenu from "../component/SelectMenu";
 
-export default function Table({ data, accent = "bg-blue-500/40", open, setOpen, onDelete, onUpdate, nonEditable }) {
+export default function Table({ data, accent = "bg-green-500/40", open, setOpen, onDelete, onUpdate, nonEditable }) {
   const [modalOpen, setModalOpen] = useState(false)
   const [enable, setEnable] = useState(false)
   const [deleteId, setDeleteId] = useState(null)

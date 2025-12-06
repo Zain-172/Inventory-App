@@ -87,7 +87,7 @@ const Employees = () => {
         <Navigation />
       </nav>
       <TopBar>
-        <div className="flex items-center gap-4 py-2 text-3xl font-bold">
+        <div className="flex items-center gap-4 py-2 text-2xl font-bold">
           <FaUserAlt />
           Employees
         </div>
