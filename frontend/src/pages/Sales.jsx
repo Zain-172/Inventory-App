@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
-import { FaArrowsAltH, FaCheckCircle, FaEllipsisV, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
+import { FaArrowsAltH, FaCheckCircle, FaEllipsisV, FaPlusCircle, FaReceipt, FaRegCreditCard, FaTrashAlt } from "react-icons/fa";
 import Modal from "../component/Modal";
 import Form from "../component/SalesForm";
 import { useAppData } from "../context/AppDataContext";
@@ -11,12 +11,9 @@ import MessageBox from "../component/MessageBox";
 
 const Sales = () => {
   const { alertBox } = useAlertBox();
-  const [open, setOpen] = useState(false);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
-  const [from, SetFrom] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split("T")[0]);
-  const [to, SetTo] = useState(new Date().toISOString().split("T")[0]);
-  const { salesWithItems, setSalesWithItems, loading } = useAppData();
+  const { salesWithItems, setSalesWithItems, loading, from, setFrom, to, setTo } = useAppData();
 
   const handleDelete = async (id) => {
     try {
@@ -61,7 +58,7 @@ const Sales = () => {
       </nav>
         <TopBar>
           <div>
-            <h1 className="text-2xl font-bold">Sales & Purchase</h1>
+            <h1 className="text-3xl font-bold flex items-center gap-2"><FaReceipt />Sales & Purchase</h1>
           </div>
           <div className="flex flex-row justify-end items-center gap-2 py-2">
             <div className="flex flex-col items-center">
@@ -69,14 +66,14 @@ const Sales = () => {
                 From
               </p>
             </div>
-            <input type="date" value={from} onChange={(e) => SetFrom(e.target.value)} className="border px-2 py-1 rounded-md" />
+            <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} className="border px-2 py-1 rounded-md" />
             <FaArrowsAltH />
             <div className="flex flex-col items-center">
               <p className="gap-2 font-semibold">
                 To
               </p>
             </div>
-            <input type="date" value={to} onChange={(e) => SetTo(e.target.value)} className="border px-2 py-1 rounded-md " />
+            <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="border px-2 py-1 rounded-md " />
           </div>
         </TopBar>
       <main className="flex flex-col my-16 w-full">
@@ -137,8 +134,6 @@ const Sales = () => {
                 </p>
               </div>
               <Table
-                open={open}
-                setOpen={setOpen}
                 data={group.items}
                 accent="bg-blue-500/40"
               />

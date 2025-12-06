@@ -5,6 +5,7 @@ import sale_router from "./routes/sale.js";
 import raw_material_router from "./routes/raw_material.js";
 import expense_router from "./routes/expense.js";
 import report_router from "./routes/report.js";
+import employee_router from "./routes/employee.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use("/sale", sale_router);
 app.use("/raw-material", raw_material_router);
 app.use("/expense", expense_router);
 app.use("/report", report_router);
+app.use("/employee", employee_router);
 
 app.listen(PORT, () => {
   console.log(`Backend running at http://localhost:${PORT}`);

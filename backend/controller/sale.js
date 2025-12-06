@@ -56,8 +56,9 @@ export default class Sale {
     }
   };
   getSales = (req, res) => {
+    const { date } = req.query;
     try {
-      const rows = db.prepare("SELECT * FROM sales").all();
+      const rows = db.prepare("SELECT * FROM sales WHERE sale_date = ?").all(date);
       res.json(rows);
     } catch (err) {
       console.error(err);
@@ -65,6 +66,7 @@ export default class Sale {
     }
   };
   getSaleWithItems = (req, res) => {
+    const { from, to } = req.query;
     try {
       const rows = db
         .prepare(
@@ -73,11 +75,11 @@ export default class Sale {
          si.product_name, si.quantity, si.price as price
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
+  WHERE s.sale_date BETWEEN ? AND ?
   ORDER BY s.id DESC
 `
         )
-        .all();
-
+        .all(from, to);
       const groupedSales = [];
 
       const map = new Map();

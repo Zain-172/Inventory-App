@@ -9,7 +9,10 @@ export const AppDataProvider = ({ children }) => {
   const [salesWithItems, setSalesWithItems] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [employees, setEmployees] = useState([])
   const [loading, setLoading] = useState(true);
+  const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
+  const [from, setFrom] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split("T")[0]);
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -40,7 +43,7 @@ export const AppDataProvider = ({ children }) => {
         setProducts(productsData);
 
         // SALES
-        const resSales = await fetch("http://localhost:5000/sale/");
+        const resSales = await fetch(`http://localhost:5000/sale/?date=${new Date().toISOString().split("T")[0]}`);
         const salesData = await resSales.json();
 
         setSales(salesData);
@@ -48,19 +51,20 @@ export const AppDataProvider = ({ children }) => {
         // EXPENSES
         const resExpenses = await fetch("http://localhost:5000/expense/");
         const expensesData = await resExpenses.json();
+        console.log("Fetched expenses:", expensesData);
         const formattedExpenses = expensesData.map(item => ({
           id: item.expense_id,
           title: item.title,
-          description: item.description,
           amount: item.amount,
-          date: item.expense_date
+          date: item.expense_date,
+          description: item.description ? item.description : "",
         }));
         setExpenses(formattedExpenses);
 
-        // SALES WITH ITEMS
-        const response = await fetch("http://localhost:5000/sale/with-items");
-        const result = await response.json();
-        setSalesWithItems(result);
+        const resEmployees = await fetch("http://localhost:5000/employee/");
+        const employeesData = await resEmployees.json();
+        setEmployees(employeesData);
+
       } catch (err) {
         console.error(err);
       } finally {
@@ -70,6 +74,19 @@ export const AppDataProvider = ({ children }) => {
 
     fetchAllData();
   }, []);
+
+  useEffect(() => {
+    const fetchSalesWithItems = async (to, from) => {
+      try {
+        const res = await fetch(`http://localhost:5000/sale/with-items?to=${to}&from=${from}`);
+        const data = await res.json();
+        setSalesWithItems(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchSalesWithItems(to, from);
+  }, [to, from]);
 
   return (
     <AppDataContext.Provider
@@ -86,7 +103,13 @@ export const AppDataProvider = ({ children }) => {
         setExpenses,
         salesWithItems,
         setSalesWithItems,
-        loading
+        employees,
+        setEmployees,
+        loading,
+        to,
+        setTo,
+        from,
+        setFrom
       }}
     >
       {children}

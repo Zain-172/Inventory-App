@@ -1,4 +1,4 @@
-import { FaBook, FaBroom, FaReceipt, FaRegMoneyBillAlt, FaShoppingCart } from "react-icons/fa";
+import { FaBook, FaBookDead, FaBookOpen, FaBroom, FaReceipt, FaRegMoneyBillAlt, FaShoppingCart } from "react-icons/fa";
 import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import Dropdown from "../component/DropDown";
@@ -303,8 +303,12 @@ const Report = () => {
       <nav>
         <Navigation />
       </nav>
+      <TopBar>
+        <div className="text-3xl font-bold flex items-center gap-2" >
+          <FaBook /> Reports
+        </div>
+      </TopBar>
       <main className="flex flex-col my-20">
-        <TopBar screen="Reports" />
         <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
           <h1 className="text-4xl font-bold flex items-center justify-center gap-4">
             <FaBook /> Reports

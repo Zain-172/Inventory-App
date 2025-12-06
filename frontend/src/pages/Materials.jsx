@@ -25,12 +25,6 @@ const Material = () => {
   const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [removeModal, setRemoveModal] = useState(false);
-  const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
-  const [from, setFrom] = useState(
-    new Date(new Date().setMonth(new Date().getMonth() - 1))
-      .toISOString()
-      .split("T")[0]
-  );
   const { alertBox } = useAlertBox();
 
   const handleSubmit = async (e) => {
@@ -129,28 +123,7 @@ const Material = () => {
       </nav>
       <TopBar>
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2"><FaWarehouse />Inventory</h1>
-        </div>
-        <div className="flex flex-row justify-end items-center gap-2 py-2">
-          <div className="flex flex-col items-center">
-            <p className="gap-2 font-semibold">From</p>
-          </div>
-          <input
-            type="date"
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
-            className="border px-2 py-1 rounded-md"
-          />
-          <FaArrowsAltH />
-          <div className="flex flex-col items-center">
-            <p className="gap-2 font-semibold">To</p>
-          </div>
-          <input
-            type="date"
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
-            className="border px-2 py-1 rounded-md "
-          />
+          <h1 className="text-3xl font-bold flex items-center justify-center gap-2"><FaWarehouse />Inventory</h1>
         </div>
       </TopBar>
       <main className="flex flex-col my-16 w-screen">

@@ -58,3 +58,11 @@ electron-out/
 # --------------------
 *.tsbuildinfo
 *.cache
+
+
+# --------------------
+# Build outputs
+# --------------------
+dist-frontend/
+dist-backend/
+dist/

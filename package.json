@@ -3,16 +3,62 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "electron/main.js",
+
   "scripts": {
     "dev": "concurrently -k \"npm:dev:frontend\" \"npm:dev:backend\" \"npm:dev:electron\"",
-    "dev:frontend": "cd frontend && npx vite",
-    "dev:backend": "cd backend && npx nodemon server.js",
-    "dev:electron": "wait-on http://localhost:5173 && cmd /c \"set NODE_ENV=development && npx electron electron/main.js\"",
-    "build": "cd frontend && npx vite build"
+    "dev:frontend": "cd frontend && vite",
+    "dev:backend": "cd backend && nodemon server.js",
+    "dev:electron": "wait-on http://localhost:5173 && electron electron/main.js",
+
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend",
+    "dist": "npm run build && electron-builder"
   },
+
   "devDependencies": {
     "concurrently": "^9.2.1",
     "electron": "^39.2.3",
-    "wait-on": "^9.0.3"
+    "wait-on": "^9.0.3",
+    "electron-builder": "^24.6.4",
+    "nodemon": "^3.1.0"
+  },
+
+  "build": {
+    "asar": false,
+    "appId": "com.desktop.app",
+    "productName": "DesktopApp",
+    "directories": {
+      "output": "dist",
+      "buildResources": "resources"
+    },
+    "files": [
+      "dist-frontend/**",
+      "electron/**",
+      "backend/**",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "backend/",
+        "to": "backend/",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "dist-frontend/",
+        "to": "dist-frontend/",
+        "filter": ["**/*"]
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "resources/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
   }
 }

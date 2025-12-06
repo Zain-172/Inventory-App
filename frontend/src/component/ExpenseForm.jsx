@@ -30,7 +30,7 @@ export default function ExpenseForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white dark:bg-[#222] p-6 rounded-lg max-w-lg border border-white/30 shadow-lg"
+      className="bg-[#222] p-6 rounded-lg max-w-lg border border-white/30 shadow-lg"
     >
       <h2 className="text-xl font-bold mb-4 text-center">Add Expense</h2>
 
