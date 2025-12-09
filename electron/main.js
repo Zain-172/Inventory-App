@@ -2,8 +2,9 @@ import { app, BrowserWindow, dialog } from "electron";
 import path from "path";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
-import { Packager } from "electron-builder";
-const { autoUpdater } = Packager;
+import updater from "electron-updater";
+const { autoUpdater } = updater;
+
 
 // // Fix __dirname for ES modules
 // const __filename = fileURLToPath(import.meta.url);

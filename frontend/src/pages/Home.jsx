@@ -5,14 +5,9 @@ import {
   FaExclamationTriangle,
   FaDollarSign,
   FaShoppingCart,
-  FaHandHolding,
-  FaHandshake,
-  FaFunnelDollar,
-  FaFilter,
-  FaLine,
-  FaArrowsAlt,
-  FaArrowsAltH,
   FaThLarge,
+  FaBroom,
+  FaReceipt,
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
@@ -56,11 +51,11 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       const today = new Date().toISOString().split("T")[0];
-      const res2 = await fetch(`http://localhost:5000/product/stock-by-date?date=${today}`);
-      const stockData = await res2.json();
+      const res2 = await fetch(`http://localhost:5000/material/by-date?date=${today}`);
+      const rawData = await res2.json();
       const res3 = await fetch(`http://localhost:5000/expense/by-date?date=${today}`);
       const expenseData = await res3.json()
-      setExpense((stockData.length > 0 ? stockData[0]["sum(stock * cost_price)"] : 0) + (expenseData.length > 0 ? expenseData[0]["total"] : 0));
+      setExpense((rawData.length > 0 ? rawData[0]["total"] : 0) + (expenseData.length > 0 ? expenseData[0]["total"] : 0));
     };
     fetchData();
   }, []);
@@ -80,7 +75,7 @@ const Home = () => {
             title="Total Products"
             value={products.length}
             icon={<FaBox size={20} />}
-            bgColor="bg-green-500/40"
+            bgColor="bg-blue-500/40"
           />
           <MetricsCard
             title="Expense"
@@ -98,10 +93,11 @@ const Home = () => {
             title="Orders Today"
             value={ordersToday}
             icon={<FaShoppingCart size={20} />}
-            bgColor="bg-green-500/40"
+            bgColor="bg-yellow-500/40"
           />
         </div>
         <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
+          { sales.length > 0 && <p className="flex items-center w-full gap-2 text-xl font-bold"><FaReceipt /> Sales</p> }
           <Table data={sales.map((item) => ({
             ID: item.id,
             Invoice: item.invoice_id,
@@ -110,6 +106,7 @@ const Home = () => {
             Amount: `Rs. ${item.total_amount}`,
             Earning: `Rs. ${item.total_amount - item.total_cost}`,
           }))} />
+          { products.length > 0 && <p className="flex items-center w-full gap-2 text-xl font-bold"><FaBroom /> Inventory</p> }
           <Table data={products} accent="bg-green-500/40" />
         </div>
       </main>

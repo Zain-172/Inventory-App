@@ -7,6 +7,7 @@ import CostCalculator from "./pages/CostCalculator";
 import Expense from "./pages/Expense";
 import Employees from "./pages/Employees";
 import Customer from "./pages/Customer";
+import Raw from "./pages/Raw";
 import { AppDataProvider } from "./context/AppDataContext";
 import { AlertProvider } from "./component/Alerts";
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/expense" element={<Expense />} />
           <Route path="/employee" element={<Employees />} />
           <Route path="/customer" element={<Customer />} />
+          <Route path="/raw" element={<Raw />} />
         </Routes>
       </HashRouter>
       </AlertProvider>

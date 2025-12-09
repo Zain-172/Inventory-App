@@ -11,6 +11,7 @@ export const AppDataProvider = ({ children }) => {
   const [expenses, setExpenses] = useState([]);
   const [employees, setEmployees] = useState([])
   const [customers, setCustomers] = useState([])
+  const [materials, setMaterials] = useState([])
   const [loading, setLoading] = useState(true);
   const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
   const [from, setFrom] = useState(new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split("T")[0]);
@@ -70,6 +71,10 @@ export const AppDataProvider = ({ children }) => {
         const customersData = await resCustomers.json();
         setCustomers(customersData);
 
+        const resRaw = await fetch("http://localhost:5000/material/");
+        const rawData = await resRaw.json();
+        setMaterials(rawData);
+
       } catch (err) {
         console.error(err);
       } finally {
@@ -113,6 +118,8 @@ export const AppDataProvider = ({ children }) => {
         setEmployees,
         customers,
         setCustomers,
+        materials,
+        setMaterials,
         loading,
         to,
         setTo,

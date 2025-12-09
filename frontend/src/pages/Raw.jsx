@@ -1,17 +1,17 @@
 import Navigation from "../component/Navigation";
 import Modal from "../component/Modal";
 import Table from "../component/Table";
-import ExpenseForm from "../component/ExpenseForm";
+import MaterialForm from "../component/MaterialForm";
 import Dropdown from "../component/DropDown";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAlertBox } from "../component/Alerts";
 
-const Monthly = () => {
+const Raw = () => {
   const [openModal, setOpenModal] = useState(false);
-  const { loading, expenses, setExpenses } = useAppData();
+  const { loading, materials, setMaterials } = useAppData();
   const month = [
     { key: "January", value: "01" },
     { key: "February", value: "02" },
@@ -30,29 +30,25 @@ const Monthly = () => {
   const [open, setOpen] = useState(false);
   const { alertBox } = useAlertBox();
 
-  useEffect(() => {
-    console.log("Selected month changed to:", expenses);
-  }, [expenses]);
-
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/expense/${id}`, {
+      const response = await fetch(`http://localhost:5000/material/${id}`, {
         method: "DELETE",
       });
       if (response.ok) {
-        setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
-        alertBox("The Expense is deleted successfully", "Success", <FaCheckCircle />);
+        setMaterials((prevMaterials) => prevMaterials.filter((material) => material.id !== id));
+        alertBox("The Material is deleted successfully", "Success", <FaCheckCircle />);
       } else {
-        console.error("Failed to delete expense");
+        console.error("Failed to delete material");
       }
     } catch (err) {
-      console.error("Failed to delete expense:", err);
+      console.error("Failed to delete material:", err);
     }
   }
 
   const handleModify = async (editedData, deleteId) => {
     console.log(editedData)
-    const res = await fetch(`http://localhost:5000/expense/${deleteId}`, {
+    const res = await fetch(`http://localhost:5000/material/${deleteId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -83,24 +79,24 @@ const Monthly = () => {
         </div>
 
         <div className="px-2 mb-8">
-          <Table data={expenses.filter(item => item.date.startsWith(`2025-${month.find(m => m.key === selectedMonth)?.value}`))} onDelete={handleDelete} accent="bg-green-500/40" open={open} setOpen={setOpen} onUpdate={handleModify} />
+          <Table data={materials.filter(item => item.date.startsWith(`2025-${month.find(m => m.key === selectedMonth)?.value}`))} onDelete={handleDelete} accent="bg-green-500/40" open={open} setOpen={setOpen} onUpdate={handleModify} />
         </div>
 
           <button
             onClick={() => setOpenModal(true)}
             className="px-4 py-2 w-56 grid place-self-center bg-green-500/40 rounded text-white font-bold"
           >
-            + Add Expense
+            + Raw Material
           </button>
       </main>
 
       <Navigation />
 
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <ExpenseForm onSubmit={() => setOpenModal(false)} />
+        <MaterialForm />
       </Modal>
     </div>
   );
 };
 
-export default Monthly;
+export default Raw;

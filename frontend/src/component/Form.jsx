@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaCalculator, FaPlusCircle, FaWarehouse } from "react-icons/fa";
 import RawMaterial from "../models/RawMaterial";
+import TrieSearch from "./Trie";
 export default function Form({ onSubmit }) {
   const [formData, setFormData] = useState(new RawMaterial());
 
@@ -42,14 +43,9 @@ export default function Form({ onSubmit }) {
       <div className="flex gap-4 w-full">
         <div className="w-full mb-4">
           <label className="block text-sm font-medium mb-1">Material</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name || ""}
-            onChange={handleChange}
-            placeholder="Material X"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
-            required
+          <TrieSearch
+            value={formData.name}
+            onChange={(value) => setFormData((prev) => ({ ...prev, name: value }))}
           />
         </div>
 
@@ -63,7 +59,7 @@ export default function Form({ onSubmit }) {
             value={formData.quantity || 0}
             onChange={handleChange}
             placeholder="100"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -77,7 +73,7 @@ export default function Form({ onSubmit }) {
             value={formData.price || 0}
             onChange={handleChange}
             placeholder="200"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -90,7 +86,7 @@ export default function Form({ onSubmit }) {
             value={formData.machinery || 0}
             onChange={handleChange}
             placeholder="200"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -104,7 +100,7 @@ export default function Form({ onSubmit }) {
             value={formData.labour || 0}
             onChange={handleChange}
             placeholder="Material X"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -117,7 +113,7 @@ export default function Form({ onSubmit }) {
             value={formData.date_added || ""}
             onChange={handleChange}
             placeholder="100"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -130,7 +126,7 @@ export default function Form({ onSubmit }) {
             value={formData.description || ""}
             onChange={handleChange}
             placeholder="Material X"
-            className="w-full px-3 py-2 rounded-md focus:outline-none bg-[#111] border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-md focus:outline-none bg-[#181818] border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>

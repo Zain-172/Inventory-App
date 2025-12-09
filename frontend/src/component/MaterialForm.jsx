@@ -4,14 +4,14 @@ import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "./Alerts";
 import { FaCheckCircle } from "react-icons/fa";
 import TrieSearch from "./Trie";
-export default function ExpenseForm({onSubmit}) {
+export default function MaterialForm() {
   const [form, setForm] = useState(new Expense());
-  const { setExpenses } = useAppData();
+  const { setMaterials } = useAppData();
   const { alertBox } = useAlertBox();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:5000/expense/add-expense", {
+    const res = await fetch("http://localhost:5000/material/add-material", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -20,10 +20,10 @@ export default function ExpenseForm({onSubmit}) {
     });
     if (res.ok) {
       const data = await res.json();
-      setExpenses((prevExpenses) => [
-        ...prevExpenses,
+      setMaterials((prevMaterials) => [
+        ...prevMaterials,
         {
-          id: data.expenseId,
+          id: data.materialId,
           title: form.title,
           description: form.description,
           amount: form.amount,
@@ -31,7 +31,6 @@ export default function ExpenseForm({onSubmit}) {
         },
       ]);
       setForm(new Expense());
-      onSubmit && onSubmit();
       alertBox(
         "The Expense is recorded successfully",
         "Success",
@@ -45,25 +44,24 @@ export default function ExpenseForm({onSubmit}) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#222] p-6 rounded-lg border border-white/30 shadow-lg w-[45vw]"
+      className="bg-[#222] p-6 rounded-lg max-w-lg border border-white/30 shadow-lg"
     >
-      <h2 className="text-xl font-bold mb-4 text-center">Add Expense</h2>
-      <div className="flex gap-4">
-        <label className="text-sm w-full">Title
-          <TrieSearch
-            onChange={(value) => setForm({ ...form, title: value })}
-          />
-        </label>
-        <label className="text-sm w-full">Amount
-          <input
-            type="number"
-            className="w-full p-2 bg-[#181818] border rounded mb-3"
-            value={form.amount}
-            onChange={(e) => setForm({ ...form, amount: e.target.value })}
-            required
-          />
-        </label>
-      </div>
+      <h2 className="text-xl font-bold mb-4 text-center">Add Material</h2>
+
+      <label className="text-sm">Title</label>
+      <TrieSearch
+        onChange={(value) => setForm({ ...form, title: value })}
+      />
+
+      <label className="text-sm">Amount</label>
+      <input
+        type="number"
+        className="w-full p-2 bg-[#181818] border rounded mb-3"
+        value={form.amount}
+        onChange={(e) => setForm({ ...form, amount: e.target.value })}
+        required
+      />
+
       <label className="text-sm">Date</label>
       <input
         type="date"

@@ -15,6 +15,7 @@ const SelectMenu = ({
   setOpen,
   onSave,
   onDiscard,
+  buttons,
 }) => {
   const [modify, setModify] = useState(false);
   return (
@@ -57,7 +58,7 @@ const SelectMenu = ({
               Please select the action you would like to perform.
             </p>
             <div className="flex justify-evenly items-center">
-              <button
+              { !buttons && <button
                 className="flex gap-2 justify-center items-center w-32 bg-[#222] px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-yellow-600 font-bold"
                 onClick={() => {
                   setModify(true);
@@ -66,7 +67,7 @@ const SelectMenu = ({
               >
                 <FaPencilAlt />
                 Modify
-              </button>
+              </button> }
               <button
                 className="flex gap-2 justify-center items-center w-32 bg-[#222] px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-[rgb(255,20,20)] font-bold"
                 onClick={onDelete}

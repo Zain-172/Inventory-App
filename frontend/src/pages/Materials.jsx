@@ -3,13 +3,11 @@ import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
 import {
-  FaArrowsAltH,
   FaBroom,
   FaBrush,
   FaCalculator,
   FaEllipsisV,
   FaPlusCircle,
-  FaShopware,
   FaTrashAlt,
   FaWarehouse,
 } from "react-icons/fa";
@@ -124,7 +122,7 @@ const Material = () => {
         <Navigation />
       </nav>
       <TopBar>
-          <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaWarehouse />Inventory</h1>
+          <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaBroom />Inventory</h1>
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
         <div className="px-2 py-6">
@@ -138,10 +136,10 @@ const Material = () => {
                 <FaCalculator /> Calculate Cost
               </Link>
               <Link
-                to="/cost-calculator"
+                to="/raw"
                 className="px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"
               >
-                <FaBrush /> Raw Materials
+                <FaWarehouse /> Raw Materials
               </Link>
               <button
                 className="py-3 px-2 rounded bg-green-500/40 hover:bg-gray-700"
@@ -153,7 +151,7 @@ const Material = () => {
                 <FaEllipsisV />
               </button>
               {openMenuIndex && (
-                <div className="absolute right-0 mt-32 w-48 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
+                <div className="absolute right-0 mt-32 w-48 bg-[#181818] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
                   <button
                     onClick={() => setIsModalOpen(true)}
                     className="px-4 py-2  hover:bg-green-500/40 text-white rounded-t border-b font-bold flex items-center gap-2"
@@ -175,6 +173,7 @@ const Material = () => {
             setOpen={setOpen}
             data={products}
             onDelete={handleDelete}
+            nonEditable="Delete"
             accent="bg-green-500/40"
           />
         </div>
@@ -186,80 +185,84 @@ const Material = () => {
       >
         <form
           onSubmit={handleSubmit}
-          className="bg-[#222] rounded-lg p-6 flex flex-col border border-white/40 w-96"
+          className="bg-[#222] rounded-lg p-6 flex flex-col border border-white/40 w-[50vw]"
         >
           <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
             <FaBroom />
             Stock
           </h2>
-          <div className="w-full mb-4">
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <Dropdown
-              className="flex justify-between items-center w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500 border-white/40"
-              options={rawMaterials.map((material) => ({
-                key: material.name,
-                value: material.cost_price,
-              }))}
-              onChange={(d) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  name: d.key,
-                  cost_price: d.value,
-                }))
-              }
-            />
+          <div className="flex items-center gap-4">
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-1">Name</label>
+              <Dropdown
+                className="flex justify-between items-center w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500 border-white/40"
+                options={rawMaterials.map((material) => ({
+                  key: material.name,
+                  value: material.cost_price,
+                }))}
+                onChange={(d) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    name: d.key,
+                    cost_price: d.value,
+                  }))
+                }
+              />
+            </div>
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-1">Cost Price</label>
+              <input
+                type="number"
+                name="costPrice"
+                value={formData.cost_price}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    cost_price: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
           </div>
-          <div className="w-full mb-4">
-            <label className="block text-sm font-medium mb-1">Cost Price</label>
-            <input
-              type="number"
-              name="costPrice"
-              value={formData.cost_price}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  cost_price: e.target.value,
-                }))
-              }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="w-full mb-4">
-            <label className="block text-sm font-medium mb-1">Quantity</label>
-            <input
-              type="number"
-              name="stock"
-              value={formData.stock}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  stock: e.target.value,
-                }))
-              }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-          <div className="w-full mb-4">
-            <label className="block text-sm font-medium mb-1">Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={(e) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  date: e.target.value,
-                }))
-              }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
-              required
-            />
+          <div className="flex items-center gap-4">
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-1">Quantity</label>
+              <input
+                type="number"
+                name="stock"
+                value={formData.stock}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    stock: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div className="w-full mb-4">
+              <label className="block text-sm font-medium mb-1">Date</label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    date: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
           </div>
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
+            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
           >
             <FaPlusCircle /> Add Stock
           </button>
@@ -282,7 +285,7 @@ const Material = () => {
           <div className="w-full mb-4">
             <label className="block text-sm font-medium mb-1">Name</label>
             <Dropdown
-              className="flex justify-between items-center w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500 border-white/40"
+              className="flex justify-between items-center w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500 border-white/40"
               options={rawMaterials.map((material) => ({
                 key: material.name,
                 value: material.cost_price,
@@ -308,7 +311,7 @@ const Material = () => {
                   stock: e.target.value,
                 }))
               }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
               required
             />
             {formData.stock >
@@ -331,7 +334,7 @@ const Material = () => {
                   date: e.target.value,
                 }))
               }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#111] focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
