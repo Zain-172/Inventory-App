@@ -2,7 +2,7 @@ import { useState } from "react";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "./Alerts";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaWarehouse } from "react-icons/fa";
 export default function RawForm() {
   const [form, setForm] = useState(new Expense());
   const { setMaterials } = useAppData();
@@ -32,45 +32,47 @@ export default function RawForm() {
       onSubmit={handleSubmit}
       className="bg-[#222] p-6 rounded-lg max-w-lg border border-white/30 shadow-lg"
     >
-      <h2 className="text-xl font-bold mb-4 text-center">Add Material</h2>
+      <h2 className="text-xl font-bold mb-4 text-center"><FaWarehouse /> Material</h2>
 
-      <label className="text-sm">Title</label>
-      <input
-        type="text"
-        className="w-full p-2 bg-[#222] border rounded mb-3"
-        value={form.title}
-        onChange={(e) => setForm({ ...form, title: e.target.value })}
-        required
-      />
+      <div className="grid grid-cols-2 gap-4 mb-4">
+        <label className="text-sm">Title
+          <input
+            type="text"
+            className="w-full p-2 bg-[#222] border rounded-lg mb-3"
+            value={form.title}
+            onChange={(e) => setForm({ ...form, title: e.target.value })}
+            required
+          />
+        </label>
 
-      <label className="text-sm">Amount</label>
-      <input
-        type="number"
-        className="w-full p-2 bg-[#222] border rounded mb-3"
-        value={form.amount}
-        onChange={(e) => setForm({ ...form, amount: e.target.value })}
-        required
-      />
-
+        <label className="text-sm">Amount
+          <input
+            type="number"
+            className="w-full p-2 bg-[#222] border rounded-lg mb-3"
+            value={form.amount}
+            onChange={(e) => setForm({ ...form, amount: e.target.value })}
+            required
+          />
+        </label>
+      </div>
       <label className="text-sm">Date</label>
       <input
         type="date"
-        className="w-full p-2 bg-[#222] border rounded mb-4"
+        className="w-full p-2 bg-[#222] border rounded-lg mb-4"
         value={form.date}
         onChange={(e) => setForm({ ...form, date: e.target.value })}
         required
       />
-        
       <label className="text-sm">Description</label>
       <textarea
-        className="w-full p-2 bg-[#222] border border-white/20 resize-none rounded mb-3"
+        className="w-full p-2 bg-[#222] border border-white/20 resize-none rounded-lg mb-3"
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
       />
 
-      <button 
-        type="submit" 
-        className="w-full bg-green-500/60 text-white py-2 rounded font-bold"
+      <button
+        type="submit"
+        className="w-full bg-green-500/60 text-white py-2 rounded-lg font-bold"
       >
         Save
       </button>

@@ -129,7 +129,7 @@ export default function SalesForm({ onSubmit }) {
       <button
         onClick={() => deleteEntry(item.id)}
         type="button"
-        className="p-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+        className="p-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
       >
         <FaTrashAlt />
       </button>
@@ -160,7 +160,7 @@ export default function SalesForm({ onSubmit }) {
             value={formData.date}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
             required
           />
         </div>
@@ -178,7 +178,7 @@ export default function SalesForm({ onSubmit }) {
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Shop</label>
           <p
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
           >
             {customers.find((c) => c.id === formData.customer?.value)?.shop || ""}
           </p>
@@ -214,7 +214,7 @@ export default function SalesForm({ onSubmit }) {
             value={formData.quantity}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
             required
           />
           {formData.quantity >
@@ -232,14 +232,14 @@ export default function SalesForm({ onSubmit }) {
             value={formData.sales_price}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#111]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
             required
           />
         </div>
         <button
           onClick={addEntry}
           type="button"
-          className="flex items-center justify-center p-2 mb-1 bg-green-500/40 text-white rounded-sm hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center p-2 mb-1 bg-green-500/40 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <FaPlus />
         </button>
@@ -254,7 +254,7 @@ export default function SalesForm({ onSubmit }) {
       )}
       <button
         type="submit"
-        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-blue-700 transition-colors"
+        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
       >
         <FaPlusCircle /> Add Sale
       </button>

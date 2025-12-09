@@ -77,7 +77,7 @@ const Sales = () => {
                 To
               </p>
             </div>
-            <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="border px-2 py-1 rounded-md " />
+            <input type="date" value={to} onChange={(e) => setTo(e.target.value)} className="border px-2 py-1 rounded-lg " />
           </div>
         </TopBar>
       <main className="flex flex-col my-16 w-full">
@@ -86,7 +86,7 @@ const Sales = () => {
             <h2 className="text-2xl font-bold mb-4">Sales & Purchase</h2>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"
+              className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded-lg font-bold flex items-center gap-2"
             >
               <FaPlusCircle /> Sale Items
             </button>
@@ -99,7 +99,7 @@ const Sales = () => {
                   <strong>Invoice:</strong> {group.invoice_id}
                 </p>
                 <div className="flex justify-end">
-                  <button className="p-2 rounded bg-green-500/40 hover:bg-gray-700"
+                  <button className="p-2 rounded-lg bg-green-500/40 hover:bg-gray-700"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenMenuIndex(openMenuIndex === index ? null : index);

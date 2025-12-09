@@ -56,56 +56,59 @@ export default function CustomerForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#222] p-6 rounded-lg max-w-lg border border-white/30 shadow-lg"
+      className="bg-[#181818] p-6 rounded-lg w-[45vw] grid grid-cols-2 gap-4 border border-white/30 shadow-lg"
     >
-      <h2 className="text-xl font-bold mb-4 text-center">
+      <h2 className="text-xl font-bold text-center col-span-2">
         <FaHandshake className="inline mr-2" /> Add Customer
       </h2>
 
       {/* Name */}
-      <label className="text-sm">Customer Name</label>
+      <label className="text-sm">Customer Name
       <input
         type="text"
-        className="w-full p-2 bg-[#222] border rounded mb-3"
+        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
         value={form.customer}
         onChange={(e) =>
           setForm({ ...form, customer: e.target.value })
         }
         required
       />
-
+      </label>
       {/* Phone */}
-      <label className="text-sm">Phone</label>
+      <label className="text-sm">Phone
       <input
         type="text"
-        className="w-full p-2 bg-[#222] border rounded mb-3"
+        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
         value={form.phone}
         onChange={(e) => setForm({ ...form, phone: e.target.value })}
       />
+      </label>
 
       {/* Address */}
-      <label className="text-sm">Address</label>
+      <label className="text-sm">Address
       <input
         type="text"
-        className="w-full p-2 bg-[#222] border rounded mb-3"
+        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
         value={form.address}
         onChange={(e) => setForm({ ...form, address: e.target.value })}
       />
+      </label>
 
       {/* Shop Name */}
-      <label className="text-sm">Shop Name</label>
+      <label className="text-sm">Shop Name
       <input
         type="text"
-        className="w-full p-2 bg-[#222] border rounded mb-4"
+        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
         value={form.shop}
         onChange={(e) =>
           setForm({ ...form, shop: e.target.value })
         }
       />
+      </label>
 
       <button
         type="submit"
-        className="w-full bg-green-500/60 text-white py-2 rounded font-bold"
+        className="w-full bg-green-500/60 col-span-2 text-white py-2 rounded-lg font-bold"
       >
         Save Customer
       </button>

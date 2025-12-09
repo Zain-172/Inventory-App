@@ -63,7 +63,7 @@ export default function TrieSearch({value, onChange}) {
         onChange={handleChange}
         onFocus={() => setFocus(true)}
         onBlur={() => setTimeout(() => setFocus(false), 120)}
-        className="w-full p-2 bg-[#181818] border rounded mb-3"
+        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
       />
 
       {/* Suggestions (only when focused) */}

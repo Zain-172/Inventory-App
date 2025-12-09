@@ -46,7 +46,7 @@ const Receipt = forwardRef(({ saleData }, ref) => {
       </div>
       <p className="absolute bottom-1 right-2 text-sm text-gray-600">{saleData.sale_date}</p>
     </div>
-    <button onClick={handleClick} className="bg-blue-900 rounded-sm py-1 font-bold grid place-self-center w-[550px] mt-6 no-print">Print</button>
+    <button onClick={handleClick} className="bg-blue-900 rounded-lg py-1 font-bold grid place-self-center w-[550px] mt-6 no-print">Print</button>
     </>
   );
 });

@@ -35,7 +35,7 @@ export default function Form({ onSubmit }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="">
+    <form onSubmit={handleSubmit} className="bg-[#181818] p-4 rounded-lg w-full border border-white/30 shadow-md shadow-white/10 mb-16">
       <h2 className="text-3xl font-semibold text-center mb-4 flex justify-center items-end gap-4">
         <FaWarehouse size={36} />
         Production Cost
@@ -59,7 +59,7 @@ export default function Form({ onSubmit }) {
             value={formData.quantity || 0}
             onChange={handleChange}
             placeholder="100"
-            className="w-full px-3 py-2 border rounded focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -73,7 +73,7 @@ export default function Form({ onSubmit }) {
             value={formData.price || 0}
             onChange={handleChange}
             placeholder="200"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -86,7 +86,7 @@ export default function Form({ onSubmit }) {
             value={formData.machinery || 0}
             onChange={handleChange}
             placeholder="200"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -100,7 +100,7 @@ export default function Form({ onSubmit }) {
             value={formData.labour || 0}
             onChange={handleChange}
             placeholder="Material X"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -113,7 +113,7 @@ export default function Form({ onSubmit }) {
             value={formData.date_added || ""}
             onChange={handleChange}
             placeholder="100"
-            className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
@@ -126,13 +126,13 @@ export default function Form({ onSubmit }) {
             value={formData.description || ""}
             onChange={handleChange}
             placeholder="Material X"
-            className="w-full px-3 py-2 rounded-md focus:outline-none bg-[#181818] border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg focus:outline-none bg-[#181818] border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
       <button
         type="submit"
-        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
+        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
       >
         <FaCalculator /> Calculate
       </button>

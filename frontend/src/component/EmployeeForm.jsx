@@ -21,7 +21,7 @@ export default function EmployeeForm({ onSubmit }) {
   };
 
   return (
-    <form className="flex flex-col items-center bg-[#202020] p-6 rounded-xl w-[55vw] border border-white/30 shadow-lg" onSubmit={handleSubmit}>
+    <form className="flex flex-col items-center bg-[#181818] p-6 rounded-xl w-[55vw] border border-white/30 shadow-lg" onSubmit={handleSubmit}>
       <h2 className="text-2xl font-semibold mb-4 flex items-center justify-center gap-2"><FaUserAlt /> Employee</h2>
       <div className="flex items-center gap-4 w-full">
       {/* Name */}
@@ -33,7 +33,7 @@ export default function EmployeeForm({ onSubmit }) {
           value={form.name}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded mt-1"
+          className="w-full p-2 border rounded-lg mt-1"
         />
       </label>
 
@@ -46,7 +46,7 @@ export default function EmployeeForm({ onSubmit }) {
           value={form.position}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded mt-1"
+          className="w-full p-2 border rounded-lg mt-1"
         />
       </label>
       </div>
@@ -60,7 +60,7 @@ export default function EmployeeForm({ onSubmit }) {
           value={form.salary}
           onChange={handleChange}
           required
-          className="w-full p-2 border rounded mt-1"
+          className="w-full p-2 border rounded-lg mt-1"
         />
       </label>
 
@@ -72,7 +72,7 @@ export default function EmployeeForm({ onSubmit }) {
           name="phone"
           value={form.phone}
           onChange={handleChange}
-          className="w-full p-2 border rounded mt-1"
+          className="w-full p-2 border rounded-lg mt-1"
         />
       </label>
       </div>
@@ -84,14 +84,14 @@ export default function EmployeeForm({ onSubmit }) {
           value={form.address}
           onChange={handleChange}
           rows="3"
-          className="w-full p-2 border rounded mt-1 resize-none"
+          className="w-full p-2 border rounded-lg mt-1 resize-none"
         />
       </label>
 
       {/* Submit */}
       <button
         type="submit"
-        className="flex items-center gap-2 px-4 py-2 bg-green-600/40 text-white rounded hover:bg-green-800"
+        className="flex items-center gap-2 px-4 py-2 bg-green-600/40 text-white rounded-lg hover:bg-green-800"
       >
         <FaSave /> Employee
       </button>

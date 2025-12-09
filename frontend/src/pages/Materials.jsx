@@ -136,18 +136,18 @@ const Material = () => {
             <div className="flex items-center justify-center gap-4 mb-4">
               <Link
                 to="/cost-calculator"
-                className="px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"
+                className="px-4 py-2 bg-green-500/40 text-white rounded-lg font-bold flex items-center gap-2"
               >
                 <FaCalculator /> Calculate Cost
               </Link>
               <Link
                 to="/raw"
-                className="px-4 py-2 bg-green-500/40 text-white rounded font-bold flex items-center gap-2"
+                className="px-4 py-2 bg-green-500/40 text-white rounded-lg font-bold flex items-center gap-2"
               >
                 <FaWarehouse /> Raw Materials
               </Link>
               <button
-                className="py-3 px-2 rounded bg-green-500/40 hover:bg-gray-700"
+                className="py-3 px-2 rounded-lg bg-green-500/40 hover:bg-gray-700"
                 onClick={(e) => {
                   e.stopPropagation();
                   setOpenMenuIndex((prev) => !prev);
@@ -190,7 +190,7 @@ const Material = () => {
       >
         <form
           onSubmit={handleSubmit}
-          className="bg-[#222] rounded-lg p-6 flex flex-col border border-white/40 w-[50vw]"
+          className="bg-[#181818] rounded-lg p-6 flex flex-col border border-white/40 w-[50vw]"
         >
           <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
             <FaBroom />
@@ -200,7 +200,7 @@ const Material = () => {
             <div className="w-full mb-4">
               <label className="block text-sm font-medium mb-1">Name</label>
               <Dropdown
-                className="flex justify-between items-center w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500 border-white/40"
+                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500 border-white/40"
                 options={rawMaterials.map((material) => ({
                   key: material.name,
                   value: material.cost_price,
@@ -227,7 +227,7 @@ const Material = () => {
                     cost_price: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -245,7 +245,7 @@ const Material = () => {
                     stock: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
@@ -261,14 +261,14 @@ const Material = () => {
                     date: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
           </div>
           <button
             type="submit"
-            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
+            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
             <FaPlusCircle /> Add Stock
           </button>
@@ -282,7 +282,7 @@ const Material = () => {
       >
         <form
           onSubmit={handleRemove}
-          className="bg-[#222] rounded-lg p-6 flex flex-col border border-white/40 w-96"
+          className="bg-[#181818] rounded-lg p-6 flex flex-col border border-white/40 w-96"
         >
           <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
             <FaBroom />
@@ -291,7 +291,7 @@ const Material = () => {
           <div className="w-full mb-4">
             <label className="block text-sm font-medium mb-1">Name</label>
             <Dropdown
-              className="flex justify-between items-center w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500 border-white/40"
+              className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500 border-white/40"
               options={rawMaterials.map((material) => ({
                 key: material.name,
                 value: material.cost_price,
@@ -317,7 +317,7 @@ const Material = () => {
                   stock: e.target.value,
                 }))
               }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
               required
             />
             {formData.stock >
@@ -340,13 +340,13 @@ const Material = () => {
                   date: e.target.value,
                 }))
               }
-              className="w-full px-3 py-2 border rounded-md focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-[#181818] focus:ring-2 focus:ring-blue-500"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-md hover:bg-green-700 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
             <FaPlusCircle /> Add Stock
           </button>

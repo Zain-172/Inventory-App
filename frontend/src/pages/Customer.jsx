@@ -97,7 +97,7 @@ const Customer = () => {
           <h2 className="text-2xl font-bold">Customers</h2>
           <button
             onClick={() => setOpenModal(true)}
-            className="flex items-center gap-2 font-bold bg-green-500/40 text-white px-4 py-2 rounded"
+            className="flex items-center gap-2 font-bold bg-green-500/40 text-white px-4 py-2 rounded-lg"
           >
             <FaPlusCircle /> Customer
           </button>

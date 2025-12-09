@@ -84,7 +84,7 @@ const Raw = () => {
 
           <button
             onClick={() => setOpenModal(true)}
-            className="px-4 py-2 w-56 grid place-self-center bg-green-500/40 rounded text-white font-bold"
+            className="px-4 py-2 w-56 grid place-self-center bg-green-500/40 rounded-lg text-white font-bold"
           >
             + Raw Material
           </button>
