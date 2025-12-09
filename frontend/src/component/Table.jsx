@@ -25,8 +25,8 @@ export default function Table({
   if (data.length <= 0) return null;
   return (
     <div className="flex flex-col w-full">
-      <div className="overflow-x-auto">
-        <table className="min-w-full border rounded-lg">
+      <div className="overflow-x-auto border rounded-lg">
+        <table className="min-w-full border rounded-lg overflow-hidden  ">
           <thead className="">
             <tr>
               {Object.keys(data[0]).map((key, index) => (

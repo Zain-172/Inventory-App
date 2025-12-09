@@ -4,7 +4,7 @@ import Table from "../component/Table";
 import TopBar from "../component/TopBar";
 import {
   FaBroom,
-  FaBrush,
+  FaCheckCircle,
   FaCalculator,
   FaEllipsisV,
   FaPlusCircle,
@@ -20,7 +20,7 @@ import { useAlertBox } from "../component/Alerts";
 
 const Material = () => {
   const [open, setOpen] = useState(false);
-  const { rawMaterials, products, setProducts, loading } = useAppData();
+  const { rawMaterials, products, setProducts, loading, fetchProducts } = useAppData();
   const [openMenuIndex, setOpenMenuIndex] = useState(false);
   const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,7 +40,9 @@ const Material = () => {
       });
       const result = await res.json();
       if (res.ok) {
-        window.location.reload();
+        alertBox("The Product is added successfully", "Success", <FaCheckCircle />);
+        fetchProducts();
+        setFormData(new Product());
       } else {
         console.error("Failed to add product:", result.message);
       }
@@ -78,7 +80,10 @@ const Material = () => {
       });
       const result = await res.json();
       if (res.ok) {
-        window.location.reload();
+        alertBox("The Product stock is removed successfully", "Success", <FaCheckCircle />);
+        fetchProducts();
+        setRemoveModal(false);
+        setFormData(new Product());
       } else {
         console.error("Failed to add product:", result.message);
       }
@@ -207,6 +212,7 @@ const Material = () => {
                     cost_price: d.value,
                   }))
                 }
+                value={formData.name}
               />
             </div>
             <div className="w-full mb-4">

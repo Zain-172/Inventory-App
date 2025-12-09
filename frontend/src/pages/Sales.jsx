@@ -15,7 +15,7 @@ const Sales = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
-  const { salesWithItems, setSalesWithItems, loading, from, setFrom, to, setTo } = useAppData();
+  const { salesWithItems, setSalesWithItems, loading, from, setFrom, to, setTo, fetchSalesWithItems } = useAppData();
   const [selectedSale, setSelectedSale] = useState(null);
   const receiptRef = useRef(null);
 
@@ -47,7 +47,9 @@ const Sales = () => {
       body: JSON.stringify(data),
     });
     if (res.ok) {
-      window.location.reload();
+      alertBox("The Sale is added successfully", "Success", <FaCheckCircle />);
+      fetchSalesWithItems(from, to);
+      setIsModalOpen(false);
     } else {
       console.error("Failed to add sale");
     }

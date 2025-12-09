@@ -10,7 +10,7 @@ import { useAlertBox } from "../component/Alerts";
 const Daily = () => {
   const [openModal, setOpenModal] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const { loading, expenses, setExpenses } = useAppData();
+  const { loading, expenses, setExpenses, fetchExpenses } = useAppData();
   const [open, setOpen] = useState(false);
   const { alertBox } = useAlertBox();
 
@@ -40,7 +40,8 @@ const Daily = () => {
       body: JSON.stringify(new Expense(editedData))
     });
     if (res.ok) {
-      console.log("Modified successfully");
+      fetchExpenses();
+      alertBox("The Expense is modified successfully", "Success", <FaCheckCircle />);
     } else {
       console.error("Failed to modify");
     }

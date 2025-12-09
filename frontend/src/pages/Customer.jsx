@@ -11,7 +11,7 @@ import CustomerForm from "../component/CustomerForm";
 const Customer = () => {
   const [open, setOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const { loading, customers, setCustomers } = useAppData();
+  const { loading, customers, setCustomers, fetchCustomers } = useAppData();
   const { alertBox } = useAlertBox();
   const handleSubmit = async (data) => {
     const res = await fetch("http://localhost:5000/customer/add-customer", {
@@ -44,11 +44,11 @@ const Customer = () => {
         body: JSON.stringify(editedData),
       });
       if (res.ok) {
-        const updatedCustomer = await res.json();
-        setCustomers((prevCustomers) =>
-          prevCustomers.map((customer) =>
-            customer.id === updatedCustomer.id ? updatedCustomer : customer
-          )
+        fetchCustomers();
+        alertBox(
+          "The Customer is modified successfully",
+          "Success",
+          <FaCheckCircle />
         );
       } else {
         console.error("Failed to modify customer");

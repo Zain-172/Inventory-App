@@ -11,7 +11,7 @@ import { useAlertBox } from "../component/Alerts";
 
 const Monthly = () => {
   const [openModal, setOpenModal] = useState(false);
-  const { loading, expenses, setExpenses } = useAppData();
+  const { loading, expenses, setExpenses, fetchExpenses } = useAppData();
   const month = [
     { key: "January", value: "01" },
     { key: "February", value: "02" },
@@ -60,7 +60,7 @@ const Monthly = () => {
       body: JSON.stringify(new Expense(editedData))
     });
     if (res.ok) {
-      console.log("Modified successfully");
+      fetchExpenses();
       alertBox("The Expense is modified successfully", "Success", <FaCheckCircle />);
     } else {
       console.error("Failed to modify");

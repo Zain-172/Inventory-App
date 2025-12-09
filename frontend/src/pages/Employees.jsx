@@ -11,7 +11,7 @@ import EmployeeForm from "../component/EmployeeForm";
 const Employees = () => {
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = useState(false);
-  const { loading, employees, setEmployees } = useAppData();
+  const { loading, employees, setEmployees, fetchEmployees } = useAppData();
   const { alertBox } = useAlertBox();
   const handleDelete = async (id) => {
     try {
@@ -71,6 +71,7 @@ const Employees = () => {
         "Success",
         <FaCheckCircle />
       );
+      fetchEmployees();
     } else {
       console.error("Failed to modify");
     }

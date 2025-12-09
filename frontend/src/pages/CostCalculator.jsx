@@ -7,10 +7,12 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAppData } from "../context/AppDataContext";
 import RawMaterial from "../models/RawMaterial";
+import { useAlertBox } from "../component/Alerts";
 
 export default function CostCalculator() {
   const [open, setOpen] = useState(false);
-  const { rawMaterials, setRawMaterials, loading } = useAppData();
+  const { rawMaterials, setRawMaterials, loading, fetchCostCalculation } = useAppData();
+  const { alertBox } = useAlertBox();
 
   const handleDelete = async (id) => {
     try {
@@ -36,7 +38,8 @@ export default function CostCalculator() {
       body: JSON.stringify(new RawMaterial(editedData))
     });
     if (res.ok) {
-      console.log("Modified successfully");
+      fetchCostCalculation();
+      alertBox("The Raw Material is modified successfully", "Success", <FaCheckCircle />);
     } else {
       console.error("Failed to modify");
     }

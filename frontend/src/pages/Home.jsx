@@ -106,6 +106,7 @@ const Home = () => {
             Amount: `Rs. ${item.total_amount}`,
             Earning: `Rs. ${item.total_amount - item.total_cost}`,
           }))} />
+          <hr className="w-full bg-white"/>
           { products.length > 0 && <p className="flex items-center w-full gap-2 text-xl font-bold"><FaBroom /> Inventory</p> }
           <Table data={products} accent="bg-green-500/40" />
         </div>

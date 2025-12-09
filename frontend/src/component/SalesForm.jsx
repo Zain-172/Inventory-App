@@ -247,7 +247,7 @@ export default function SalesForm({ onSubmit }) {
       {entry.length > 0 ? (
         <Table
           data={tableData}
-          headers={["Product", "Quantity", "Price", "Action"]}
+          nonEditable="Action"
         />
       ) : (
         <div className="h-20"></div>
