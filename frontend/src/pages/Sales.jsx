@@ -1,19 +1,23 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
-import { FaArrowsAltH, FaCheckCircle, FaEllipsisV, FaPlusCircle, FaReceipt, FaRegCreditCard, FaTrashAlt } from "react-icons/fa";
+import { FaArrowsAltH, FaCheckCircle, FaEllipsisV, FaPlusCircle, FaPrint, FaReceipt, FaTrashAlt } from "react-icons/fa";
 import Modal from "../component/Modal";
 import Form from "../component/SalesForm";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "../component/Alerts";
 import MessageBox from "../component/MessageBox";
+import Receipt from "../component/Receipt";
 
 const Sales = () => {
   const { alertBox } = useAlertBox();
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
+  const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
   const { salesWithItems, setSalesWithItems, loading, from, setFrom, to, setTo } = useAppData();
+  const [selectedSale, setSelectedSale] = useState(null);
+  const receiptRef = useRef(null);
 
   const handleDelete = async (id) => {
     try {
@@ -104,7 +108,7 @@ const Sales = () => {
                   {openMenuIndex === index && (
                   <div className="absolute right-0 mt-10 w-40 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
                     <button
-                      className="flex items-center justify-center gap-2 hover:bg-gray-700 px-4 py-2 rounded"
+                      className="flex items-center gap-2 hover:bg-gray-700 px-4 py-2 font-bold rounded-t-lg border-b border-white/40"
                       onClick={(e) => {
                         e.stopPropagation();
                         setIsMessageBoxOpen(true);
@@ -112,6 +116,17 @@ const Sales = () => {
                     >
                       <FaTrashAlt />
                       Delete
+                    </button>
+                    <button
+                      className="flex items-center gap-2 hover:bg-gray-700 px-4 py-2 font-bold rounded-b-lg"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedSale(group);
+                        setIsPrintModalOpen(true);
+                      }}
+                    >
+                      <FaPrint />
+                      Print
                     </button>
                     {isMessageBoxOpen && openMenuIndex === index && <MessageBox isOpen={isMessageBoxOpen} onClose={() => setIsMessageBoxOpen(false)} message="Delete" onConfirm={() => handleDelete(group.id)}>
                       <div className="w-[300px] mb-2">
@@ -160,6 +175,13 @@ const Sales = () => {
         title="Add New Material"
       >
         <Form onSubmit={handleSubmit} />
+      </Modal>
+      <Modal
+        isOpen={isPrintModalOpen}
+        onClose={() => setIsPrintModalOpen(false)}
+        title="Print Receipt"
+      >
+        <Receipt saleData={selectedSale} ref={receiptRef} />
       </Modal>
     </div>
   );

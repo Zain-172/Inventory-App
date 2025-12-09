@@ -123,7 +123,6 @@ const { autoUpdater } = updater;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-let backendProcess = null;
 let mainWindow = null;
 
 // Function to create main Electron window
@@ -151,7 +150,6 @@ function createWindow() {
 
 // App events
 app.on("ready", () => {
-  // startBackend();
   createWindow();
 });
 
