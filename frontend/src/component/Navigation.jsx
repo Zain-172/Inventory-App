@@ -16,12 +16,12 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed left-0 bottom-0 right-0 flex overflow-hidden transition-all duration-300 z-100 bg-black border-t border-white/60 rounded-t-lg`}
+      className={`fixed left-0 bottom-0 right-0 flex overflow-hidden transition-all duration-300 z-100 border-t rounded-t-lg`}
     >
       <ul className="grid grid-cols-7 items-center w-full">
         <li>
           <Link
-            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/"
           >
             <FaThLarge style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -30,7 +30,7 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/materials"
           >
             <FaBroom style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -39,7 +39,7 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/sales"
           >
             <FaReceipt style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -48,7 +48,7 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/expense"
           >
             <FaCreditCard style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -57,7 +57,7 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/report"
           >
             <FaBook style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -66,7 +66,7 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex flex-col justify-center border-white/50 border-r gap-1 items-center my-2"
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/employee"
           >
             <FaUserAlt style={{ minWidth: "50px", fontSize: "1.5rem" }} />

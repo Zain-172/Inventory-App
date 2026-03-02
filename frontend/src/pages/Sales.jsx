@@ -86,7 +86,7 @@ const Sales = () => {
             <h2 className="text-2xl font-bold mb-4">Sales & Purchase</h2>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mb-4 px-4 py-2 bg-green-500/40 text-white rounded-lg font-bold flex items-center gap-2"
+              className="mb-4 px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
             >
               <FaPlusCircle /> Sale Items
             </button>
@@ -99,7 +99,7 @@ const Sales = () => {
                   <strong>Invoice:</strong> {group.invoice_id}
                 </p>
                 <div className="flex justify-end">
-                  <button className="p-2 rounded-lg bg-green-500/40 hover:bg-gray-700"
+                  <button className="p-2 rounded-lg bg-green-500 hover:bg-gray-700"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenMenuIndex(openMenuIndex === index ? null : index);
@@ -156,7 +156,7 @@ const Sales = () => {
               </div>
               <Table
                 data={group.items}
-                accent="bg-green-500/40"
+                accent="bg-green-500"
               />
               <div className="flex justify-between items-center my-4">
                 <p className="text-lg font-bold">

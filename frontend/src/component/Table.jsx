@@ -5,7 +5,7 @@ import SelectMenu from "../component/SelectMenu";
 
 export default function Table({
   data,
-  accent = "bg-green-500/40",
+  accent = "bg-green-500",
   open,
   setOpen,
   onDelete,

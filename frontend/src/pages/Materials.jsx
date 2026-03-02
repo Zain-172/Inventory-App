@@ -136,18 +136,18 @@ const Material = () => {
             <div className="flex items-center justify-center gap-4 mb-4">
               <Link
                 to="/cost-calculator"
-                className="px-4 py-2 bg-green-500/40 text-white rounded-lg font-bold flex items-center gap-2"
+                className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
               >
                 <FaCalculator /> Calculate Cost
               </Link>
               <Link
                 to="/raw"
-                className="px-4 py-2 bg-green-500/40 text-white rounded-lg font-bold flex items-center gap-2"
+                className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
               >
                 <FaWarehouse /> Raw Materials
               </Link>
               <button
-                className="py-3 px-2 rounded-lg bg-green-500/40 hover:bg-gray-700"
+                className="py-3 px-2 rounded-lg bg-green-500 hover:bg-gray-700"
                 onClick={(e) => {
                   e.stopPropagation();
                   setOpenMenuIndex((prev) => !prev);
@@ -159,13 +159,13 @@ const Material = () => {
                 <div className="absolute right-0 mt-32 w-48 bg-[#181818] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="px-4 py-2  hover:bg-green-500/40 text-white rounded-t border-b font-bold flex items-center gap-2"
+                    className="px-4 py-2  hover:bg-green-500 text-white rounded-t border-b font-bold flex items-center gap-2"
                   >
                     <FaPlusCircle /> Add Stock
                   </button>
                   <button
                     onClick={() => setRemoveModal(true)}
-                    className="px-4 py-2  hover:bg-green-500/40 text-white rounded-b font-bold flex items-center gap-2"
+                    className="px-4 py-2  hover:bg-green-500 text-white rounded-b font-bold flex items-center gap-2"
                   >
                     <FaTrashAlt /> Remove Stock
                   </button>
@@ -179,7 +179,7 @@ const Material = () => {
             data={products}
             onDelete={handleDelete}
             nonEditable="Delete"
-            accent="bg-green-500/40"
+            accent="bg-green-500"
           />
         </div>
       </main>
@@ -268,7 +268,7 @@ const Material = () => {
           </div>
           <button
             type="submit"
-            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
             <FaPlusCircle /> Add Stock
           </button>
@@ -346,7 +346,7 @@ const Material = () => {
           </div>
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 bg-green-500/40 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
             <FaPlusCircle /> Add Stock
           </button>

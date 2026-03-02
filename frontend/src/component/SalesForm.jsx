@@ -239,7 +239,7 @@ export default function SalesForm({ onSubmit }) {
         <button
           onClick={addEntry}
           type="button"
-          className="flex items-center justify-center p-2 mb-1 bg-green-500/40 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center p-2 mb-1 bg-green-500 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <FaPlus />
         </button>
@@ -254,7 +254,7 @@ export default function SalesForm({ onSubmit }) {
       )}
       <button
         type="submit"
-        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500/40 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
       >
         <FaPlusCircle /> Add Sale
       </button>

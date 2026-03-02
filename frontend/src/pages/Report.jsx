@@ -355,7 +355,7 @@ const Report = () => {
           <div className="grid grid-cols-4 gap-4 w-full">
             <button
               onClick={GenerateSalesReport}
-              className="flex flex-col items-center justify-center bg-blue-500/40 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center bg-blue-500 p-4 rounded-lg w-full"
             >
               <FaReceipt className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
@@ -374,7 +374,7 @@ const Report = () => {
             </button>
             <button
               onClick={GenerateProductSaleReport}
-              className="flex flex-col items-center justify-center bg-green-500/40 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center bg-green-500 p-4 rounded-lg w-full"
             >
               <FaShoppingCart className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
@@ -393,7 +393,7 @@ const Report = () => {
             </button>
             <button
               onClick={GenerateProductionReport}
-              className="flex flex-col items-center justify-center bg-yellow-500/40 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center bg-yellow-500 p-4 rounded-lg w-full"
             >
               <FaBroom className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
@@ -412,7 +412,7 @@ const Report = () => {
             </button>
             <button
               onClick={GenerateExpensesReport}
-              className="flex flex-col items-center justify-center bg-red-500/40 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center bg-red-500 p-4 rounded-lg w-full"
             >
               <FaRegMoneyBillAlt className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>

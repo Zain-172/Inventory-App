@@ -97,7 +97,7 @@ const Customer = () => {
           <h2 className="text-2xl font-bold">Customers</h2>
           <button
             onClick={() => setOpenModal(true)}
-            className="flex items-center gap-2 font-bold bg-green-500/40 text-white px-4 py-2 rounded-lg"
+            className="flex items-center gap-2 font-bold bg-green-500 text-white px-4 py-2 rounded-lg"
           >
             <FaPlusCircle /> Customer
           </button>
@@ -109,7 +109,7 @@ const Customer = () => {
             onUpdate={handleModify}
             open={open}
             setOpen={setOpen}
-            accent="bg-green-500/40"
+            accent="bg-green-500"
           />
         </div>
       </main>

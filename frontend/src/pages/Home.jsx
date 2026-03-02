@@ -75,40 +75,26 @@ const Home = () => {
             title="Total Products"
             value={products.length}
             icon={<FaBox size={20} />}
-            bgColor="bg-blue-500/40"
+            bgColor="bg-blue-500"
           />
           <MetricsCard
             title="Expense"
             value={"Rs. " + expense}
             icon={<FaExclamationTriangle size={20} />}
-            bgColor="bg-red-500/40"
+            bgColor="bg-red-500"
           />
           <MetricsCard
             title="Profit"
             value={`Rs. ${profit}`}
             icon={<FaDollarSign size={20} />}
-            bgColor="bg-green-500/40"
+            bgColor="bg-green-500"
           />
           <MetricsCard
             title="Orders Today"
             value={ordersToday}
             icon={<FaShoppingCart size={20} />}
-            bgColor="bg-yellow-500/40"
+            bgColor="bg-yellow-500"
           />
-        </div>
-        <div className="px-2 mb-6 flex flex-col gap-6 items-center justify-center">
-          { sales.length > 0 && <p className="flex items-center w-full gap-2 text-xl font-bold"><FaReceipt /> Sales</p> }
-          <Table data={sales.map((item) => ({
-            ID: item.id,
-            Invoice: item.invoice_id,
-            Salesman: item.salesman,
-            Quantity: item.total_items,
-            Amount: `Rs. ${item.total_amount}`,
-            Earning: `Rs. ${item.total_amount - item.total_cost}`,
-          }))} />
-          <hr className="w-full bg-white"/>
-          { products.length > 0 && <p className="flex items-center w-full gap-2 text-xl font-bold"><FaBroom /> Inventory</p> }
-          <Table data={products} accent="bg-green-500/40" />
         </div>
       </main>
     </div>
