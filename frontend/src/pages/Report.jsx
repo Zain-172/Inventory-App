@@ -338,7 +338,7 @@ const Report = () => {
               {selectedPeriod.value === "daily" && (
                 <input
                   type="date"
-                  className="border p-2 rounded-lg w-full bg-[#181818]"
+                  className="border p-2 rounded-lg w-full bg-white"
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
                 />

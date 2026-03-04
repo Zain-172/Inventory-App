@@ -1,16 +1,17 @@
 import db from "../Database/DB.js";
 
 export default class Product {
-  constructor(id, name, price, stock, date) {
+  constructor(id, name, price, stock, date, type) {
     this.id = id;
     this.name = name;
     this.price = price;
     this.stock = stock;
     this.date = date;
+    this.type = type;
   }
   getProduct = (req, res) => {
     try {
-      const row = db.prepare("SELECT * FROM products").all();
+      const row = db.prepare("SELECT id, name, cost_price, stock, date, type FROM products").all();
       if (!row) {
         return res.status(404).json({ message: "Product not found" });
       }
@@ -25,7 +26,7 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated from products GROUP by name"
+          "SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated, type from products GROUP by name"
         )
         .all();
       res.json(rows);

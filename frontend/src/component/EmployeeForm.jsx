@@ -21,7 +21,7 @@ export default function EmployeeForm({ onSubmit }) {
   };
 
   return (
-    <form className="flex flex-col items-center bg-[#181818] p-6 rounded-xl w-[55vw] border border-white/30 shadow-lg" onSubmit={handleSubmit}>
+    <form className="flex flex-col items-center bg-white p-6 rounded-xl w-[55vw] border border-white/30 shadow-lg" onSubmit={handleSubmit}>
       <h2 className="text-2xl font-semibold mb-4 flex items-center justify-center gap-2"><FaUserAlt /> Employee</h2>
       <div className="flex items-center gap-4 w-full">
       {/* Name */}

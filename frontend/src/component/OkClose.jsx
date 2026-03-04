@@ -33,7 +33,7 @@ export default function ModalMessageBox({
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="relative w-full max-w-[370px] p-6 bg-[#111] border-white/40 border shadow-white/5 rounded-2xl shadow-md z-10"
+            className="relative w-full max-w-[370px] p-6 bg-white border-white/40 border shadow-white/5 rounded-2xl shadow-md z-10"
           >
             {/* Title */}
               <h2 className={`flex items-center gap-2 text-xl font-semibold mb-3 ${title === "Success" ? "text-green-500" : "text-yellow-500"}`}>{icon}{title}</h2>
@@ -56,7 +56,7 @@ export default function ModalMessageBox({
 
               <button
                 onClick={onOk}
-                className="px-4 py-2 rounded-xl bg-[#333] min-w-20 text-white font-semibold hover:bg-indigo-700"
+                className="px-4 py-2 rounded-xl bg-[#777] min-w-20 text-white font-semibold hover:bg-indigo-700"
               >
                 {okLabel}
               </button>

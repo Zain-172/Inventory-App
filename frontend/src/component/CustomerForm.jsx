@@ -56,7 +56,7 @@ export default function CustomerForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#181818] p-6 rounded-lg w-[45vw] grid grid-cols-2 gap-4 border border-white/30 shadow-lg"
+      className="bg-white p-6 rounded-lg w-[45vw] grid grid-cols-2 gap-4 border border-white/30 shadow-lg"
     >
       <h2 className="text-xl font-bold text-center col-span-2">
         <FaHandshake className="inline mr-2" /> Add Customer
@@ -66,7 +66,7 @@ export default function CustomerForm() {
       <label className="text-sm">Customer Name
       <input
         type="text"
-        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
+        className="w-full p-2 bg-white border rounded-lg mb-3"
         value={form.customer}
         onChange={(e) =>
           setForm({ ...form, customer: e.target.value })
@@ -78,7 +78,7 @@ export default function CustomerForm() {
       <label className="text-sm">Phone
       <input
         type="text"
-        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
+        className="w-full p-2 bg-white border rounded-lg mb-3"
         value={form.phone}
         onChange={(e) => setForm({ ...form, phone: e.target.value })}
       />
@@ -88,7 +88,7 @@ export default function CustomerForm() {
       <label className="text-sm">Address
       <input
         type="text"
-        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
+        className="w-full p-2 bg-white border rounded-lg mb-3"
         value={form.address}
         onChange={(e) => setForm({ ...form, address: e.target.value })}
       />
@@ -98,7 +98,7 @@ export default function CustomerForm() {
       <label className="text-sm">Shop Name
       <input
         type="text"
-        className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
+        className="w-full p-2 bg-white border rounded-lg mb-3"
         value={form.shop}
         onChange={(e) =>
           setForm({ ...form, shop: e.target.value })

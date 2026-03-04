@@ -139,7 +139,7 @@ export default function SalesForm({ onSubmit }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#181818] border border-white/40 p-6 rounded-xl shadow-[0px_0px_10px] shadow-white/20 w-[90vw] max-w-3xl max-h-screen overflow-y-auto"
+      className="bg-white border border-white/40 p-6 rounded-xl shadow-[0px_0px_10px] shadow-white/20 w-[90vw] max-w-3xl max-h-screen overflow-y-auto"
     >
       <h2 className="text-3xl font-semibold text-center">Sales</h2>
 
@@ -160,7 +160,7 @@ export default function SalesForm({ onSubmit }) {
             value={formData.date}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             required
           />
         </div>
@@ -178,7 +178,7 @@ export default function SalesForm({ onSubmit }) {
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Shop</label>
           <p
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
           >
             {customers.find((c) => c.id === formData.customer?.value)?.shop || ""}
           </p>
@@ -214,7 +214,7 @@ export default function SalesForm({ onSubmit }) {
             value={formData.quantity}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             required
           />
           {formData.quantity >
@@ -232,7 +232,7 @@ export default function SalesForm({ onSubmit }) {
             value={formData.sales_price}
             onChange={handleChange}
             placeholder="1"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-[#181818]"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             required
           />
         </div>

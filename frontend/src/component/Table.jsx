@@ -27,7 +27,7 @@ export default function Table({
     <div className="flex flex-col w-full">
       <div className="overflow-x-auto border rounded-lg">
         <table className="min-w-full border rounded-lg overflow-hidden  ">
-          <thead className="">
+          <thead className="text-sm font-medium uppercase">
             <tr>
               {Object.keys(data[0]).map((key, index) => (
                 <th key={index} className="px-4 py-2 border text-left">

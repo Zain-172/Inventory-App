@@ -44,7 +44,7 @@ export default function MaterialForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-[#181818] p-6 rounded-lg w-[50vw] border border-white/30 shadow-lg"
+      className="bg-white p-6 rounded-lg w-[50vw] border border-white/30 shadow-lg"
     >
       <h2 className="text-2xl font-bold mb-4 text-center flex items-center gap-2 justify-center"><FaWarehouse /> Material</h2>
 
@@ -57,7 +57,7 @@ export default function MaterialForm() {
         <label className="text-sm">Amount
         <input
           type="number"
-          className="w-full p-2 bg-[#181818] border rounded-lg mb-3"
+          className="w-full p-2 bg-white border rounded-lg mb-3"
           value={form.amount}
           onChange={(e) => setForm({ ...form, amount: e.target.value })}
           required
@@ -67,7 +67,7 @@ export default function MaterialForm() {
       <label className="text-sm">Date</label>
       <input
         type="date"
-        className="w-full p-2 bg-[#181818] border rounded-lg mb-4"
+        className="w-full p-2 bg-white border rounded-lg mb-4"
         value={form.date}
         onChange={(e) => setForm({ ...form, date: e.target.value })}
         required
@@ -75,7 +75,7 @@ export default function MaterialForm() {
 
       <label className="text-sm">Description</label>
       <textarea
-        className="w-full p-2 bg-[#181818] border border-white/20 resize-none rounded-lg mb-3"
+        className="w-full p-2 bg-white border border-white/20 resize-none rounded-lg mb-3"
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
       />

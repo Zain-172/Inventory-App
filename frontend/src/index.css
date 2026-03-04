@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family:sans-serif;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -42,10 +42,11 @@
 
 table {
   border-collapse: collapse;
+  color: #fff;
   width: 100%;
 }
 th {
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(17, 17, 17);
   transition: all 0.3s ease;
 }
 td {
@@ -62,7 +63,7 @@ th:hover {
 input {
   background-color: #181818;
   border: 1px solid #555;
-  color: #fff;
+  color: #000;
   padding: 8px;
   border-radius: 4px;
   transition: all 0.3s ease;
@@ -85,7 +86,7 @@ li {
   transition: all 0.3s ease;
 }
 li:hover {
-  background-color: #222;
+  background-color: #aaa;
   cursor: pointer;
   transition: all 0.3s ease;
 }

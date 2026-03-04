@@ -28,7 +28,7 @@ const SelectMenu = ({
           } transition-all duration-300`}
         >
           <div
-            className="flex gap-2 justify-center items-center w-32 bg-[#222] px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-yellow-600 border border-yellow-600 font-bold"
+            className="flex gap-2 justify-center items-center w-32 bg-red-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition-colors text-yellow-600 border border-yellow-600 font-bold"
             onClick={() => {
               setModify(false);
               onSave();
@@ -38,7 +38,7 @@ const SelectMenu = ({
             Save
           </div>
           <div
-            className="flex gap-2 justify-center items-center w-32 bg-[#222] px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-[rgb(255,20,20)] border border-[rgb(255,20,20)] font-bold"
+            className="flex gap-2 justify-center items-center w-32 bg-red-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition-colors text-white border border-white font-bold"
             onClick={() => {
               setModify(false);
               onDiscard();
@@ -50,7 +50,7 @@ const SelectMenu = ({
         </div>
       ) : (
         <Modal isOpen={open} onClose={() => setOpen(false)}>
-          <div className="bg-[#111] w-80 grid grid-rows-2 gap-4 p-4 rounded-lg shadow-lg shadow-white/10 border border-white/30">
+          <div className="bg-white w-80 grid grid-rows-2 gap-4 p-4 rounded-2xl shadow-lg shadow-white/10 border border-white/30">
             <h1 className="flex items-center justify-center gap-2 font-bold text-2xl">
               <FaHandPointer /> Action
             </h1>
@@ -59,7 +59,7 @@ const SelectMenu = ({
             </p>
             <div className="flex justify-evenly items-center">
               { !buttons && <button
-                className="flex gap-2 justify-center items-center w-32 bg-[#222] px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-yellow-600 font-bold"
+                className="flex gap-2 justify-center items-center w-32 bg-yellow-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-yellow-600 transition-colors text-white font-bold"
                 onClick={() => {
                   setModify(true);
                   onModify();
@@ -69,7 +69,7 @@ const SelectMenu = ({
                 Modify
               </button> }
               <button
-                className="flex gap-2 justify-center items-center w-32 bg-[#222] px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors text-[rgb(255,20,20)] font-bold"
+                className="flex gap-2 justify-center items-center w-32 bg-red-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition-colors text-white font-bold"
                 onClick={onDelete}
               >
                 <FaTrashAlt />
