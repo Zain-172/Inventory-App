@@ -94,23 +94,25 @@ export default class Product {
     }
   }
   insertProduct = (req, res) => {
-    const { name, cost_price, stock, date, action } = req.body;
+    const { name, cost_price, stock, date, type, action } = req.body;
+    console.log("Received data: ", { name, cost_price, stock, date, type, action });
     try {
       const stmt1 = db.prepare(`
-      INSERT INTO products (name, cost_price, stock, date)
-      VALUES (?, ?, ?, ?)
-      ON CONFLICT(name) DO UPDATE
+      INSERT INTO products (name, cost_price, stock, date, type)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(name, type) DO UPDATE
       SET stock = stock + excluded.stock,
           cost_price = excluded.cost_price,
-          date = excluded.date
+          date = excluded.date,
+          type = excluded.type
     `);
-      stmt1.run(name, cost_price, stock, date);
+      stmt1.run(name, cost_price, stock, date, type);
 
       const stmt2 = db.prepare(`
-      INSERT INTO products_history (name, cost_price, stock, date, action)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO products_history (name, cost_price, stock, date, type, action)
+      VALUES (?, ?, ?, ?, ?, ?)
     `);
-      stmt2.run(name, cost_price, stock, date, action);
+      stmt2.run(name, cost_price, stock, date, type, action);
 
       res.status(201).json({ message: "Product created/updated" });
     } catch (err) {
@@ -136,12 +138,12 @@ export default class Product {
 
   updateProduct = (req, res) => {
     const { id } = req.params;
-    const { name, price, stock } = req.body;
+    const { name, price, stock, type } = req.body;
     try {
       const stmt = db.prepare(
-        "UPDATE products SET name = ?, cost_price = ?, stock = ? WHERE id = ?"
+        "UPDATE products SET name = ?, cost_price = ?, stock = ?, type = ? WHERE id = ?"
       );
-      const info = stmt.run(name, price, stock, id);
+      const info = stmt.run(name, price, stock, type, id);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });

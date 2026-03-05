@@ -1,13 +1,14 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Materials from "./pages/Materials";
-import Sales from "./pages/Sales";
-import Report from "./pages/Report";
-import CostCalculator from "./pages/CostCalculator";
-import Expense from "./pages/Expense";
-import Employees from "./pages/Employees";
-import Customer from "./pages/Customer";
-import Raw from "./pages/Raw";
+import { lazy } from "react";
+const Materials = lazy(() => import("./pages/Materials"));
+const Sales = lazy(() => import("./pages/Sales"));
+const Report = lazy(() => import("./pages/Report"));
+const CostCalculator = lazy(() => import("./pages/CostCalculator"));
+const Expense = lazy(() => import("./pages/Expense"));
+const Employees = lazy(() => import("./pages/Employees"));
+const Customer = lazy(() => import("./pages/Customer"));
+const Raw = lazy(() => import("./pages/Raw"));
 import { AppDataProvider } from "./context/AppDataContext";
 import { AlertProvider } from "./component/Alerts";
 

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useAlertBox } from "../component/Alerts";
 
-const Monthly = () => {
+const Monthly = ({ filterVal = 'factory' }) => {
   const [openModal, setOpenModal] = useState(false);
   const { loading, expenses, setExpenses, fetchExpenses } = useAppData();
   const month = [
@@ -78,12 +78,14 @@ const Monthly = () => {
           <h2 className="text-2xl font-bold">Expense</h2>
           <div>
 
-          <Dropdown options={month} className="flex items-center justify-between w-56 px-4 py-2 border border-white/40 bg-[#111] mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />
+          <Dropdown options={month} className="flex items-center justify-between w-56 px-4 py-2 border border-black bg-white mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />
           </div>
         </div>
 
         <div className="px-2 mb-8">
-          <Table data={expenses.filter(item => item.date.startsWith(`2025-${month.find(m => m.key === selectedMonth)?.value}`))} onDelete={handleDelete} accent="bg-green-500" open={open} setOpen={setOpen} onUpdate={handleModify} />
+          <Table data={expenses.
+            filter(item => (item.title.toLowerCase()).includes(filterVal) || filterVal === "factory" && (item.title.toLowerCase()).includes("salary") )
+            } onDelete={handleDelete} accent="bg-green-500" open={open} setOpen={setOpen} onUpdate={handleModify} />
         </div>
 
           <button

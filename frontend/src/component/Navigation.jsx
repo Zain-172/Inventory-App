@@ -16,7 +16,7 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed left-0 bottom-0 right-0 flex overflow-hidden transition-all duration-300 z-100 border-t rounded-t-lg`}
+      className={`bg-white fixed left-0 bottom-0 right-0 flex overflow-hidden transition-all duration-300 z-100 border-t rounded-t-lg`}
     >
       <ul className="grid grid-cols-7 items-center w-full">
         <li>

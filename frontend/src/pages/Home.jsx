@@ -21,47 +21,7 @@ const Home = () => {
   const { sales, loading, products } = useAppData();
   const [expense, setExpense] = useState(0);
   const [profit, setProfit] = useState(0);
-
-  const ordersToday = useMemo(() => {
-    if (!sales || sales.length === 0) return 0;
-    const today = new Date();
-    return sales.filter((sale) => {
-      if (!sale.sale_date) return false;
-      const saleDate = new Date(sale.sale_date);
-      if (isNaN(saleDate)) return false;
-      return (
-        saleDate.getFullYear() === today.getFullYear() &&
-        saleDate.getMonth() === today.getMonth() &&
-        saleDate.getDate() === today.getDate()
-      );
-    }).length;
-  }, [sales]);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const today = new Date().toISOString().split("T")[0];
-      const res = await fetch(`http://localhost:000/sale/by-date?date=${today}`);
-      const data = await res.json();
-      const res2 = await fetch(`http://localhost:5000/sale/cost-by-date?date=${today}`);
-      const data2 = await res2.json();
-      console.log(data, data2);
-      setProfit((data.length > 0 ? data[0]["sum(total_amount)"] : 0) - (data2.length > 0 ? data2[0]["sum(total_cost)"] : 0));
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const today = new Date().toISOString().split("T")[0];
-      const res2 = await fetch(`http://localhost:5000/material/by-date?date=${today}`);
-      const rawData = await res2.json();
-      const res3 = await fetch(`http://localhost:5000/expense/by-date?date=${today}`);
-      const expenseData = await res3.json()
-      setExpense((rawData.length > 0 ? rawData[0]["total"] : 0) + (expenseData.length > 0 ? expenseData[0]["total"] : 0));
-    };
-    fetchData();
-  }, []);
+  const [ordersToday, setOrdersToday] = useState(0);
 
   if (loading) return <div>Loading...</div>;
   return (

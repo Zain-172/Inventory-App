@@ -21,15 +21,17 @@ import { useAlertBox } from "../component/Alerts";
 const Material = () => {
   const [open, setOpen] = useState(false);
   const { rawMaterials, products, setProducts, loading, fetchProducts } = useAppData();
-  const [openMenuIndex, setOpenMenuIndex] = useState(false);
+  // const [openMenuIndex, setOpenMenuIndex] = useState(false);
   const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [removeModal, setRemoveModal] = useState(false);
+  const [filter, setFilter] = useState("production");
   const { alertBox } = useAlertBox();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = { ...formData, action: "ADD" };
+    console.log("Form Data: ", data);
     try {
       const res = await fetch("http://localhost:5000/product/add-product", {
         method: "POST",
@@ -67,7 +69,8 @@ const Material = () => {
       formData.name,
       formData.cost_price,
       -formData.stock,
-      formData.date
+      formData.date,
+      formData.type
     );
     data.action = "REMOVE";
     try {
@@ -119,34 +122,44 @@ const Material = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div
-      className="grid h-screen place-content-start"
-      onClick={() => setOpenMenuIndex(false)}
-    >
+    <div className="grid h-screen place-content-start">
       <nav>
         <Navigation />
       </nav>
       <TopBar>
-          <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaBroom />Inventory</h1>
+        <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaBroom />Inventory</h1>
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
-        <div className="px-2 py-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold mb-4">Inventory</h2>
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <Link
-                to="/cost-calculator"
-                className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
-              >
-                <FaCalculator /> Calculate Cost
-              </Link>
-              <Link
-                to="/raw"
-                className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
-              >
-                <FaWarehouse /> Raw Materials
-              </Link>
+        <div className="flex items-center justify-center gap-4 py-6">
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "raw" ? "bg-green-500 text-white" : "bg-white text-green-500"}`} onClick={() => setFilter("raw")}>
+            Raw Materials
+          </button>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "production" ? "bg-green-500 text-white" : "bg-white text-green-500"}`} onClick={() => setFilter("production")}>
+            Production Made
+          </button>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "ready" ? "bg-green-500 text-white" : "bg-white text-green-500"}`} onClick={() => setFilter("ready")}>
+            Ready Made
+          </button>
+        </div>
+        <div className="px-2 py-2">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-bold">Inventory</h2>
+            <div className="flex items-center justify-center gap-4">
+              { filter == "production" && (
+                <Link
+                  to="/cost-calculator"
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
+                >
+                  <FaCalculator /> Calculate Cost
+                </Link>
+              )}
               <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
+                >
+                  <FaPlusCircle /> Add Stock
+                </button>
+              {/* <button
                 className="py-3 px-2 rounded-lg bg-green-500 hover:bg-green-600 text-white"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -154,9 +167,9 @@ const Material = () => {
                 }}
               >
                 <FaEllipsisV />
-              </button>
-              {openMenuIndex && (
-                <div className="absolute right-0 mt-32 w-48 bg-white border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
+              </button> */}
+              {/* {openMenuIndex && (
+                <div className="absolute right-0 mt-32 w-48 bg-white border border-black text-white rounded-lg shadow-lg flex flex-col">
                   <button
                     onClick={() => setIsModalOpen(true)}
                     className="px-4 py-2  hover:bg-green-500 text-white rounded-t border-b font-bold flex items-center gap-2"
@@ -170,13 +183,13 @@ const Material = () => {
                     <FaTrashAlt /> Remove Stock
                   </button>
                 </div>
-              )}
+              )} */}
             </div>
           </div>
           <Table
             open={open}
             setOpen={setOpen}
-            data={products.map((product) => ({
+            data={products.filter((product) => product.type === filter).map((product) => ({
               id: product.id,
               name: product.name,
               cost_price: product.cost_price,
@@ -196,17 +209,17 @@ const Material = () => {
       >
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-lg p-6 flex flex-col border border-white/40 w-[50vw]"
+          className="bg-white rounded-xl p-6 flex flex-col w-[50vw]"
         >
           <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
             <FaBroom />
             Stock
           </h2>
-          <div className="flex items-center gap-4">
-            <div className="w-full mb-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="w-full">
               <label className="block text-sm font-medium mb-1">Name</label>
               <Dropdown
-                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-white/40"
+                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-black"
                 options={rawMaterials.map((material) => ({
                   key: material.name,
                   value: material.cost_price,
@@ -221,7 +234,7 @@ const Material = () => {
                 value={formData.name}
               />
             </div>
-            <div className="w-full mb-4">
+            <div className="w-full">
               <label className="block text-sm font-medium mb-1">Cost Price</label>
               <input
                 type="number"
@@ -237,9 +250,7 @@ const Material = () => {
                 required
               />
             </div>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="w-full mb-4">
+            <div className="w-full">
               <label className="block text-sm font-medium mb-1">Quantity</label>
               <input
                 type="number"
@@ -255,7 +266,25 @@ const Material = () => {
                 required
               />
             </div>
-            <div className="w-full mb-4">
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-1">Type</label>
+              <Dropdown
+                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-black"
+                options={[
+                  { key: "Raw Material", value: "raw" },
+                  { key: "Production Made", value: "production" },
+                  { key: "Ready Made", value: "ready" },
+                ]}
+                onChange={(d) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    type: d.value
+                  }))
+                }
+                value={formData.name}
+              />
+            </div>
+            <div className="w-full col-span-2">
               <label className="block text-sm font-medium mb-1">Date</label>
               <input
                 type="date"
@@ -288,16 +317,16 @@ const Material = () => {
       >
         <form
           onSubmit={handleRemove}
-          className="bg-white rounded-lg p-6 flex flex-col border border-white/40 w-96"
+          className="bg-white rounded-lg p-6 flex flex-col border border-black w-96"
         >
           <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
             <FaBroom />
             Stock
           </h2>
-          <div className="w-full mb-4">
+          <div className="w-full">
             <label className="block text-sm font-medium mb-1">Name</label>
             <Dropdown
-              className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-white/40"
+              className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-black"
               options={rawMaterials.map((material) => ({
                 key: material.name,
                 value: material.cost_price,
@@ -311,7 +340,7 @@ const Material = () => {
               }
             />
           </div>
-          <div className="w-full mb-4 relative">
+          <div className="w-full relative">
             <label className="block text-sm font-medium mb-1">Quantity</label>
             <input
               type="number"
@@ -334,7 +363,7 @@ const Material = () => {
               </span>
             )}
           </div>
-          <div className="w-full mb-4">
+          <div className="w-full">
             <label className="block text-sm font-medium mb-1">Date</label>
             <input
               type="date"

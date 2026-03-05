@@ -2,7 +2,7 @@ import { useState } from "react";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "./Alerts";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaCreditCard } from "react-icons/fa";
 import TrieSearch from "./Trie";
 export default function ExpenseForm({onSubmit}) {
   const [form, setForm] = useState(new Expense());
@@ -47,7 +47,7 @@ export default function ExpenseForm({onSubmit}) {
       onSubmit={handleSubmit}
       className="bg-white p-6 rounded-lg border border-white/30 shadow-lg w-[45vw]"
     >
-      <h2 className="text-xl font-bold mb-4 text-center">Add Expense</h2>
+      <h2 className="text-xl font-bold mb-4 text-center"><FaCreditCard /> Expense</h2>
       <div className="flex gap-4">
         <label className="text-sm w-full">Title
           <TrieSearch

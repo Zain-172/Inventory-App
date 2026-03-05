@@ -39,7 +39,6 @@ export const AppDataProvider = ({ children }) => {
   const fetchExpenses = async () => {
     const resExpenses = await fetch("http://localhost:5000/expense/");
     const expensesData = await resExpenses.json();
-    console.log("Fetched expenses:", expensesData);
     const formattedExpenses = expensesData.map((item) => ({
       id: item.id,
       title: item.title,
@@ -61,6 +60,7 @@ export const AppDataProvider = ({ children }) => {
   const fetchProducts = async () => {
     const resProducts = await fetch("http://localhost:5000/product/");
     const productsData = await resProducts.json();
+    console.log("Fetched products:", productsData);
     setProducts(productsData);
   };
   const fetchInventory = async () => {
@@ -129,7 +129,6 @@ export const AppDataProvider = ({ children }) => {
         `http://localhost:5000/sale/with-items?to=${to}&from=${from}`
       );
       const data = await res.json();
-      console.log("Fetched sales with items:", data);
       setSalesWithItems(data);
     } catch (err) {
       console.error(err);
