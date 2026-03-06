@@ -25,3 +25,14 @@ CREATE TABLE products (
  UNIQUE(name, type)
 );
 ```
+-----------------------------------------------------
+```
+CREATE TABLE employee_accounts (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	employee_id INTEGER NOT NULL,
+	payment REAL NOT NULL,
+	reason TEXT "salary payment",
+	time_stamp datetime DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+)
+```

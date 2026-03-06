@@ -11,7 +11,7 @@ export default class Product {
   }
   getProduct = (req, res) => {
     try {
-      const row = db.prepare("SELECT id, name, cost_price, stock, date, type FROM products").all();
+      const row = db.prepare("SELECT id, name, cost_price, stock, date, type, barcode FROM products").all();
       if (!row) {
         return res.status(404).json({ message: "Product not found" });
       }
@@ -26,7 +26,7 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated, type from products GROUP by name"
+          "SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated, type, barcode from products GROUP by name"
         )
         .all();
       res.json(rows);
@@ -56,7 +56,7 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT name, stock, cost_price FROM products_history WHERE stock > 0 and date = ? "
+          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and date = ? "
         )
         .all(date);
         res.json(rows);
@@ -70,7 +70,7 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT name, stock, cost_price, date FROM products_history WHERE stock > 0 and strftime('%Y-%m', date) = ? "
+          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and strftime('%Y-%m', date) = ? "
         )
         .all(date);
         res.json(rows);
@@ -84,7 +84,7 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT name, stock, cost_price, date FROM products_history WHERE stock > 0 and strftime('%Y', date) = ? "
+          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and strftime('%Y', date) = ? "
         )
         .all(date);
         res.json(rows);
@@ -95,18 +95,16 @@ export default class Product {
   }
   insertProduct = (req, res) => {
     const { name, cost_price, stock, date, type, action } = req.body;
-    console.log("Received data: ", { name, cost_price, stock, date, type, action });
-    try {
-      const stmt1 = db.prepare(`
-      INSERT INTO products (name, cost_price, stock, date, type)
-      VALUES (?, ?, ?, ?, ?)
-      ON CONFLICT(name, type) DO UPDATE
-      SET stock = stock + excluded.stock,
-          cost_price = excluded.cost_price,
-          date = excluded.date,
-          type = excluded.type
-    `);
-      stmt1.run(name, cost_price, stock, date, type);
+      try {
+        const stmt1 = db.prepare(`
+        INSERT INTO products (name, cost_price, stock, date, type)
+        VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(name, type) DO UPDATE
+        SET stock = stock + excluded.stock,
+            cost_price = excluded.cost_price,
+            date = excluded.date
+      `);
+        stmt1.run(name, cost_price, stock, date, type);
 
       const stmt2 = db.prepare(`
       INSERT INTO products_history (name, cost_price, stock, date, type, action)
@@ -138,12 +136,12 @@ export default class Product {
 
   updateProduct = (req, res) => {
     const { id } = req.params;
-    const { name, price, stock, type } = req.body;
+    const { name, price, stock, type, barcode } = req.body;
     try {
       const stmt = db.prepare(
-        "UPDATE products SET name = ?, cost_price = ?, stock = ?, type = ? WHERE id = ?"
+        "UPDATE products SET name = ?, cost_price = ?, stock = ?, type = ?, barcode = ? WHERE id = ?"
       );
-      const info = stmt.run(name, price, stock, type, id);
+      const info = stmt.run(name, price, stock, type, barcode, id);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });

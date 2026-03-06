@@ -7,7 +7,7 @@ export default function Dropdown({
   options = [],
   onChange,
   className = "w-full px-4 py-2 bg-white border border-[#555] rounded-lg flex justify-between items-center cursor-pointer",
-  optionClassName = "flex items-center gap-4 px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-600 transition-colors",
+  optionClassName = "flex items-center gap-4 px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-200 transition-colors",
   value,
 }) {
   const [open, setOpen] = useState(false);
@@ -65,7 +65,7 @@ export default function Dropdown({
                 className={optionClassName}
                 onClick={() => handleSelect(option)}
               >
-                <div className={`border p-1 rounded-full ${selected.key === option.key ? "bg-white" : ""}`}></div>{option.key}
+                <div className={`border p-1 rounded-full ${selected.key === option.key ? "bg-black" : ""}`}></div>{option.key}
               </div>
             ))}
           </Motion.div>

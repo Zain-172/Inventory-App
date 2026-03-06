@@ -60,18 +60,21 @@ th:hover {
   cursor: pointer;
   transition: all 0.3s ease;
 }
+form {
+  background: #fff;
+}
 input {
-  background-color: #181818;
-  border: 1px solid #555;
-  color: #000;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  color: #000000;
   padding: 8px;
   border-radius: 4px;
   transition: all 0.3s ease;
 }
 textarea {
-  background-color: #181818;
-  border: 1px solid #555;
-  color: #fff;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  color: #000000;
   padding: 8px;
   border-radius: 4px;
   transition: all 0.3s ease;

@@ -45,9 +45,9 @@ export default function ExpenseForm({onSubmit}) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-lg border border-white/30 shadow-lg w-[45vw]"
+      className="p-6 rounded-lg border border-white/30 shadow-lg w-[45vw]"
     >
-      <h2 className="text-xl font-bold mb-4 text-center"><FaCreditCard /> Expense</h2>
+      <h2 className="text-xl font-bold mb-4 flex gap-2 justify-center"><FaCreditCard /> Expense</h2>
       <div className="flex gap-4">
         <label className="text-sm w-full">Title
           <TrieSearch
@@ -57,7 +57,7 @@ export default function ExpenseForm({onSubmit}) {
         <label className="text-sm w-full">Amount
           <input
             type="number"
-            className="w-full p-2 bg-white border rounded-lg mb-3"
+            className="w-full p-2 border rounded-lg mb-3"
             value={form.amount}
             onChange={(e) => setForm({ ...form, amount: e.target.value })}
             required
@@ -67,7 +67,7 @@ export default function ExpenseForm({onSubmit}) {
       <label className="text-sm">Date</label>
       <input
         type="date"
-        className="w-full p-2 bg-white border rounded-lg mb-4"
+        className="w-full p-2 border rounded-lg mb-4"
         value={form.date}
         onChange={(e) => setForm({ ...form, date: e.target.value })}
         required
@@ -75,14 +75,14 @@ export default function ExpenseForm({onSubmit}) {
 
       <label className="text-sm">Description</label>
       <textarea
-        className="w-full p-2 bg-white border border-white/20 resize-none rounded-lg mb-3"
+        className="w-full p-2 border border-black resize-none rounded-lg mb-3"
         value={form.description}
         onChange={(e) => setForm({ ...form, description: e.target.value })}
       />
 
       <button
         type="submit"
-        className="w-full bg-green-500/60 text-white py-2 rounded-lg font-bold"
+        className="w-full bg-green-500 text-white py-2 rounded-lg font-bold"
       >
         Save
       </button>

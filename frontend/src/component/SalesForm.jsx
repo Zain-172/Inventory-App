@@ -8,12 +8,17 @@ import { useAlertBox } from "./Alerts";
 export default function SalesForm({ onSubmit }) {
   const { products, customers } = useAppData();
   const product = [
-    ...products.map((item) => ({ key: item.name, value: item.id })),
+    ...products.map((item) => ({ key: item.name + " (" + item.barcode + ")", value: item.id })),
   ];
   const customerOptions = customers.map((cust) => ({
-    key: cust.customer,
+    key: cust.shop,
     value: cust.id,
   }));
+  const paymentStatusOptions = [
+    { key: "Paid", value: "paid" },
+    { key: "Pending", value: "pending" },
+    { key: "Half Payment", value: "half_payment" },
+  ];
   const salesmen = [
     { key: "John Doe", value: "John Doe" },
     { key: "Jane Smith", value: "Jane Smith" },
@@ -25,6 +30,7 @@ export default function SalesForm({ onSubmit }) {
     price: "",
     sales_price: "",
     quantity: "",
+    status: paymentStatusOptions[0],
     salesman: salesmen[0],
     customer: customerOptions[0],
     date: new Date().toISOString().split("T")[0],
@@ -59,6 +65,7 @@ export default function SalesForm({ onSubmit }) {
         (sum, i) => sum + i.quantity * i.sale_price,
         0
       ),
+      status: formData.status.value,
       total_items: entry.reduce((sum, i) => sum + Number(i.quantity), 0),
       customer: formData.customer.value,
       items: entry,
@@ -176,12 +183,12 @@ export default function SalesForm({ onSubmit }) {
           />
         </div>
         <div className="w-full">
-          <label className="block text-sm font-medium mb-1">Shop</label>
-          <p
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          >
-            {customers.find((c) => c.id === formData.customer?.value)?.shop || ""}
-          </p>
+          <label className="block text-sm font-medium mb-1">Status</label>
+          <Dropdown
+            options={paymentStatusOptions}
+            value={paymentStatusOptions[0]}
+            onChange={(d) => setFormData((prev) => ({ ...prev, status: d }))}
+          />
         </div>
       </div>
       <div className="flex gap-4 w-full justify-center items-end mb-8">

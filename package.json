@@ -14,9 +14,10 @@
     "dist": "npm run build && electron-builder"
   },
   "devDependencies": {
+    "baseline-browser-mapping": "^2.10.0",
     "concurrently": "^9.2.1",
     "electron": "^39.2.3",
-    "electron-builder": "^24.6.4",
+    "electron-builder": "^26.8.1",
     "nodemon": "^3.1.0",
     "wait-on": "^9.0.3"
   },
@@ -24,7 +25,7 @@
     "asar": false,
     "appId": "com.desktop.app",
     "productName": "Inventory Manager",
-      "publish": [
+    "publish": [
       {
         "provider": "github",
         "owner": "Zain-172",

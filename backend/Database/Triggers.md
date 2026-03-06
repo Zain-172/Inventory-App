@@ -107,3 +107,13 @@ BEGIN
 END
 ```
 -------------------------------------------------------------------------
+```
+DROP TRIGGER "main"."generate_barcode";
+CREATE TRIGGER generate_barcode
+AFTER INSERT ON products
+BEGIN
+UPDATE products
+SET barcode = 'BR' || printf('%05d0', NEW.id)
+WHERE id = NEW.id;
+END
+```

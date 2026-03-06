@@ -1,6 +1,6 @@
 import { HashRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import { lazy } from "react";
+const Home = lazy(() => import("./pages/Home"));
 const Materials = lazy(() => import("./pages/Materials"));
 const Sales = lazy(() => import("./pages/Sales"));
 const Report = lazy(() => import("./pages/Report"));
@@ -9,6 +9,7 @@ const Expense = lazy(() => import("./pages/Expense"));
 const Employees = lazy(() => import("./pages/Employees"));
 const Customer = lazy(() => import("./pages/Customer"));
 const Raw = lazy(() => import("./pages/Raw"));
+const EmployeeAccount = lazy(() => import("./pages/EmployeeAccount"));
 import { AppDataProvider } from "./context/AppDataContext";
 import { AlertProvider } from "./component/Alerts";
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/employee" element={<Employees />} />
           <Route path="/customer" element={<Customer />} />
           <Route path="/raw" element={<Raw />} />
+          <Route path="/account/:id" element={<EmployeeAccount />} />
         </Routes>
       </HashRouter>
       </AlertProvider>

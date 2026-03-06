@@ -17,7 +17,8 @@ export default class Sale {
         total_items,
         total_cost,
         items,
-        customer
+        customer,
+        status
       } = req.body;
 
       if (!items || items.length === 0) {
@@ -25,8 +26,8 @@ export default class Sale {
       }
 
       const insertSaleStmt = db.prepare(`
-        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items, total_cost, customer_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items, total_cost, customer_id, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       const transaction = db.transaction(() => {
@@ -37,7 +38,8 @@ export default class Sale {
           total_amount,
           total_items,
           total_cost,
-          customer
+          customer,
+          status
         );
         const sale_id = saleInfo.lastInsertRowid;
 
@@ -73,7 +75,7 @@ export default class Sale {
       const rows = db
         .prepare(
           `
-  SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, si.item_id,
+  SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, si.item_id,
          si.product_name, si.quantity, si.price as price, c.customer, c.shop
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
@@ -96,6 +98,7 @@ export default class Sale {
             salesman: row.salesman,
             total_amount: row.total_amount,
             total_items: row.total_items,
+            status: row.status,
             customer: row.customer,
             shop: row.shop,
             items: [],

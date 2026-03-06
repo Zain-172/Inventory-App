@@ -20,7 +20,7 @@ import { useAlertBox } from "../component/Alerts";
 
 const Material = () => {
   const [open, setOpen] = useState(false);
-  const { rawMaterials, products, setProducts, loading, fetchProducts } = useAppData();
+  const { products, setProducts, loading, fetchProducts } = useAppData();
   // const [openMenuIndex, setOpenMenuIndex] = useState(false);
   const [formData, setFormData] = useState(new Product());
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -127,7 +127,7 @@ const Material = () => {
         <Navigation />
       </nav>
       <TopBar>
-        <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaBroom />Inventory</h1>
+        <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaBroom />Products</h1>
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
         <div className="flex items-center justify-center gap-4 py-6">
@@ -143,7 +143,7 @@ const Material = () => {
         </div>
         <div className="px-2 py-2">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">Inventory</h2>
+            <h2 className="text-2xl font-bold">{ filter === "raw" ? "Raw Materials" : filter === "production" ? "Production Made" : "Ready Made" }</h2>
             <div className="flex items-center justify-center gap-4">
               { filter == "production" && (
                 <Link
@@ -192,6 +192,7 @@ const Material = () => {
             data={products.filter((product) => product.type === filter).map((product) => ({
               id: product.id,
               name: product.name,
+              barcode: product.barcode,
               cost_price: product.cost_price,
               stock: product.stock,
               date: product.date,
@@ -218,20 +219,18 @@ const Material = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">Name</label>
-              <Dropdown
-                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-black"
-                options={rawMaterials.map((material) => ({
-                  key: material.name,
-                  value: material.cost_price,
-                }))}
-                onChange={(d) =>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={(e) =>
                   setFormData((prev) => ({
                     ...prev,
-                    name: d.key,
-                    cost_price: d.value,
+                    name: e.target.value,
                   }))
                 }
-                value={formData.name}
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
+                required
               />
             </div>
             <div className="w-full">
@@ -325,19 +324,18 @@ const Material = () => {
           </h2>
           <div className="w-full">
             <label className="block text-sm font-medium mb-1">Name</label>
-            <Dropdown
-              className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-black"
-              options={rawMaterials.map((material) => ({
-                key: material.name,
-                value: material.cost_price,
-              }))}
-              onChange={(d) =>
+            <input
+              type="number"
+              name="name"
+              value={formData.name}
+              onChange={(e) =>
                 setFormData((prev) => ({
                   ...prev,
-                  name: d.key,
-                  cost_price: d.value,
+                  name: e.target.value,
                 }))
               }
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
+              required
             />
           </div>
           <div className="w-full relative">

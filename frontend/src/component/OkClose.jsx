@@ -56,7 +56,7 @@ export default function ModalMessageBox({
 
               <button
                 onClick={onOk}
-                className="px-4 py-2 rounded-xl bg-[#777] min-w-20 text-white font-semibold hover:bg-indigo-700"
+                className="px-4 py-2 rounded-xl bg-green-500/30 min-w-20 text-white font-semibold hover:bg-green-500 transition-colors"
               >
                 {okLabel}
               </button>

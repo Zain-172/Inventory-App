@@ -55,6 +55,7 @@ export const AppDataProvider = ({ children }) => {
       }`
     );
     const salesData = await resSales.json();
+    console.log("Fetched sales:", salesData);
     setSales(salesData);
   };
   const fetchProducts = async () => {

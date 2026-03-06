@@ -22,7 +22,7 @@ const Expense = () => {
             Home Expenses
           </button>
           <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "bill" ? "bg-green-500 text-white" : "bg-white text-green-500"}`} onClick={() => setFilter("bill")}>
-            Bills Expenses
+            Utility Bills
           </button>
         </div>
         <div className="flex flex-col w-full">
