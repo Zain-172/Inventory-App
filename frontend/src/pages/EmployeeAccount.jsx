@@ -1,83 +1,72 @@
 import Table from "../component/Table";
 import { useAppData } from "../context/AppDataContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaCheckCircle, FaPlusCircle, FaUserAlt } from "react-icons/fa";
 import { useAlertBox } from "../component/Alerts";
-import Navigation from "../component/Navigation";
+const Navigation = lazy(() => import("../component/Navigation"));
 import TopBar from "../component/TopBar";
 import Modal from "../component/Modal";
-import EmployeeForm from "../component/EmployeeForm";
+import { lazy } from "react";
+const AccountForm = lazy(() => import("../component/AccountForm"));
 import { useParams } from "react-router-dom";
+import { fetchEmployeeAccounts, addEmployeeAccount, updateEmployeeAccount, deleteEmployeeAccount } from "../api/EmployeeAccount";
 
 const EmployeesAccount = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = useState(false);
-  const { loading, employees, setEmployees, fetchEmployees } = useAppData();
+  const { loading } = useAppData();
+  const [employees, setEmployees] = useState([]);
   const { alertBox } = useAlertBox();
+
+  useEffect(() => {
+    const loadAccounts = async () => {
+      try {
+        const accounts = await fetchEmployeeAccounts();
+        setEmployees(accounts.filter(account => account.employee_id === parseInt(id)));
+      } catch (err) {
+        console.error("Failed to load employee accounts:", err);
+      }
+    };
+    loadAccounts();
+  }, [id]);
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/employee/${id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setEmployees((prevEmployees) =>
-          prevEmployees.filter((employee) => employee.id !== id)
-        );
-        alertBox(
-          "The Employee is deleted successfully",
-          "Success",
-          <FaCheckCircle />
-        );
-      } else {
-        console.error("Failed to delete employee");
-      }
+      await deleteEmployeeAccount(id);
+      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+      alertBox("The Employee account is deleted successfully", "Success", <FaCheckCircle />);
     } catch (err) {
-      console.error("Failed to delete employee:", err);
+      console.error("Failed to delete employee account:", err);
+    } finally {
+      fetchEmployeeAccounts();
     }
-    setOpenModal(false);
   };
 
-  const handleSubmit = async (data) => {
-    const res = await fetch("http://localhost:5000/employee/add-employee", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (res.ok) {
-      const newEmployee = await res.json();
-      setEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
-      alertBox(
-        "The Employee is added successfully",
-        "Success",
-        <FaCheckCircle />
-      );
-    } else {
-      console.error("Failed to add employee");
-    }
-  };
   const handleModify = async (editedData, deleteId) => {
-    console.log(editedData);
-    const res = await fetch(`http://localhost:5000/employee/${deleteId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedData),
-    });
-    if (res.ok) {
-      alertBox(
-        "The Employee is modified successfully",
-        "Success",
-        <FaCheckCircle />
-      );
-      fetchEmployees();
-    } else {
-      console.error("Failed to modify");
+    try {
+      await updateEmployeeAccount(deleteId, editedData);
+      setEmployees((prev) => prev.map((emp) => emp.id === deleteId ? { ...emp, ...editedData } : emp));
+      alertBox("The Employee account is updated successfully", "Success", <FaCheckCircle />);
+    } catch (err) {
+      console.error("Failed to update employee account:", err);
+    } finally {
+      fetchEmployeeAccounts();
     }
   };
+
+  const handleSubmit = async (formData) => {
+    try {
+      const newAccount = await addEmployeeAccount({ ...formData, employee_id: parseInt(id) });
+      setEmployees((prev) => [...prev, newAccount]);
+      alertBox("The Employee account is added successfully", "Success", <FaCheckCircle />);
+      setOpenModal(false);
+    } catch (err) {
+      console.error("Failed to add employee account:", err);
+    } finally {
+      fetchEmployeeAccounts();
+    }
+  };
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -97,12 +86,15 @@ const EmployeesAccount = () => {
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
         <div className="px-2 py-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Employees</h2>
+          <h2 className="text-2xl font-bold">
+            {employees.find((employee) => employee.id === parseInt(id))?.name || "Employee Account"}
+          </h2>
           <button
             onClick={() => setOpenModal(true)}
             className="flex items-center gap-2 font-bold bg-green-500 text-white px-4 py-2 rounded-lg"
           >
-            <FaPlusCircle /> Employee
+            <FaPlusCircle />
+            Employee
           </button>
         </div>
         <div className="px-2 mb-8">
@@ -117,7 +109,7 @@ const EmployeesAccount = () => {
         </div>
       </main>
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <EmployeeForm onSubmit={handleSubmit} />
+        <AccountForm onSubmit={handleSubmit} />
       </Modal>
     </div>
   );

@@ -75,7 +75,14 @@ const Monthly = ({ filterVal = 'factory' }) => {
       <main className="flex flex-col w-full">
 
         <div className="px-2 py-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Expense</h2>
+          <h2 className="text-2xl font-bold">
+            {
+              filterVal === "factory" ? "Factory Expenses"
+              : filterVal === "home" ? "Home Expenses"
+              : filterVal === "bill" ? "bill Expenses"
+              : ""
+            }
+          </h2>
           <div>
 
           <Dropdown options={month} className="flex items-center justify-between w-56 px-4 py-2 border border-black bg-white mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />

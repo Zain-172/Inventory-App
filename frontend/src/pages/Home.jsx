@@ -38,52 +38,60 @@ const Home = () => {
             title="Products"
             value={products.length}
             icon={<FaBox size={40} />}
-            bgColor="bg-blue-500"
+            bgColor="bg-gradient-to-r from-blue-700 to-blue-400"
+            to="/materials"
           />
           <MetricsCard
             title="Expense"
             value={"Rs. " + expense}
             icon={<FaExclamationTriangle size={40} />}
-            bgColor="bg-red-500"
+            bgColor="bg-gradient-to-r from-red-700 to-red-400"
+            to="/expense"
           />
           <MetricsCard
             title="Profit"
             value={`Rs. ${profit}`}
             icon={<FaDollarSign size={40} />}
-            bgColor="bg-green-500"
+            bgColor="bg-gradient-to-r from-green-700 to-green-400"
+            to="/sales"
           />
           <MetricsCard
             title="Orders"
             value={ordersToday}
             icon={<FaShoppingCart size={40} />}
-            bgColor="bg-yellow-500"
+            bgColor="bg-gradient-to-r from-yellow-700 to-yellow-400"
+            to="/sales"
           />
           <MetricsCard
             title="Sales"
             value={ordersToday}
             icon={<FaMoneyBill size={40} />}
-            bgColor="bg-lime-500"
+            bgColor="bg-gradient-to-r from-lime-700 to-lime-400"
+            to="/sales"
           />
           <MetricsCard
             title="Customers"
             value={ordersToday}
             icon={<FaUserFriends size={40} />}
             bgColor="bg-cyan-500"
+            to="/customer"
           />
           <MetricsCard
             title="Shops"
             value={ordersToday}
             icon={<FaBuilding size={40} />}
-            bgColor="bg-indigo-500"
+            bgColor="bg-gradient-to-r from-indigo-700 to-indigo-400"
+            to="/shops"
           />
           <MetricsCard
             title="Employees"
             value={ordersToday}
             icon={<FaUser size={40} />}
-            bgColor="bg-stone-900"
+            bgColor="bg-gradient-to-r from-pink-700 to-pink-400"
+            to="/employee"
           />
         </div>
-        <button className="mx-auto flex items-center justify-center p-4 text-white bg-slate-800 font-bold rounded-full shadow-md shadow-black/30 hover:bg-slate-700 transition-colors">
+        <button className="mx-auto flex items-center justify-center p-4 text-white bg-neutral-400 font-bold rounded-full shadow-md shadow-black/30 hover:bg-slate-700 transition-colors">
           <FaPlus />
         </button>
       </main>
