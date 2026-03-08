@@ -79,7 +79,7 @@ const Monthly = ({ filterVal = 'factory' }) => {
             {
               filterVal === "factory" ? "Factory Expenses"
               : filterVal === "home" ? "Home Expenses"
-              : filterVal === "bill" ? "bill Expenses"
+              : filterVal === "bill" ? "Utility Bills"
               : ""
             }
           </h2>

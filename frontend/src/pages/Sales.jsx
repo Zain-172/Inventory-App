@@ -1,7 +1,12 @@
 import { useState, useRef } from "react";
-import Navigation from "../component/Navigation";
-import Table from "../component/Table";
-import TopBar from "../component/TopBar";
+import { lazy } from "react";
+const Navigation = lazy(() => import("../component/Navigation"));
+const Table = lazy(() => import("../component/Table"));
+const TopBar = lazy(() => import("../component/TopBar"));
+const Modal = lazy(() => import("../component/Modal"));
+const Form = lazy(() => import("../component/SalesForm"));
+const Receipt = lazy(() => import("../component/Receipt"));
+const DropDown = lazy(() => import("../component/DropDown"));
 import {
   FaArrowsAltH,
   FaCheckCircle,
@@ -11,12 +16,9 @@ import {
   FaReceipt,
   FaTrashAlt,
 } from "react-icons/fa";
-import Modal from "../component/Modal";
-import Form from "../component/SalesForm";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "../component/Alerts";
 import MessageBox from "../component/MessageBox";
-import Receipt from "../component/Receipt";
 
 const Sales = () => {
   const { alertBox } = useAlertBox();
@@ -26,6 +28,7 @@ const Sales = () => {
   const {
     salesWithItems,
     setSalesWithItems,
+    customers,
     loading,
     from,
     setFrom,
@@ -35,6 +38,7 @@ const Sales = () => {
   } = useAppData();
   const [selectedSale, setSelectedSale] = useState(null);
   const [filter, setFilter] = useState("paid");
+  const [custFilter, setCustFilter] = useState("all");
   const receiptRef = useRef(null);
 
   const handleDelete = async (id) => {
@@ -83,7 +87,10 @@ const Sales = () => {
     half_payment: "bg-yellow-500",
     pending: "bg-red-500",
   };
-
+  const options = customers.map((cust) => ({
+    key: cust.customer,
+    value: cust.id,
+  })).concat([{ key: "All", value: "all" }]);
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -123,9 +130,19 @@ const Sales = () => {
           </button>
         </div>
         <div className="px-2 py-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold mb-4">Sales</h2>
-            <div className="flex items-center justify-center gap-4 mb-4">
+          <div>
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold mb-4">Sales</h2>
+              <div className="flex items-center justeify-center gap-4 mb-4">
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center justify-center gap-2"
+                >
+                  <FaPlusCircle /> Sales
+                </button>
+                <DropDown options={options} onChange={(data) => setCustFilter(data.value)} className="w-40 px-4 py-2 bg-white border border-[#555] rounded-lg flex justify-between items-center cursor-pointer" />
+            </div>
+            </div>
               <div className="flex flex-row justify-end items-center gap-2 py-2">
                 <div className="flex flex-col items-center">
                   <p className="gap-2 font-semibold">From</p>
@@ -147,17 +164,14 @@ const Sales = () => {
                   className="border px-2 py-1 rounded-lg "
                 />
               </div>
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
-              >
-                <FaPlusCircle /> Sale Items
-              </button>
-            </div>
           </div>
           <hr className="mb-4 border-neutral-800" />
           {salesWithItems
-            .filter((group) => group.status === filter || filter === "all")
+            .filter((group) => {
+              const statusMatch = group.status === filter || filter === "all";
+              const customerMatch = custFilter === "all" || group.customer_id === custFilter;
+              return statusMatch && customerMatch;
+            })
             .map((group, index) => (
               <div key={index} className="">
                 <div className="grid grid-cols-2 mb-2">
@@ -230,7 +244,7 @@ const Sales = () => {
                     <strong>Date:</strong> {group.sale_date}
                   </p>
                   <p className="text-lg">
-                    <strong>Shop:</strong> {group.shop}
+                    <strong>Customer:</strong> {group.customer}
                   </p>
                   <p className="text-lg text-right">
                     <strong>Status:</strong>{" "}

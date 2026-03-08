@@ -73,7 +73,7 @@ const Home = () => {
             title="Customers"
             value={ordersToday}
             icon={<FaUserFriends size={40} />}
-            bgColor="bg-cyan-500"
+            bgColor="bg-gradient-to-r from-cyan-700 to-cyan-400"
             to="/customer"
           />
           <MetricsCard

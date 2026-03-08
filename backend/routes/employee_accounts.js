@@ -7,7 +7,7 @@ const employeeAccountsInstance = new EmployeeAccounts();
 employee_accounts_router.get('/', (req, res) => {
     employeeAccountsInstance.getEmployeeAccounts(req, res);
 });
-employee_accounts_router.post('/add-account', (req, res) => {
+employee_accounts_router.post('/', (req, res) => {
     employeeAccountsInstance.insertEmployeeAccount(req, res);
 });
 employee_accounts_router.delete('/:id', (req, res) => {

@@ -8,7 +8,7 @@ export default function CustomerForm() {
     customer: "",
     phone: "",
     address: "",
-    shop: "",
+    type: "",
   });
 
   const { setCustomers } = useAppData();   // <-- you will store this in context
@@ -40,7 +40,7 @@ export default function CustomerForm() {
         customer: "",
         phone: "",
         address: "",
-        shop: "",
+        type: "",
       });
 
       alertBox(
@@ -59,7 +59,7 @@ export default function CustomerForm() {
       className="bg-white p-6 rounded-lg w-[45vw] grid grid-cols-2 gap-4 border border-white/30 shadow-lg"
     >
       <h2 className="text-xl font-bold text-center col-span-2">
-        <FaHandshake className="inline mr-2" /> Add Customer
+        <FaHandshake className="inline mr-2" /> Customer
       </h2>
 
       {/* Name */}
@@ -94,21 +94,21 @@ export default function CustomerForm() {
       />
       </label>
 
-      {/* Shop Name */}
-      <label className="text-sm">Shop Name
+      {/* type Name */}
+      <label className="text-sm">Type
       <input
         type="text"
         className="w-full p-2 bg-white border rounded-lg mb-3"
-        value={form.shop}
+        value={form.type}
         onChange={(e) =>
-          setForm({ ...form, shop: e.target.value })
+          setForm({ ...form, type: e.target.value })
         }
       />
       </label>
 
       <button
         type="submit"
-        className="w-full bg-green-500/60 col-span-2 text-white py-2 rounded-lg font-bold"
+        className="w-full bg-green-500 col-span-2 text-white py-2 rounded-lg font-bold"
       >
         Save Customer
       </button>

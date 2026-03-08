@@ -94,15 +94,16 @@ li:hover {
   transition: all 0.3s ease;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  th {
-    background-color: #f3f4f6;
-  }
-  th, td {
-    border: 1px solid #000;
-  }
+
+.dark :root {
+  color: #ffffff;
+  background-color: #1b1b1b;
 }
+.dark th {
+  background-color: #fefefe;
+  color: #000;
+}
+.dark th, td {
+  border: 1px solid #000;
+}
+

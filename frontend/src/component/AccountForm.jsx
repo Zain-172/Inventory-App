@@ -3,8 +3,8 @@ import { FaSave, FaUserAlt } from "react-icons/fa";
 
 export default function EmployeeForm({ onSubmit }) {
   const [form, setForm] = useState({
-    payment: "",
-    date: "",
+    amount: 0,
+    date: new Date().toISOString().split("T")[0], // default to today
     reason: ""
   });
 
@@ -28,8 +28,8 @@ export default function EmployeeForm({ onSubmit }) {
         <span className="text-sm font-medium">Payment</span>
         <input
           type="number"
-          name="payment"
-          value={form.payment}
+          name="amount"
+          value={form.amount}
           onChange={handleChange}
           required
           className="w-full p-2 border rounded-lg mt-1"

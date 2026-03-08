@@ -20,6 +20,7 @@ export default class Sale {
         customer,
         status
       } = req.body;
+      console.log("Received sale data:", req.body);
 
       if (!items || items.length === 0) {
         return res.status(400).json({ message: "Sale items required" });
@@ -76,7 +77,7 @@ export default class Sale {
         .prepare(
           `
   SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, si.item_id,
-         si.product_name, si.quantity, si.price as price, c.customer, c.shop
+         si.product_name, si.quantity, si.price as price, c.customer, c.id as customer_id
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
   JOIN customers c ON s.customer_id = c.id
@@ -100,7 +101,7 @@ export default class Sale {
             total_items: row.total_items,
             status: row.status,
             customer: row.customer,
-            shop: row.shop,
+            customer_id: row.customer_id,
             items: [],
           };
           map.set(row.invoice_id, saleObj);

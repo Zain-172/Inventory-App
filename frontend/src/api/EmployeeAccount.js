@@ -1,6 +1,6 @@
-
+const API_BASE_URL = "http://localhost:5000";
 export function fetchEmployeeAccounts() {
-    return fetch("/employee-accounts")
+    return fetch(`${API_BASE_URL}/employee-accounts`)
         .then(res => res.json())
         .catch(err => {
             console.error("Failed to fetch employee accounts", err);
@@ -9,7 +9,7 @@ export function fetchEmployeeAccounts() {
 }
 
 export function addEmployeeAccount(account) {
-    return fetch("/employee-accounts", {
+    return fetch(`${API_BASE_URL}/employee-accounts`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -24,7 +24,7 @@ export function addEmployeeAccount(account) {
 }
 
 export function deleteEmployeeAccount(id) {
-    return fetch(`/employee-accounts/${id}`, {
+    return fetch(`${API_BASE_URL}/employee-accounts/${id}`, {
         method: "DELETE"
     })
     .then(res => {
@@ -39,7 +39,7 @@ export function deleteEmployeeAccount(id) {
 }
 
 export function updateEmployeeAccount(id, account) {
-    return fetch(`/employee-accounts/${id}`, {
+    return fetch(`${API_BASE_URL}/employee-accounts/${id}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

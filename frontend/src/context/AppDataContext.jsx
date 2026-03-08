@@ -130,6 +130,7 @@ export const AppDataProvider = ({ children }) => {
         `http://localhost:5000/sale/with-items?to=${to}&from=${from}`
       );
       const data = await res.json();
+      console.log("Fetched sales with items:", data);
       setSalesWithItems(data);
     } catch (err) {
       console.error(err);

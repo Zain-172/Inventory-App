@@ -1,13 +1,14 @@
-import Table from "../component/Table";
 import { useAppData } from "../context/AppDataContext";
 import { useEffect, useState } from "react";
-import { FaCheckCircle, FaPlusCircle, FaUserAlt } from "react-icons/fa";
+import { FaCheckCircle, FaPlusCircle, FaUser, FaUserAlt } from "react-icons/fa";
+import { lazy } from "react";
 import { useAlertBox } from "../component/Alerts";
 const Navigation = lazy(() => import("../component/Navigation"));
+import Table from "../component/Table";
 import TopBar from "../component/TopBar";
 import Modal from "../component/Modal";
-import { lazy } from "react";
 const AccountForm = lazy(() => import("../component/AccountForm"));
+const Metrics = lazy(() => import("../component/Metrics"));
 import { useParams } from "react-router-dom";
 import { fetchEmployeeAccounts, addEmployeeAccount, updateEmployeeAccount, deleteEmployeeAccount } from "../api/EmployeeAccount";
 
@@ -15,15 +16,15 @@ const EmployeesAccount = () => {
   const { id } = useParams();
   const [openModal, setOpenModal] = useState(false);
   const [open, setOpen] = useState(false);
-  const { loading } = useAppData();
-  const [employees, setEmployees] = useState([]);
+  const { loading, employees } = useAppData();
+  const [accounts, setAccounts] = useState([]);
   const { alertBox } = useAlertBox();
 
   useEffect(() => {
     const loadAccounts = async () => {
       try {
         const accounts = await fetchEmployeeAccounts();
-        setEmployees(accounts.filter(account => account.employee_id === parseInt(id)));
+        setAccounts(accounts);
       } catch (err) {
         console.error("Failed to load employee accounts:", err);
       }
@@ -33,7 +34,7 @@ const EmployeesAccount = () => {
   const handleDelete = async (id) => {
     try {
       await deleteEmployeeAccount(id);
-      setEmployees((prev) => prev.filter((emp) => emp.id !== id));
+      setAccounts((prev) => prev.filter((account) => account.id !== id));
       alertBox("The Employee account is deleted successfully", "Success", <FaCheckCircle />);
     } catch (err) {
       console.error("Failed to delete employee account:", err);
@@ -45,7 +46,7 @@ const EmployeesAccount = () => {
   const handleModify = async (editedData, deleteId) => {
     try {
       await updateEmployeeAccount(deleteId, editedData);
-      setEmployees((prev) => prev.map((emp) => emp.id === deleteId ? { ...emp, ...editedData } : emp));
+      setAccounts((prev) => prev.map((account) => account.id === deleteId ? { ...account, ...editedData } : account));
       alertBox("The Employee account is updated successfully", "Success", <FaCheckCircle />);
     } catch (err) {
       console.error("Failed to update employee account:", err);
@@ -57,7 +58,7 @@ const EmployeesAccount = () => {
   const handleSubmit = async (formData) => {
     try {
       const newAccount = await addEmployeeAccount({ ...formData, employee_id: parseInt(id) });
-      setEmployees((prev) => [...prev, newAccount]);
+      setAccounts((prev) => [...prev, newAccount]);
       alertBox("The Employee account is added successfully", "Success", <FaCheckCircle />);
       setOpenModal(false);
     } catch (err) {
@@ -85,9 +86,17 @@ const EmployeesAccount = () => {
         </div>
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
-        <div className="px-2 py-6 flex justify-between items-center">
+        <div className="px-2 my-8">
+          <Metrics
+            title="Employees"
+            value={"Rs." + accounts.reduce((total, account) => total + (account.employee_id === parseInt(id) ? account.amount : 0), 0)}
+            icon={<FaUser size={40} />}
+            bgColor="bg-gradient-to-r from-green-700 to-green-400"
+           />
+        </div>
+        <div className="px-2 flex justify-between items-center">
           <h2 className="text-2xl font-bold">
-            {employees.find((employee) => employee.id === parseInt(id))?.name || "Employee Account"}
+            {employees.find((emp) => emp.id === parseInt(id))?.name || "Employee Account"}
           </h2>
           <button
             onClick={() => setOpenModal(true)}
@@ -99,7 +108,7 @@ const EmployeesAccount = () => {
         </div>
         <div className="px-2 mb-8">
           <Table
-            data={employees}
+            data={accounts}
             onDelete={handleDelete}
             onUpdate={handleModify}
             open={open}

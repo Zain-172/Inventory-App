@@ -6,14 +6,14 @@ export default class Customer {
     customer,
     phone,
     address,
-    shop,
+    type,
     date_added
   ) {
     this.id = id;
     this.customer = customer;
     this.phone = phone;
     this.address = address;
-    this.shop = shop;
+    this.type = type;
     this.date_added = date_added;
   }
 
@@ -24,7 +24,7 @@ export default class Customer {
     try {
       const rows = db
         .prepare(
-          "SELECT id, customer, phone, address, shop FROM customers"
+          "SELECT id, customer, phone, address, type FROM customers"
         )
         .all();
 
@@ -44,7 +44,7 @@ export default class Customer {
     try {
       const row = db
         .prepare(
-          "SELECT id, customer, phone, address, shop, date_added FROM customers WHERE id = ?"
+          "SELECT id, customer, phone, address, type, date_added FROM customers WHERE id = ?"
         )
         .get(id);
 
@@ -67,7 +67,7 @@ export default class Customer {
     try {
       const rows = db
         .prepare(
-          "SELECT id, customer, phone, address, shop FROM customers WHERE customer LIKE ? LIMIT 10"
+          "SELECT id, customer, phone, address, type FROM customers WHERE customer LIKE ? LIMIT 10"
         )
         .all(`%${query}%`);
 
@@ -82,14 +82,14 @@ export default class Customer {
   // INSERT CUSTOMER
   // ================================
   insertCustomer = (req, res) => {
-    const { customer, phone, address, shop } = req.body;
+    const { customer, phone, address, type } = req.body;
 
     try {
       const stmt = db.prepare(
-        "INSERT INTO customers (customer, phone, address, shop) VALUES (?, ?, ?, ?)"
+        "INSERT INTO customers (customer, phone, address, type) VALUES (?, ?, ?, ?)"
       );
 
-      const info = stmt.run(customer, phone, address, shop);
+      const info = stmt.run(customer, phone, address, type);
 
       res.status(201).json({
         message: "Customer added",
@@ -106,16 +106,16 @@ export default class Customer {
   // ================================
   updateCustomer = (req, res) => {
     const { id } = req.params;
-    const { customer, phone, address, shop } = req.body;
+    const { customer, phone, address, type } = req.body;
 
     try {
       const stmt = db.prepare(
         `UPDATE customers 
-         SET customer = ?, phone = ?, address = ?, shop = ?
+         SET customer = ?, phone = ?, address = ?, type = ?
          WHERE id = ?`
       );
 
-      const info = stmt.run(customer, phone, address, shop, id);
+      const info = stmt.run(customer, phone, address, type, id);
 
       if (info.changes === 0)
         return res.status(404).json({ message: "Customer not found" });

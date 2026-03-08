@@ -1,5 +1,6 @@
 import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 export default function TopBar({ children }) {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function TopBar({ children }) {
         <FaArrowCircleLeft />
       </button>
       {children}
+      <ThemeToggle />
     </header>
   );
 }

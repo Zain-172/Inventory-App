@@ -11,7 +11,7 @@ export default function SalesForm({ onSubmit }) {
     ...products.map((item) => ({ key: item.name + " (" + item.barcode + ")", value: item.id })),
   ];
   const customerOptions = customers.map((cust) => ({
-    key: cust.shop,
+    key: cust.customer,
     value: cust.id,
   }));
   const paymentStatusOptions = [
