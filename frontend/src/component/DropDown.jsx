@@ -6,7 +6,7 @@ export default function Dropdown({
   label = { value: 0, key: "Select" },
   options = [],
   onChange,
-  className = "w-full px-4 py-2 bg-white border border-[#555] rounded-lg flex justify-between items-center cursor-pointer",
+  className = "w-full px-4 py-2 border border-[#555] rounded-lg flex justify-between items-center cursor-pointer",
   optionClassName = "flex items-center gap-4 px-4 py-2 cursor-pointer border-t border-white/30 hover:bg-gray-200 transition-colors",
   value,
 }) {
@@ -55,7 +55,7 @@ export default function Dropdown({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -5 }}
             transition={{ duration: 0.15 }}
-            className="absolute mt-2 w-full border rounded-xl shadow-lg z-20 px-1 py-2 bg-white border-white/20 max-h-44 overflow-auto"
+            className="absolute mt-2 w-full border rounded-xl shadow-lg z-20 px-1 py-2 bg-white dark:bg-neutral-800 border-white/20 max-h-44 overflow-auto"
           >
             <div className="px-4 py-1 border-b">{label.key}</div>
 

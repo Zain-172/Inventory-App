@@ -4,7 +4,7 @@ import express from 'express';
 const employee_accounts_router = express.Router();
 const employeeAccountsInstance = new EmployeeAccounts();
 
-employee_accounts_router.get('/', (req, res) => {
+employee_accounts_router.get('/:id', (req, res) => {
     employeeAccountsInstance.getEmployeeAccounts(req, res);
 });
 employee_accounts_router.post('/', (req, res) => {

@@ -85,7 +85,7 @@ const Monthly = ({ filterVal = 'factory' }) => {
           </h2>
           <div>
 
-          <Dropdown options={month} className="flex items-center justify-between w-56 px-4 py-2 border border-black bg-white mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />
+          <Dropdown options={month} className="flex items-center justify-between w-56 px-4 py-2 border dark:border-white border-black mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />
           </div>
         </div>
 

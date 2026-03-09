@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { FaSave, FaUserAlt } from "react-icons/fa";
 
-export default function EmployeeForm({ onSubmit }) {
-  const [form, setForm] = useState({
-    name: "",
-    position: "",
-    salary: "",
-    phone: "",
-    address: ""
-  });
+export default function EmployeeForm({ onSubmit, modifyData }) {
+  const [form, setForm] = useState(modifyData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -91,7 +85,7 @@ export default function EmployeeForm({ onSubmit }) {
       {/* Submit */}
       <button
         type="submit"
-        className="flex items-center gap-2 px-4 py-2 bg-green-600/40 text-white rounded-lg hover:bg-green-800"
+        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-800"
       >
         <FaSave /> Employee
       </button>

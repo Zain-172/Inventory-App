@@ -10,12 +10,12 @@
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
   background-color: #fbfbfb;
-  border-color: #151515;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: all 0.3s ease;
 }
 ::-webkit-scrollbar {
   position: absolute;
@@ -43,25 +43,33 @@
 table {
   border-collapse: collapse;
   color: #fff;
+  border: 1px solid #ffffff3c;
   width: 100%;
 }
+
 th {
   background-color: rgb(17, 17, 17);
   transition: all 0.3s ease;
 }
+
 td {
   padding: 12px 15px;
   border: 1px solid #fff;
   text-align: left;
   transition: all 0.3s ease;
 }
+
 th:hover {
   background-color: rgb(50, 59, 83);
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
 form {
   background: #fff;
+}
+.dark form {
+  background: #1b1b1b;
 }
 input {
   background-color: #ffffff;
@@ -71,6 +79,12 @@ input {
   border-radius: 4px;
   transition: all 0.3s ease;
 }
+
+.dark input {
+  background-color: #1b1b1b;
+  border: 1px solid #ffffff3c;
+  color: #ffffff;
+}
 textarea {
   background-color: #ffffff;
   border: 1px solid #000000;
@@ -79,6 +93,12 @@ textarea {
   border-radius: 4px;
   transition: all 0.3s ease;
 }
+.dark textarea {
+  background-color: #1b1b1b;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+}
+
 tr:hover {
   background-color: #333;
   cursor: pointer;
@@ -88,22 +108,17 @@ tr:hover {
 li {
   transition: all 0.3s ease;
 }
+
 li:hover {
   background-color: #aaa;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-
-.dark :root {
+:root.dark {
   color: #ffffff;
   background-color: #1b1b1b;
+  transition: all 0.3s ease;
 }
-.dark th {
-  background-color: #fefefe;
-  color: #000;
-}
-.dark th, td {
-  border: 1px solid #000;
-}
+
 

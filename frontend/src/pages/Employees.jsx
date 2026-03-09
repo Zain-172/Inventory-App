@@ -12,31 +12,8 @@ import { useNavigate } from "react-router-dom";
 const Employees = () => {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
-  const [open, setOpen] = useState(false);
-  const { loading, employees, setEmployees, fetchEmployees } = useAppData();
+  const { loading, employees, setEmployees } = useAppData();
   const { alertBox } = useAlertBox();
-  const handleDelete = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5000/employee/${id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setEmployees((prevEmployees) =>
-          prevEmployees.filter((employee) => employee.id !== id)
-        );
-        alertBox(
-          "The Employee is deleted successfully",
-          "Success",
-          <FaCheckCircle />
-        );
-      } else {
-        console.error("Failed to delete employee");
-      }
-    } catch (err) {
-      console.error("Failed to delete employee:", err);
-    }
-    setOpenModal(false);
-  };
 
   const handleSubmit = async (data) => {
     const res = await fetch("http://localhost:5000/employee/add-employee", {
@@ -56,26 +33,6 @@ const Employees = () => {
       );
     } else {
       console.error("Failed to add employee");
-    }
-  };
-  const handleModify = async (editedData, deleteId) => {
-    console.log(editedData);
-    const res = await fetch(`http://localhost:5000/employee/${deleteId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedData),
-    });
-    if (res.ok) {
-      alertBox(
-        "The Employee is modified successfully",
-        "Success",
-        <FaCheckCircle />
-      );
-      fetchEmployees();
-    } else {
-      console.error("Failed to modify");
     }
   };
   if (loading)

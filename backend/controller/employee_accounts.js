@@ -11,9 +11,10 @@ export default class EmployeeAccounts {
 
     getEmployeeAccounts = (req, res) => {
         try {
+            const { id } = req.params;
             const rows = db
-                .prepare("SELECT id, employee_id, amount, date, reason FROM employee_accounts")
-                .all();
+                .prepare("SELECT id, employee_id, amount, date, reason FROM employee_accounts WHERE employee_id = ?")
+                .all(id);
             res.json(rows);
         } catch (err) {
             console.error(err);

@@ -131,13 +131,13 @@ const Material = () => {
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
         <div className="flex items-center justify-center gap-4 py-6">
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "raw" ? "bg-green-500 text-white" : "bg-white text-green-500"}`} onClick={() => setFilter("raw")}>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "raw" ? "bg-green-500 text-white" : "text-green-500"}`} onClick={() => setFilter("raw")}>
             Raw Materials
           </button>
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "production" ? "bg-green-500 text-white" : "bg-white text-green-500"}`} onClick={() => setFilter("production")}>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "production" ? "bg-green-500 text-white" : "text-green-500"}`} onClick={() => setFilter("production")}>
             Production Made
           </button>
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "ready" ? "bg-green-500 text-white" : "bg-white text-green-500"}`} onClick={() => setFilter("ready")}>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "ready" ? "bg-green-500 text-white" : "text-green-500"}`} onClick={() => setFilter("ready")}>
             Ready Made
           </button>
         </div>
@@ -268,7 +268,7 @@ const Material = () => {
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">Type</label>
               <Dropdown
-                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 border-black"
+                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
                 options={[
                   { key: "Raw Material", value: "raw" },
                   { key: "Production Made", value: "production" },

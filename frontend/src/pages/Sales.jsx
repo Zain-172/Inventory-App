@@ -111,19 +111,19 @@ const Sales = () => {
       <main className="flex flex-col my-16 w-full">
         <div className="flex items-center justify-center gap-4 py-6">
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "paid" ? "bg-green-500 text-white" : "bg-white text-green-500"}`}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "paid" ? "bg-green-500 text-white" : "text-green-500"}`}
             onClick={() => setFilter("paid")}
           >
             Full Payment
           </button>
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "pending" ? "bg-green-500 text-white" : "bg-white text-green-500"}`}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "pending" ? "bg-green-500 text-white" : "text-green-500"}`}
             onClick={() => setFilter("pending")}
           >
             Pending
           </button>
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "half_payment" ? "bg-green-500 text-white" : "bg-white text-green-500"}`}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "half_payment" ? "bg-green-500 text-white" : "text-green-500"}`}
             onClick={() => setFilter("half_payment")}
           >
             Half Payment
@@ -140,7 +140,7 @@ const Sales = () => {
                 >
                   <FaPlusCircle /> Sales
                 </button>
-                <DropDown options={options} onChange={(data) => setCustFilter(data.value)} className="w-40 px-4 py-2 bg-white border border-[#555] rounded-lg flex justify-between items-center cursor-pointer" />
+                <DropDown options={options} onChange={(data) => setCustFilter(data.value)} className="w-40 px-4 py-2 border border-[#555] rounded-lg flex justify-between items-center cursor-pointer" />
             </div>
             </div>
               <div className="flex flex-row justify-end items-center gap-2 py-2">
@@ -165,7 +165,7 @@ const Sales = () => {
                 />
               </div>
           </div>
-          <hr className="mb-4 border-neutral-800" />
+          <hr className="mb-4 bg-neutral-900 dark:bg-neutral-200" />
           {salesWithItems
             .filter((group) => {
               const statusMatch = group.status === filter || filter === "all";
@@ -260,7 +260,7 @@ const Sales = () => {
                     Total Price: {group.total_amount}
                   </p>
                 </div>
-                <hr className="mb-6 bg-neutral-800" />
+                <hr className="mb-6 bg-neutral-900 dark:bg-neutral-200" />
               </div>
             ))}
         </div>

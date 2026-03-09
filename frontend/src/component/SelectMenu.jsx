@@ -50,7 +50,7 @@ const SelectMenu = ({
         </div>
       ) : (
         <Modal isOpen={open} onClose={() => setOpen(false)}>
-          <div className="bg-white w-80 grid grid-rows-2 gap-4 p-4 rounded-2xl shadow-lg shadow-white/10 border border-white/30">
+          <div className="bg-white dark:bg-neutral-900 w-80 grid grid-rows-2 gap-4 p-4 rounded-2xl shadow-lg shadow-white/10 border border-white/30">
             <h1 className="flex items-center justify-center gap-2 font-bold text-2xl">
               <FaHandPointer /> Action
             </h1>

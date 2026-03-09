@@ -1,6 +1,6 @@
 const API_BASE_URL = "http://localhost:5000";
-export function fetchEmployeeAccounts() {
-    return fetch(`${API_BASE_URL}/employee-accounts`)
+export function fetchEmployeeAccounts(id) {
+    return fetch(`${API_BASE_URL}/employee-accounts/${id}`)
         .then(res => res.json())
         .catch(err => {
             console.error("Failed to fetch employee accounts", err);
