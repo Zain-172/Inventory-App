@@ -10,6 +10,8 @@ const Employees = lazy(() => import("./pages/Employees"));
 const Customer = lazy(() => import("./pages/Customer"));
 const Raw = lazy(() => import("./pages/Raw"));
 const EmployeeAccount = lazy(() => import("./pages/EmployeeAccount"));
+const Login = lazy(() => import("./pages/Login"));
+const SignUp = lazy(() => import("./pages/SignUp"));
 import { AppDataProvider } from "./context/AppDataContext";
 import { AlertProvider } from "./component/Alerts";
 
@@ -19,7 +21,7 @@ function App() {
       <AlertProvider>
       <HashRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/materials" element={<Materials />} />
           <Route path="/sales" element={<Sales />} />
           <Route path="/report" element={<Report />} />
@@ -29,6 +31,8 @@ function App() {
           <Route path="/customer" element={<Customer />} />
           <Route path="/raw" element={<Raw />} />
           <Route path="/account/:id" element={<EmployeeAccount />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
       </HashRouter>
       </AlertProvider>
