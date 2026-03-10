@@ -4,7 +4,7 @@ export default class SaleItem {
   constructor() {
     this.insertStmt = db.prepare(`
       INSERT INTO sale_items
-      (sale_id, product_name, quantity, price, product_id)
+      (sale_id, product_name, quantity, price, barcode)
       VALUES (?, ?, ?, ?, ?)
     `);
     this.getBySaleIdStmt = db.prepare(`

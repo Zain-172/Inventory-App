@@ -76,7 +76,7 @@ export default class Sale {
       const rows = db
         .prepare(
           `
-  SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, si.item_id,
+  SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, si.barcode,
          si.product_name, si.quantity, si.price as price, c.customer, c.id as customer_id
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
@@ -109,8 +109,8 @@ export default class Sale {
         }
 
         map.get(row.invoice_id).items.push({
-          id: row.item_id,
           product_name: row.product_name,
+          barcode: row.barcode,
           quantity: row.quantity,
           price: row.price,
         });

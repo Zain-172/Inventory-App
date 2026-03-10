@@ -132,7 +132,7 @@ export default function Form({ onSubmit }) {
       </div>
       <button
         type="submit"
-        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
       >
         <FaCalculator /> Calculate
       </button>

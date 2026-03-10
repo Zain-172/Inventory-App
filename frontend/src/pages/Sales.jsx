@@ -83,14 +83,16 @@ const Sales = () => {
     }
   };
   const colors = {
-    paid: "bg-green-500",
+    paid: "bg-green-600",
     half_payment: "bg-yellow-500",
     pending: "bg-red-500",
   };
-  const options = customers.map((cust) => ({
-    key: cust.customer,
-    value: cust.id,
-  })).concat([{ key: "All", value: "all" }]);
+  const options = customers
+    .map((cust) => ({
+      key: cust.customer,
+      value: cust.id,
+    }))
+    .concat([{ key: "All", value: "all" }]);
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -111,19 +113,19 @@ const Sales = () => {
       <main className="flex flex-col my-16 w-full">
         <div className="flex items-center justify-center gap-4 py-6">
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "paid" ? "bg-green-500 text-white" : "text-green-500"}`}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "paid" ? "bg-green-600 text-white" : "text-green-500"}`}
             onClick={() => setFilter("paid")}
           >
             Full Payment
           </button>
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "pending" ? "bg-green-500 text-white" : "text-green-500"}`}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "pending" ? "bg-green-600 text-white" : "text-green-500"}`}
             onClick={() => setFilter("pending")}
           >
             Pending
           </button>
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "half_payment" ? "bg-green-500 text-white" : "text-green-500"}`}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "half_payment" ? "bg-green-600 text-white" : "text-green-500"}`}
             onClick={() => setFilter("half_payment")}
           >
             Half Payment
@@ -136,40 +138,45 @@ const Sales = () => {
               <div className="flex items-center justeify-center gap-4 mb-4">
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center justify-center gap-2"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center justify-center gap-2"
                 >
                   <FaPlusCircle /> Sales
                 </button>
-                <DropDown options={options} onChange={(data) => setCustFilter(data.value)} className="w-40 px-4 py-2 border border-[#555] rounded-lg flex justify-between items-center cursor-pointer" />
-            </div>
-            </div>
-              <div className="flex flex-row justify-end items-center gap-2 py-2">
-                <div className="flex flex-col items-center">
-                  <p className="gap-2 font-semibold">From</p>
-                </div>
-                <input
-                  type="date"
-                  value={from}
-                  onChange={(e) => setFrom(e.target.value)}
-                  className="border px-2 py-1 rounded-md"
-                />
-                <FaArrowsAltH />
-                <div className="flex flex-col items-center">
-                  <p className="gap-2 font-semibold">To</p>
-                </div>
-                <input
-                  type="date"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  className="border px-2 py-1 rounded-lg "
+                <DropDown
+                  options={options}
+                  onChange={(data) => setCustFilter(data.value)}
+                  className="w-40 px-4 py-2 border border-[#555] rounded-lg flex justify-between items-center cursor-pointer"
                 />
               </div>
+            </div>
+            <div className="flex flex-row justify-end items-center gap-2 py-2">
+              <div className="flex flex-col items-center">
+                <p className="gap-2 font-semibold">From</p>
+              </div>
+              <input
+                type="date"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+                className="border px-2 py-1 rounded-md"
+              />
+              <FaArrowsAltH />
+              <div className="flex flex-col items-center">
+                <p className="gap-2 font-semibold">To</p>
+              </div>
+              <input
+                type="date"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                className="border px-2 py-1 rounded-lg "
+              />
+            </div>
           </div>
           <hr className="mb-4 bg-neutral-900 dark:bg-neutral-200" />
           {salesWithItems
             .filter((group) => {
               const statusMatch = group.status === filter || filter === "all";
-              const customerMatch = custFilter === "all" || group.customer_id === custFilter;
+              const customerMatch =
+                custFilter === "all" || group.customer_id === custFilter;
               return statusMatch && customerMatch;
             })
             .map((group, index) => (

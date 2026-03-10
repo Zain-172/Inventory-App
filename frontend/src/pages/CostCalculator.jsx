@@ -53,9 +53,9 @@ export default function CostCalculator() {
       <main className="p-6 flex flex-col gap-2">
         <div className="flex justify-between items-center w-full">
           <h2 className="text-2xl font-bold mb-4">Production Cost</h2>
-          <Link to="/materials" className="mb-4 px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"><FaBroom /> Materials</Link>
+          <Link to="/materials" className="mb-4 px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"><FaBroom /> Materials</Link>
         </div>
-        <Table data={rawMaterials} nonEditable="cost_price" open={open} setOpen={setOpen} onDelete={handleDelete} onUpdate={handleModify} accent="bg-green-500" />
+        <Table data={rawMaterials} nonEditable="cost_price" open={open} setOpen={setOpen} onDelete={handleDelete} onUpdate={handleModify} accent="bg-green-600" />
         <hr className="my-12" />
         <Form />
       </main>

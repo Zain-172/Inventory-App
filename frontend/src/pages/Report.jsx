@@ -374,7 +374,7 @@ const Report = () => {
             </button>
             <button
               onClick={GenerateProductSaleReport}
-              className="flex flex-col items-center justify-center bg-green-500 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center bg-green-600 p-4 rounded-lg w-full"
             >
               <FaShoppingCart className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>

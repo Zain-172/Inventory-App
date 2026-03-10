@@ -57,7 +57,7 @@ const Employees = () => {
           <h2 className="text-2xl font-bold">Employees</h2>
           <button
             onClick={() => setOpenModal(true)}
-            className="flex items-center gap-2 font-bold bg-green-500 text-white px-4 py-2 rounded-lg"
+            className="flex items-center gap-2 font-bold bg-green-600 text-white px-4 py-2 rounded-lg"
           >
             <FaPlusCircle /> Employee
           </button>
@@ -88,7 +88,7 @@ const Employees = () => {
                 {Object.keys(row).map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className={`border p-0 bg-green-500 ${
+                    className={`border p-0 bg-green-600 ${
                       colIndex == 0 ? "w-6" : ""
                     }`}
                   >

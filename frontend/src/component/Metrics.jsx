@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-export default function MetricsCard({ title, value, icon, bgColor = "bg-green-500", enableToggle = true, showValue = false, to = "#" }) {
+export default function MetricsCard({ title, value, icon, bgColor = "bg-green-600", enableToggle = true, showValue = false, to = "#" }) {
   const [isShown, setIsShown] = useState(showValue); // If toggle is disabled, show value by default
 
   return (

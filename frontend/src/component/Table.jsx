@@ -5,7 +5,7 @@ import SelectMenu from "../component/SelectMenu";
 
 export default function Table({
   data,
-  accent = "bg-green-500",
+  accent = "bg-green-600",
   open,
   setOpen,
   onDelete,
@@ -30,7 +30,7 @@ export default function Table({
           <thead className="text-sm font-medium uppercase">
             <tr>
               {Object.keys(data[0]).map((key, index) => (
-                <th key={index} className="px-4 py-2 border text-left">
+                <th key={index} className={`px-4 py-2 border text-left ${key.toLowerCase() === "id" ? "text-center" : ""}`}>
                   {key === "Action"
                     ? ""
                     : key.toUpperCase().replaceAll("_", " ")}
@@ -52,11 +52,9 @@ export default function Table({
                 {Object.keys(row).map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className={`border p-0 ${accent} ${
-                      colIndex == 0 ? "w-6" : ""
-                    }`}
+                    className={`border p-0 ${accent} ${data[0][colIndex] === "Action" ? "w-2" : ""}`}
                   >
-                    {colIndex ? (
+                    {col !== "id" ? (
                       enable && col !== nonEditable && deleteId === row.id ? (
                         <input
                           className="bg-transparent w-full rounded-none h-100 border-none focus:ring-0"
@@ -65,11 +63,13 @@ export default function Table({
                           value={editedData[col] || row[col]}
                           onChange={handleChange}
                         />
+                      ) : col === "Action" ? (
+                        <div className="flex items-center justify-center">{row[col]}</div>
                       ) : (
                         <p className="p-2 min-w-[150px]">{row[col]}</p>
                       )
                     ) : (
-                      <p className="text-center w-8">{row[col]}</p>
+                      <p className="text-center">{row[col]}</p>
                     )}
                   </td>
                 ))}

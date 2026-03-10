@@ -2,31 +2,18 @@ import Navigation from "../component/Navigation";
 import Modal from "../component/Modal";
 import Table from "../component/Table";
 import ExpenseForm from "../component/ExpenseForm";
-import Dropdown from "../component/DropDown";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
 import { useEffect, useState } from "react";
-import { FaCheckCircle } from "react-icons/fa";
+import { FaCheckCircle, FaArrowsAltH } from "react-icons/fa";
 import { useAlertBox } from "../component/Alerts";
 
 const Monthly = ({ filterVal = 'factory' }) => {
   const [openModal, setOpenModal] = useState(false);
   const { loading, expenses, setExpenses, fetchExpenses } = useAppData();
-  const month = [
-    { key: "January", value: "01" },
-    { key: "February", value: "02" },
-    { key: "March", value: "03" },
-    { key: "April", value: "04" },
-    { key: "May", value: "05" },
-    { key: "June", value: "06" },
-    { key: "July", value: "07" },
-    { key: "August", value: "08" },
-    { key: "September", value: "09" },
-    { key: "October", value: "10" },
-    { key: "November", value: "11" },
-    { key: "December", value: "12" },
-  ]
-  const [selectedMonth, setSelectedMonth] = useState(month[new Date().getMonth()].key);
+
+  const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
+  const [from, setFrom] = useState(new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split("T")[0]);
   const [open, setOpen] = useState(false);
   const { alertBox } = useAlertBox();
 
@@ -85,19 +72,41 @@ const Monthly = ({ filterVal = 'factory' }) => {
           </h2>
           <div>
 
-          <Dropdown options={month} className="flex items-center justify-between w-56 px-4 py-2 border dark:border-white border-black mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />
+
+
+              <div className="flex flex-row justify-end items-center gap-2 py-2">
+                <div className="flex flex-col items-center">
+                  <p className="gap-2 font-semibold">From</p>
+                </div>
+                <input
+                  type="date"
+                  value={from}
+                  onChange={(e) => setFrom(e.target.value)}
+                  className="border px-2 py-1 rounded-md"
+                />
+                <FaArrowsAltH />
+                <div className="flex flex-col items-center">
+                  <p className="gap-2 font-semibold">To</p>
+                </div>
+                <input
+                  type="date"
+                  value={to}
+                  onChange={(e) => setTo(e.target.value)}
+                  className="border px-2 py-1 rounded-lg "
+                />
+              </div>
           </div>
         </div>
 
         <div className="px-2 mb-8">
           <Table data={expenses.
             filter(item => (item.title.toLowerCase()).includes(filterVal) || filterVal === "factory" && (item.title.toLowerCase()).includes("salary") )
-            } onDelete={handleDelete} accent="bg-green-500" open={open} setOpen={setOpen} onUpdate={handleModify} />
+            } onDelete={handleDelete} accent="bg-green-600" open={open} setOpen={setOpen} onUpdate={handleModify} />
         </div>
 
           <button
             onClick={() => setOpenModal(true)}
-            className="px-4 py-2 w-56 grid place-self-center bg-green-500 rounded-lg text-white font-bold"
+            className="px-4 py-2 w-56 grid place-self-center bg-green-600 rounded-lg text-white font-bold"
           >
             + Add Expense
           </button>

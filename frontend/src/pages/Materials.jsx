@@ -131,13 +131,13 @@ const Material = () => {
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
         <div className="flex items-center justify-center gap-4 py-6">
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "raw" ? "bg-green-500 text-white" : "text-green-500"}`} onClick={() => setFilter("raw")}>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "raw" ? "bg-green-600 text-white" : "text-green-500"}`} onClick={() => setFilter("raw")}>
             Raw Materials
           </button>
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "production" ? "bg-green-500 text-white" : "text-green-500"}`} onClick={() => setFilter("production")}>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "production" ? "bg-green-600 text-white" : "text-green-500"}`} onClick={() => setFilter("production")}>
             Production Made
           </button>
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "ready" ? "bg-green-500 text-white" : "text-green-500"}`} onClick={() => setFilter("ready")}>
+          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "ready" ? "bg-green-600 text-white" : "text-green-500"}`} onClick={() => setFilter("ready")}>
             Ready Made
           </button>
         </div>
@@ -148,19 +148,19 @@ const Material = () => {
               { filter == "production" && (
                 <Link
                   to="/cost-calculator"
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
                 >
                   <FaCalculator /> Calculate Cost
                 </Link>
               )}
               <button
                   onClick={() => setIsModalOpen(true)}
-                  className="px-4 py-2 bg-green-500 text-white rounded-lg font-bold flex items-center gap-2"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
                 >
                   <FaPlusCircle /> Add Stock
                 </button>
               {/* <button
-                className="py-3 px-2 rounded-lg bg-green-500 hover:bg-green-600 text-white"
+                className="py-3 px-2 rounded-lg bg-green-600 hover:bg-green-600 text-white"
                 onClick={(e) => {
                   e.stopPropagation();
                   setOpenMenuIndex((prev) => !prev);
@@ -172,13 +172,13 @@ const Material = () => {
                 <div className="absolute right-0 mt-32 w-48 bg-white border border-black text-white rounded-lg shadow-lg flex flex-col">
                   <button
                     onClick={() => setIsModalOpen(true)}
-                    className="px-4 py-2  hover:bg-green-500 text-white rounded-t border-b font-bold flex items-center gap-2"
+                    className="px-4 py-2  hover:bg-green-600 text-white rounded-t border-b font-bold flex items-center gap-2"
                   >
                     <FaPlusCircle /> Add Stock
                   </button>
                   <button
                     onClick={() => setRemoveModal(true)}
-                    className="px-4 py-2  hover:bg-green-500 text-white rounded-b font-bold flex items-center gap-2"
+                    className="px-4 py-2  hover:bg-green-600 text-white rounded-b font-bold flex items-center gap-2"
                   >
                     <FaTrashAlt /> Remove Stock
                   </button>
@@ -199,7 +199,7 @@ const Material = () => {
             }))}
             onDelete={handleDelete}
             nonEditable="Delete"
-            accent="bg-green-500"
+            accent="bg-green-600"
           />
         </div>
       </main>
@@ -302,7 +302,7 @@ const Material = () => {
           </div>
           <button
             type="submit"
-            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
             <FaPlusCircle /> Add Stock
           </button>
@@ -379,7 +379,7 @@ const Material = () => {
           </div>
           <button
             type="submit"
-            className="w-full flex items-center justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+            className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
             <FaPlusCircle /> Add Stock
           </button>

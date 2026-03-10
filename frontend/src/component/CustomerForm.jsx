@@ -108,7 +108,7 @@ export default function CustomerForm() {
 
       <button
         type="submit"
-        className="w-full bg-green-500 col-span-2 text-white py-2 rounded-lg font-bold"
+        className="w-full bg-green-600 col-span-2 text-white py-2 rounded-lg font-bold"
       >
         Save Customer
       </button>

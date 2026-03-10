@@ -72,7 +72,7 @@ export default function RawForm() {
 
       <button
         type="submit"
-        className="w-full bg-green-500 text-white py-2 rounded-lg font-bold"
+        className="w-full bg-green-600 text-white py-2 rounded-lg font-bold"
       >
         Save
       </button>

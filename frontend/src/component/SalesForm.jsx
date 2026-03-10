@@ -8,7 +8,7 @@ import { useAlertBox } from "./Alerts";
 export default function SalesForm({ onSubmit }) {
   const { products, customers } = useAppData();
   const product = [
-    ...products.map((item) => ({ key: item.name + " (" + item.barcode + ")", value: item.id })),
+    ...products.map((item) => ({ key: item.name, value: item.barcode })),
   ];
   const customerOptions = customers.map((cust) => ({
     key: cust.customer,
@@ -58,7 +58,7 @@ export default function SalesForm({ onSubmit }) {
       sale_date: formData.date,
       salesman: formData.salesman.key,
       total_cost: entry.reduce(
-        (sum, i) => sum + i.quantity * products.find((p) => p.id === i.id)?.cost_price,
+        (sum, i) => sum + i.quantity * products.find((p) => p.barcode === i.id)?.cost_price,
         0
       ),
       total_amount: entry.reduce(
@@ -75,8 +75,8 @@ export default function SalesForm({ onSubmit }) {
   };
   const addEntry = () => {
     if (
-      products.find((p) => p.name === formData.product)?.stock <
-      Number(formData.quantity) + Number(entry.find((item) => item.product === formData.product)?.quantity || 0)
+      products.find((p) => p.barcode === formData.id)?.stock <
+      Number(formData.quantity) + Number(entry.find((item) => item.id === formData.id)?.quantity || 0)
     ) {
       alertBox("Not enough stock for the selected product.");
       return;
@@ -128,7 +128,7 @@ export default function SalesForm({ onSubmit }) {
     return "INV-" + id;
   }
   const tableData = entry.map((item) => ({
-    ID: item.id,
+    Barcode: item.id,
     Product: item.product,
     Quantity: item.quantity,
     Price: item.sale_price,
@@ -208,11 +208,18 @@ export default function SalesForm({ onSubmit }) {
           {formData.id && (
             <span className="absolute -bottom-5 left-1 text-sm text-gray-400 italic">
               Cost Price:{" "}
-              {products.find((p) => p.id === formData.id)?.cost_price}
+              {products.find((p) => p.barcode === formData.id)?.cost_price}
             </span>
           )}
         </div>
-
+        <div className="w-full">
+          <label className="block text-sm font-medium mb-1">Barcode</label>
+          <div
+            className="w-full px-3 py-2 border rounded-lg dark:border-white/20 border-black"
+          >
+            {formData.id}
+          </div>
+        </div>
         <div className="w-full relative">
           <label className="block text-sm font-medium mb-1">Quantity</label>
           <input
@@ -225,8 +232,8 @@ export default function SalesForm({ onSubmit }) {
             required
           />
           {formData.quantity >
-            products.find((p) => p.id === formData.id)?.stock && (
-            <span className="absolute -bottom-5 left-1 text-sm text-red-600 italic">
+            products.find((p) => p.barcode === formData.id)?.stock && (
+            <span className="absolute -bottom-5 left-1 text-[10px] text-red-600 italic">
               *Exceeds the available stock!
             </span>
           )}
@@ -246,7 +253,7 @@ export default function SalesForm({ onSubmit }) {
         <button
           onClick={addEntry}
           type="button"
-          className="flex items-center justify-center p-2 mb-1 bg-green-500 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="flex items-center justify-center p-2 mb-1 bg-green-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
           <FaPlus />
         </button>
@@ -261,7 +268,7 @@ export default function SalesForm({ onSubmit }) {
       )}
       <button
         type="submit"
-        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-500 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
       >
         <FaPlusCircle /> Add Sale
       </button>
