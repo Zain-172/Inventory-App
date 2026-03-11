@@ -1,4 +1,4 @@
-import { nodemailer } from "../model/nodemailer";
+import node_mailer from "../model/nodemailer.js";
 export default class OTP {
     constructor() {
         if (OTP.instance) {
@@ -16,11 +16,11 @@ export default class OTP {
 
     validateOTP(input) {
         if (Date.now() > this.expiry) {
-            return { valid: false, message: "OTP expired" };
+            return { valid: false };
         } else if (input === this.otp) {
-            return { valid: true, message: "OTP valid" };
+            return { valid: true };
         } else {
-            return { valid: false, message: "Invalid OTP" };
+            return { valid: false };
         }
     }
 
@@ -35,6 +35,6 @@ export default class OTP {
         }
         const subject = "Your OTP Code";
         const text = `Your OTP code is: ${this.otp}. It is valid for 5 minutes.`;
-        nodemailer(email, subject, text);
+        node_mailer(email, subject, text);
     }
 }

@@ -1,6 +1,7 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 
-export default function mailer(to, subject, text) {
+export default function node_mailer(to, subject, text) {
+    console.log("Sending email to:", process.env.MAIL_APP_EMAIL, process.env.MAIL_APP_PASSWORD);
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {

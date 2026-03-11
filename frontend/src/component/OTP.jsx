@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { useAlertBox } from "./Alerts.jsx";
-export default function OTP({ onSuccess, OTP }) {
+import { validateOTP } from "../api/SignUp.js";
+export default function OTP({ onSuccess }) {
   const inputs = useRef([]);
   const { alertBox } = useAlertBox();
 
@@ -14,21 +15,26 @@ export default function OTP({ onSuccess, OTP }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const otp = inputs.current.map(input => input.value).join('');
-    console.log("Submitted OTP:", otp);
-    if (otp === OTP) {
+    const success = await validateOTP(otp);
+    console.log(success);
+    if (success.valid) {
+      alertBox("OTP validated successfully.", "Success");
       onSuccess();
     } else {
-      alertBox("Invalid OTP. Please try again.");
+      alertBox(success.message, "Error");
     }
   }
 
   return (
     <form className="p-6 bg-white dark:bg-neutral-900 rounded-xl" onSubmit={handleSubmit} >
         <h2 className="text-xl font-bold mb-4 text-center">Enter OTP</h2>
-          <div className="flex gap-3 mb-2">
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 text-center">
+          Please enter the 6-digit code sent to your email or phone.
+        </p>
+        <div className="flex gap-3 mb-2">
           {[0,1,2,3,4,5].map((_, i) => (
             <input
               key={i}
