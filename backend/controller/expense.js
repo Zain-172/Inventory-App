@@ -20,14 +20,14 @@ export default class Expense {
     }
   };
   getDailyExpenses = (req, res) => {
-    const { date } = req.query;
     try {
       const rows = db
         .prepare(
-          "SELECT sum(amount) as total FROM expense WHERE date = ? group by date"
+          "SELECT sum(amount) as expense from expense WHERE date = CURRENT_DATE group by date"
         )
-        .all(date);
-      res.json(rows);
+        .all();
+      console.log(rows);
+      res.json(rows[0] || { expense: 0 });
     } catch (err) {
       console.log(err);
       res.status(500).json({ message: "Internal Server Error" });

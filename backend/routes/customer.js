@@ -9,5 +9,8 @@ customer_router.get('/:id', CustomerInstance.getCustomerById);
 customer_router.post('/add-customer', CustomerInstance.insertCustomer);
 customer_router.delete('/:id', CustomerInstance.deleteCustomer);
 customer_router.put('/:id', CustomerInstance.updateCustomer);
+customer_router.get('/count/cust', CustomerInstance.countCustomers);
+customer_router.get('/count/shop', CustomerInstance.countShop);
+
 
 export default customer_router;

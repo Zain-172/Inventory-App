@@ -34,4 +34,26 @@ export default class Login {
         hash.update(password);
         return hash.digest("hex") === hashedPassword;
     }
+
+        // ================================
+
+    resetPassword = (req, res) => {
+        const { email, password } = req.body;
+        console.log(email, password);
+        try {
+            const stmt = db.prepare("SELECT user_id FROM user WHERE email = ?");
+            const user = stmt.get(email);
+            if (user) {
+                const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
+                const updateStmt = db.prepare("UPDATE user SET password = ? WHERE email = ?");
+                updateStmt.run(hashedPassword, email);
+                res.json({ success: true });
+            } else {
+                res.status(404).json({ success: false, message: "User not found" });
+            }
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ success: false, message: "Internal Server Error" });
+        }
+    }
 }

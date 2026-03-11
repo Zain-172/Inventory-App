@@ -15,15 +15,40 @@ import {
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
 import { useAppData } from "../context/AppDataContext";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { getDashboardData } from "../api/Dashboard";
 
 const Home = () => {
-  const { sales, loading, products } = useAppData();
+  const { loading, products } = useAppData();
   const [expense, setExpense] = useState(0);
   const [profit, setProfit] = useState(0);
   const [ordersToday, setOrdersToday] = useState(0);
+  const [salesToday, setSalesToday] = useState(0);
+  const [customerCount, setCustomerCount] = useState(0);
+  const [employeeCount, setEmployeeCount] = useState(0);
+  const [shopCount, setShopCount] = useState(0);
 
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const dashboardData = await getDashboardData();
+        console.log("Dashboard Data:", dashboardData);
+        setExpense(dashboardData.dailyExpense);
+        setCustomerCount(dashboardData.customerCount);
+        setEmployeeCount(dashboardData.employeeCount);
+        setOrdersToday(dashboardData.dailySale); // Assuming this is the orders today value
+        setSalesToday(dashboardData.dailySale); // Assuming this is the sales today value
+        setShopCount(dashboardData.shopCount);
+        setProfit(dashboardData.dailyProfit);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+      }
+    }
+    fetchData();
+  }, []);
   if (loading) return <div>Loading...</div>;
+
+
   return (
     <div className="grid">
       <nav>
@@ -64,28 +89,28 @@ const Home = () => {
           />
           <MetricsCard
             title="Sales"
-            value={ordersToday}
+            value={salesToday}
             icon={<FaMoneyBill size={40} />}
             bgColor="bg-gradient-to-r from-lime-700 to-lime-400"
             to="/sales"
           />
           <MetricsCard
             title="Customers"
-            value={ordersToday}
+            value={customerCount}
             icon={<FaUserFriends size={40} />}
             bgColor="bg-gradient-to-r from-cyan-700 to-cyan-400"
             to="/customer"
           />
           <MetricsCard
             title="Shops"
-            value={ordersToday}
+            value={shopCount}
             icon={<FaBuilding size={40} />}
             bgColor="bg-gradient-to-r from-indigo-700 to-indigo-400"
             to="/shops"
           />
           <MetricsCard
             title="Employees"
-            value={ordersToday}
+            value={employeeCount}
             icon={<FaUser size={40} />}
             bgColor="bg-gradient-to-r from-pink-700 to-pink-400"
             to="/employee"

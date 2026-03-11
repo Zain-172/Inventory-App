@@ -2,10 +2,7 @@ import {
   FaBroom,
   FaThLarge,
   FaReceipt,
-  FaPagelines,
-  FaPage4,
-  FaBook,
-  FaMoneyBill,
+  FaUserCheck,
   FaUserAlt,
   FaCreditCard,
   FaHandshake,
@@ -22,7 +19,7 @@ const Navigation = () => {
         <li>
           <Link
             className="flex flex-col justify-center border-r gap-1 items-center my-2"
-            to="/"
+            to="/home"
           >
             <FaThLarge style={{ minWidth: "50px", fontSize: "1.5rem" }} />
             <p className="text-sm font-bold">Dashboard</p>
@@ -58,15 +55,6 @@ const Navigation = () => {
         <li>
           <Link
             className="flex flex-col justify-center border-r gap-1 items-center my-2"
-            to="/report"
-          >
-            <FaBook style={{ minWidth: "50px", fontSize: "1.5rem" }} />
-            <p className="text-sm font-bold">Reports</p>
-          </Link>
-        </li>
-        <li>
-          <Link
-            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/employee"
           >
             <FaUserAlt style={{ minWidth: "50px", fontSize: "1.5rem" }} />
@@ -75,11 +63,20 @@ const Navigation = () => {
         </li>
         <li>
           <Link
-            className="flex flex-col justify-center gap-1 items-center my-2"
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
             to="/customer"
           >
             <FaHandshake style={{ minWidth: "50px", fontSize: "1.5rem" }} />
             <p className="text-sm font-bold">Customer</p>
+          </Link>
+        </li>
+        <li>
+          <Link
+            className="flex flex-col justify-center gap-1 items-center my-2"
+            to="/attendence"
+          >
+            <FaUserCheck style={{ minWidth: "50px", fontSize: "1.5rem" }} />
+            <p className="text-sm font-bold">Attendence</p>
           </Link>
         </li>
       </ul>

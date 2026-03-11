@@ -31,5 +31,11 @@ sale_router.get("/products-sold-by-month", (req, res) => {
 sale_router.get("/products-sold-by-year", (req, res) => {
     saleInstance.getProductsSoldByYear(req, res);
 });
+sale_router.get("/sale-today", (req, res) => {
+    saleInstance.getSaleToday(req, res);
+});
+sale_router.get("/profit-today", (req, res) => {
+    saleInstance.getProfitToday(req, res);
+});
 
 export default sale_router;

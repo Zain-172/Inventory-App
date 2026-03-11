@@ -4,5 +4,6 @@ import express from "express";
 const login_router = express.Router();
 const loginInstance = new Login();
 login_router.post('/', loginInstance.login);
+login_router.post('/reset-password', loginInstance.resetPassword);
 
 export default login_router;

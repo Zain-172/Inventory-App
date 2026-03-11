@@ -58,4 +58,14 @@ export default class Employee {
             res.status(500).json({ message: "Internal Server Error" });
         }
     };
+
+    countEmployees = (req, res) => {
+        try {
+            const row = db.prepare("SELECT COUNT(*) as count FROM employees").get();
+            res.json({ count: row.count });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+    };
 }

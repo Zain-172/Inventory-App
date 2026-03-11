@@ -146,4 +146,29 @@ export default class Customer {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+
+  countCustomers = (req, res) => {
+  try {
+    const row = db
+      .prepare("SELECT COUNT(id) AS count FROM customers WHERE type = 'normal'")
+      .get();
+
+    res.json({ count: row.count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+  countShop = (req, res) => {
+    try {
+      const row = db
+        .prepare("SELECT COUNT(id) AS count FROM customers WHERE type != 'normal' GROUP BY type")
+        .get();
+      res.json({ count: row.count });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
 }

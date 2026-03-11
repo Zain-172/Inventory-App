@@ -198,4 +198,26 @@ export default class Sale {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+  getProfitToday = (req, res) => {
+    try {
+      const rows = db
+        .prepare("SELECT sum(total_amount - total_cost) as profit FROM sales WHERE sale_date = CURRENT_DATE group by sale_date")
+        .all();
+      res.json({ profit: rows.profit || 0 });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  getSaleToday = (req, res) => {
+    try {
+      const rows = db
+        .prepare("SELECT sum(total_amount) as sale FROM sales WHERE sale_date = CURRENT_DATE group by sale_date")
+        .all();
+      res.json({ sale: rows.sale || 0 });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
 }

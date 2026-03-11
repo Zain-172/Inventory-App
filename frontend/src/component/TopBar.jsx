@@ -1,5 +1,5 @@
-import { FaArrowCircleLeft, FaArrowCircleRight } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaArrowCircleLeft, FaPowerOff } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 
 export default function TopBar({ children }) {
@@ -13,7 +13,10 @@ export default function TopBar({ children }) {
         </button>
         {children}
       </div>
-      <ThemeToggle />
+      <div className="flex items-center justify-center gap-4 px-4">
+        <ThemeToggle />
+        <Link className="bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full" to="/"><FaPowerOff /></Link>
+      </div>
     </header>
   );
 }

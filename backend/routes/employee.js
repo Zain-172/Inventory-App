@@ -16,5 +16,8 @@ employee_router.delete('/:id', (req, res) => {
 employee_router.put('/:id', (req, res) => {
     employeeInstance.updateEmployee(req, res);
 });
+employee_router.get('/count', (req, res) => {
+    employeeInstance.countEmployees(req, res);
+});
 
 export default employee_router;

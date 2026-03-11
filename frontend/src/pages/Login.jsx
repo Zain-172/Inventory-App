@@ -1,7 +1,11 @@
 import { FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/Login";
+import { lazy } from "react";
+import { useAlertBox } from "../component/Alerts";
+const Modal = lazy(() => import("../component/Modal"));
 export default function Login() {
+  const { alertBox } = useAlertBox();
   const navigate = useNavigate();
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -12,9 +16,11 @@ export default function Login() {
       const response = await login(username, password);
       if (response.login) {
         navigate("/home");
+      } else {
+        alertBox(response.message, "Login Failed", <FaUserCircle />);
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      alertBox(error, "Login Failed", <FaUserCircle />);
     }
   };
   return (
@@ -34,7 +40,7 @@ export default function Login() {
                     <label className="block">Password</label>
                     <input type="password" name="password" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Enter your password" />
                 </div>
-                <button type="button" className="text-green-500 hover:text-green-700 mb-4 grid place-self-end">Forgot Password?</button>
+                <button type="button" onClick={() => navigate("/forget-password")} className="text-green-500 hover:text-green-700 mb-4 grid place-self-end">Forgot Password?</button>
                 <button type="submit" className="w-full py-2 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-colors mb-6">Login</button>
                 <div>
                     <p className="text-center text-gray-500">Don't have an account? <button type="button" className="text-green-500 hover:text-green-700" onClick={() => navigate("/signup")}>Sign Up</button></p>
