@@ -74,15 +74,12 @@ export const AppDataProvider = ({ children }) => {
     const materialsData = await resMaterials.json();
     const formattedMaterials = materialsData.map((item) => ({
       id: item.id,
-      name: item.name,
+      raw_id: item.raw_id,
+      raw_material: item.raw_material,
+      product_id: item.product_id,
+      product: item.product,
       quantity: item.quantity,
-      price: item.price,
-      machinery: item.machinery,
-      labour: item.labour,
-      cost_price:
-        (Number(item.price) + Number(item.machinery) + Number(item.labour)) /
-        Number(item.quantity),
-      date_added: item.date_added,
+      date: item.date,
     }));
     setRawMaterials(formattedMaterials);
   };

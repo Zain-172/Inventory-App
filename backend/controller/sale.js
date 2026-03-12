@@ -200,21 +200,34 @@ export default class Sale {
   };
   getProfitToday = (req, res) => {
     try {
-      const rows = db
-        .prepare("SELECT sum(total_amount - total_cost) as profit FROM sales WHERE sale_date = CURRENT_DATE group by sale_date")
-        .all();
-      res.json({ profit: rows.profit || 0 });
+      const row = db
+        .prepare("SELECT COALESCE(sum(total_amount - total_cost), 0) as profit FROM sales WHERE sale_date = CURRENT_DATE")
+        .get();
+      res.json({ profit: row?.profit || 0 });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+
+  getOrdersToday = (req, res) => {
+    try {
+      const row = db
+        .prepare("SELECT COUNT(id) as orders FROM sales WHERE sale_date = CURRENT_DATE")
+        .get();
+      res.json({ orders: row?.orders || 0 });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+
   getSaleToday = (req, res) => {
     try {
-      const rows = db
-        .prepare("SELECT sum(total_amount) as sale FROM sales WHERE sale_date = CURRENT_DATE group by sale_date")
-        .all();
-      res.json({ sale: rows.sale || 0 });
+      const row = db
+        .prepare("SELECT COALESCE(sum(total_amount), 0) as sale FROM sales WHERE sale_date = CURRENT_DATE")
+        .get();
+      res.json({ sale: row?.sale || 0 });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });

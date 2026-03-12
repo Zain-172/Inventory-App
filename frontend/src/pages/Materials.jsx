@@ -22,15 +22,21 @@ const Material = () => {
   const [open, setOpen] = useState(false);
   const { products, setProducts, loading, fetchProducts } = useAppData();
   // const [openMenuIndex, setOpenMenuIndex] = useState(false);
-  const [formData, setFormData] = useState(new Product());
+  const [filter, setFilter] = useState("production");
+  const [formData, setFormData] = useState({
+    name: "",
+    cost_price: "",
+    stock: "",
+    date: new Date().toISOString().split("T")[0],
+    type: filter,
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [removeModal, setRemoveModal] = useState(false);
-  const [filter, setFilter] = useState("production");
   const { alertBox } = useAlertBox();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { ...formData, action: "ADD" };
+    const data = { ...formData, type: filter, action: "ADD" };
     console.log("Form Data: ", data);
     try {
       const res = await fetch("http://localhost:5000/product/add-product", {
@@ -70,7 +76,7 @@ const Material = () => {
       formData.cost_price,
       -formData.stock,
       formData.date,
-      formData.type
+      filter
     );
     data.action = "REMOVE";
     try {
@@ -204,7 +210,7 @@ const Material = () => {
         </div>
       </main>
       <Modal
-        isOpen={isModalOpen}
+        isOpen={isModalOpen && filter !== "production"}
         onClose={() => setIsModalOpen(false)}
         title="Add New Material"
       >
@@ -267,21 +273,14 @@ const Material = () => {
             </div>
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">Type</label>
-              <Dropdown
+              <div
                 className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
-                options={[
-                  { key: "Raw Material", value: "raw" },
-                  { key: "Production Made", value: "production" },
-                  { key: "Ready Made", value: "ready" },
-                ]}
-                onChange={(d) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    type: d.value
-                  }))
-                }
-                value={formData.name}
-              />
+              >
+                <span>
+                  { filter === "raw" && "Raw Material" }
+                  { filter === "ready" && "Ready Made" }
+                </span>
+              </div>
             </div>
             <div className="w-full col-span-2">
               <label className="block text-sm font-medium mb-1">Date</label>
@@ -309,6 +308,101 @@ const Material = () => {
         </form>
       </Modal>
 
+      <Modal
+        isOpen={isModalOpen && filter === "production"}
+        onClose={() => setIsModalOpen(false)}
+        title="Add New Material"
+      >
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white rounded-xl p-6 flex flex-col w-[50vw]"
+        >
+          <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
+            <FaBroom />
+            Stock
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-1">Name</label>
+              <Dropdown
+                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
+                options={products.filter((product) => product.type === "production").map((product) => ({ key: product.name, value: product.cost_price }))}
+                onChange={(d) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    name: d.key,
+                    cost_price: d.value
+                  }))
+                }
+              />
+            </div>
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-1">Cost Price</label>
+              <input
+                type="number"
+                name="costPrice"
+                value={formData.cost_price}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    cost_price: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-1">Quantity</label>
+              <input
+                type="number"
+                name="stock"
+                value={formData.stock}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    stock: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            <div className="w-full">
+              <label className="block text-sm font-medium mb-1">Type</label>
+              <div
+                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
+              >
+                <span>
+                  Production
+                </span>
+              </div>
+            </div>
+            <div className="w-full col-span-2">
+              <label className="block text-sm font-medium mb-1">Date</label>
+              <input
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    date: e.target.value,
+                  }))
+                }
+                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            className="w-full mt-4 flex items-center justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+          >
+            <FaPlusCircle /> Add Stock
+          </button>
+        </form>
+      </Modal>
       <Modal
         isOpen={removeModal}
         onClose={() => setRemoveModal(false)}

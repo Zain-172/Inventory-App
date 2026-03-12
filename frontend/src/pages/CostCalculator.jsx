@@ -6,12 +6,19 @@ import { FaBroom } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useAppData } from "../context/AppDataContext";
-import RawMaterial from "../models/RawMaterial";
 import { useAlertBox } from "../component/Alerts";
+import { FaCheckCircle } from "react-icons/fa";
 
 export default function CostCalculator() {
   const [open, setOpen] = useState(false);
-  const { rawMaterials, setRawMaterials, loading, fetchCostCalculation } = useAppData();
+  const {
+    rawMaterials,
+    setRawMaterials,
+    loading,
+    fetchCostCalculation,
+    fetchProducts,
+    fetchInventory,
+  } = useAppData();
   const { alertBox } = useAlertBox();
 
   const handleDelete = async (id) => {
@@ -29,21 +36,30 @@ export default function CostCalculator() {
     }
   };
 
-    const handleModify = async (editedData, deleteId) => {
-    const res = await fetch(`http://localhost:5000/raw-material/${deleteId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(new RawMaterial(editedData))
-    });
-    if (res.ok) {
-      fetchCostCalculation();
-      alertBox("The Raw Material is modified successfully", "Success", <FaCheckCircle />);
-    } else {
-      console.error("Failed to modify");
+  const handleSubmit = async (payload) => {
+    try {
+      const response = await fetch("http://localhost:5000/raw-material/add-raw-material", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        console.error("Failed to save cost calculation", err);
+        return false;
+      }
+
+      await Promise.all([fetchCostCalculation(), fetchProducts(), fetchInventory()]);
+      alertBox("Cost calculation saved successfully", "Success", <FaCheckCircle />);
+      return true;
+    } catch (err) {
+      console.error("Failed to save cost calculation:", err);
+      return false;
     }
-  }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -51,13 +67,19 @@ export default function CostCalculator() {
   return (
     <>
       <main className="p-6 flex flex-col gap-2">
-        <div className="flex justify-between items-center w-full">
+        <TopBar>
+          <div className="flex items-center gap-4 py-2 text-2xl font-bold">
+            <FaBroom />
+            Cost Calculator
+          </div>
+        </TopBar>
+        <div className="flex justify-between items-center w-full mt-16">
           <h2 className="text-2xl font-bold mb-4">Production Cost</h2>
           <Link to="/materials" className="mb-4 px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"><FaBroom /> Materials</Link>
         </div>
-        <Table data={rawMaterials} nonEditable="cost_price" open={open} setOpen={setOpen} onDelete={handleDelete} onUpdate={handleModify} accent="bg-green-600" />
+        <Table data={rawMaterials} nonEditable="Delete" open={open} setOpen={setOpen} onDelete={handleDelete} onUpdate={() => {}} accent="bg-green-600" />
         <hr className="my-12" />
-        <Form />
+        <Form onSubmit={handleSubmit} />
       </main>
       <Navigation />
     </>

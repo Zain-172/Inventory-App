@@ -1,12 +1,9 @@
 export default class RawMaterial {
-    constructor({id, name, quantity, price, machinery, labour, description, date_added = new Date().toISOString().split("T")[0]} = {}) {
+    constructor({id, raw_id, product_id, quantity, date = new Date().toISOString().split("T")[0]} = {}) {
         this.id = id;
-        this.name = name;
+        this.raw_id = raw_id;
+        this.product_id = product_id;
         this.quantity = quantity;
-        this.price = price;
-        this.machinery = machinery;
-        this.labour = labour;
-        this.description = description;
-        this.date_added = date_added;
+        this.date = date;
     }
 }

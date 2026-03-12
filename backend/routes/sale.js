@@ -34,6 +34,9 @@ sale_router.get("/products-sold-by-year", (req, res) => {
 sale_router.get("/sale-today", (req, res) => {
     saleInstance.getSaleToday(req, res);
 });
+sale_router.get("/orders-today", (req, res) => {
+    saleInstance.getOrdersToday(req, res);
+});
 sale_router.get("/profit-today", (req, res) => {
     saleInstance.getProfitToday(req, res);
 });

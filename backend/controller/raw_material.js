@@ -1,41 +1,124 @@
 import db from "../Database/DB.js";
 
 export default class RawMaterial {
-    constructor({id, name, quantity, price, machinery, labour, description, date_added} = {}) {
+    constructor({ id, raw_id, product_id, quantity, date } = {}) {
         this.id = id;
-        this.name = name;
+        this.raw_id = raw_id;
+        this.product_id = product_id;
         this.quantity = quantity;
-        this.price = price;
-        this.machinery = machinery;
-        this.labour = labour;
-        this.description = description;
-        this.date_added = date_added;
+        this.date = date;
     }
+
     getRawMaterials = (req, res) => {
         try {
-            const rows = db.prepare("SELECT id, name, quantity, price, machinery, labour, description, date_added FROM raw_material").all();
+            const rows = db
+                .prepare(`
+                    SELECT
+                        rm.id,
+                        rm.raw_id,
+                        r.name AS raw_material,
+                        rm.product_id,
+                        p.name AS product,
+                        rm.quantity,
+                        rm.date
+                    FROM raw_material rm
+                    LEFT JOIN products r ON r.id = rm.raw_id
+                    LEFT JOIN products p ON p.id = rm.product_id
+                    ORDER BY rm.id DESC
+                `)
+                .all();
             res.json(rows);
         } catch (err) {
             console.error(err);
             res.status(500).json({ message: "Internal Server Error" });
         }
     }
+
     insertRawMaterial = (req, res) => {
-        const material = new RawMaterial(req.body);
+        const { form_data, raw_materials } = req.body;
+
+        if (!form_data || !form_data.name || !form_data.date) {
+            return res.status(400).json({ message: "form_data with name and date is required" });
+        }
+
+        if (!Array.isArray(raw_materials) || raw_materials.length === 0) {
+            return res.status(400).json({ message: "raw_materials must be a non-empty array" });
+        }
+
+        const name = String(form_data.name).trim();
+        const cost_price = Number(form_data.cost_price ?? form_data.price ?? 0);
+        const stock = Number(form_data.stock ?? form_data.quantity ?? 0);
+        const date = form_data.date;
+        const type = form_data.type || "production";
+
+        if (!name || Number.isNaN(cost_price) || Number.isNaN(stock)) {
+            return res.status(400).json({ message: "Invalid form_data values" });
+        }
+
         try {
-            const stmt = db.prepare(`
-                INSERT INTO raw_material (name, quantity, price, machinery, labour, description, date_added)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(name) DO UPDATE
-                SET quantity = excluded.quantity, price = excluded.price, machinery = excluded.machinery, labour = excluded.labour, description = excluded.description, date_added = excluded.date_added`
-            );
-            const info = stmt.run(material.name, material.quantity, material.price, material.machinery, material.labour, material.description, material.date_added);
-            res.status(201).json({ message: "Raw Material added", materialId: info.lastInsertRowid });
+            const saveBatch = db.transaction(() => {
+                const upsertProduct = db.prepare(`
+                    INSERT INTO products (name, cost_price, stock, date, type)
+                    VALUES (?, ?, ?, ?, ?)
+                    ON CONFLICT(name, type) DO UPDATE
+                    SET stock = stock + excluded.stock,
+                        cost_price = excluded.cost_price,
+                        date = excluded.date
+                `);
+
+                upsertProduct.run(name, cost_price, stock, date, type);
+
+                const product = db
+                    .prepare("SELECT id FROM products WHERE name = ? AND type = ? LIMIT 1")
+                    .get(name, type);
+
+                if (!product) {
+                    throw new Error("Failed to resolve product id");
+                }
+
+                const insertRawMaterial = db.prepare(`
+                    INSERT INTO raw_material (raw_id, product_id, quantity, date)
+                    VALUES (?, ?, ?, ?)
+                `);
+
+                for (const entry of raw_materials) {
+                    const rawId = Number(entry.raw_id);
+                    const qty = Number(entry.quantity);
+
+                    if (Number.isNaN(rawId) || Number.isNaN(qty)) {
+                        throw new Error("Invalid raw material entry values");
+                    }
+
+                    insertRawMaterial.run(rawId, product.id, qty, date);
+                }
+
+                const insertHistory = db.prepare(`
+                    INSERT INTO products_history (name, cost_price, stock, date, type, action)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                `);
+                insertHistory.run(name, cost_price, stock, date, type, form_data.action || "Cost Calculation");
+
+                return product.id;
+            });
+
+            const productId = saveBatch();
+            res.status(201).json({
+                message: "Product and raw material entries saved",
+                product_id: productId,
+                raw_material_count: raw_materials.length,
+            });
         } catch (err) {
             console.error(err);
+            if (String(err.message).includes("FOREIGN KEY")) {
+                return res.status(400).json({ message: "Invalid raw_id or product reference" });
+            }
+            if (String(err.message).includes("UNIQUE")) {
+                return res.status(400).json({ message: "Product must be unique per type" });
+            }
             res.status(500).json({ message: "Internal Server Error" });
         }
     }
+
     deleteRawMaterial = (req, res) => {
         const id = req.params.id;
         try {
@@ -51,13 +134,25 @@ export default class RawMaterial {
             res.status(500).json({ message: "Internal Server Error" });
         }
     }
+
     updateRawMaterial = (req, res) => {
         const id = req.params.id;
         const material = new RawMaterial(req.body);
-        console.log("Updating Raw Material ID:", id, "with data:", material);
+
+        if (
+            material.raw_id === undefined ||
+            material.product_id === undefined ||
+            material.quantity === undefined ||
+            !material.date
+        ) {
+            return res.status(400).json({ message: "raw_id, product_id, quantity and date are required" });
+        }
+
         try {
-            const stmt = db.prepare("UPDATE raw_material SET name = ?, quantity = ?, price = ?, machinery = ?, labour = ?, description = ?, date_added = ? WHERE id = ?");
-            const info = stmt.run(material.name, material.quantity, material.price, material.machinery, material.labour, material.description, material.date_added, id);
+            const stmt = db.prepare(
+                "UPDATE raw_material SET raw_id = ?, product_id = ?, quantity = ?, date = ? WHERE id = ?"
+            );
+            const info = stmt.run(material.raw_id, material.product_id, material.quantity, material.date, id);
             if (info.changes === 0) {
                 res.status(404).json({ message: "Raw Material not found" });
             } else {
@@ -65,6 +160,9 @@ export default class RawMaterial {
             }
         } catch (err) {
             console.error(err);
+            if (String(err.message).includes("FOREIGN KEY")) {
+                return res.status(400).json({ message: "Invalid raw_id or product_id" });
+            }
             res.status(500).json({ message: "Internal Server Error" });
         }
     }

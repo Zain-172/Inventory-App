@@ -35,4 +35,17 @@ export default class Attendence {
 			res.status(500).json({ message: "Internal Server Error" });
 		}
 	};
+
+	countAttendanceToday = (req, res) => {
+		try {
+			const rows = db.prepare(
+				`SELECT count(id) FROM attendence WHERE date = CURRENT_DATE and status = 'Present'`
+			).all();
+			console.log("Attendance count for today:", rows);
+			res.json(rows);
+		} catch (err) {
+			console.error(err);
+			res.status(500).json({ message: "Internal Server Error" });
+		}
+	};
 }

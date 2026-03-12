@@ -40,15 +40,14 @@ CREATE TABLE IF NOT EXISTS products_history (
 ---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS raw_material (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE,
+    raw_id INTEGER,
+    product_id INTEGER,
     quantity INTEGER NOT NULL DEFAULT 0,
-    price REAL NOT NULL DEFAULT 0.0,
-    machinery REAL NOT NULL DEFAULT 0.0,
-    labour REAL NOT NULL DEFAULT 0.0,
-    date_added TEXT NOT NULL,
-    description TEXT,
+    date TEXT NOT NULL,
     created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
+    updated_at TEXT DEFAULT (datetime('now')),
+    FOREIGN KEY(raw_id) REFERENCES products(id),
+    FOREIGN KEY(product_id) REFERENCES products(id)
 );
 
 ---------------------------------------------------------
@@ -56,13 +55,10 @@ CREATE TABLE IF NOT EXISTS raw_material (
 ---------------------------------------------------------
 CREATE TABLE IF NOT EXISTS raw_material_history (
     id INTEGER,
-    name TEXT,
+    raw_id INTEGER,
+    product_id INTEGER,
     quantity REAL,
-    price REAL,
-    machinery REAL,
-    labour REAL,
-    description TEXT,
-    date_added TEXT,
+    date TEXT,
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -105,44 +101,9 @@ BEFORE UPDATE ON raw_material
 FOR EACH ROW
 BEGIN
     INSERT INTO raw_material_history (
-        id, name, quantity, price,
-        machinery, labour, description,
-        date_added
+        id, raw_id, product_id, quantity, date
     ) VALUES (
-        OLD.id, OLD.name, OLD.quantity, OLD.price,
-        OLD.machinery, OLD.labour, OLD.description,
-        OLD.date_added
-    );
-END;
-DROP TRIGGER IF EXISTS insert_product_from_raw;
-
-CREATE TRIGGER insert_product_from_raw
-AFTER INSERT ON raw_material
-FOR EACH ROW
-BEGIN
-    -- UPSERT into products
-    INSERT INTO products (name, cost_price, stock, date)
-    VALUES (
-        NEW.name,
-        (NEW.price + NEW.machinery + NEW.labour) / NEW.quantity,
-        NEW.quantity,
-        NEW.date_added
-    )
-    ON CONFLICT(name)
-    DO UPDATE SET
-        stock = excluded.stock,
-        cost_price = excluded.cost_price,
-        date = excluded.date;
-
-    -- Log into products_history
-    INSERT INTO products_history (
-        name, cost_price, stock, date, action
-    ) VALUES (
-        NEW.name,
-        (NEW.price + NEW.machinery + NEW.labour) / NEW.quantity,
-        NEW.quantity,
-        NEW.date_added,
-        'Cost Calculation'
+        OLD.id, OLD.raw_id, OLD.product_id, OLD.quantity, OLD.date
     );
 END;
 DROP TRIGGER IF EXISTS reduce_inventory_after_sale;
@@ -164,35 +125,4 @@ BEGIN
     UPDATE products
     SET stock = stock + OLD.quantity
     WHERE id = OLD.product_id;
-END;
-DROP TRIGGER IF EXISTS update_product_from_raw;
-
-CREATE TRIGGER update_product_from_raw
-AFTER UPDATE ON raw_material
-FOR EACH ROW
-BEGIN
-    -- UPSERT into products
-    INSERT INTO products (name, cost_price, stock, date)
-    VALUES (
-        NEW.name,
-        (NEW.price + NEW.machinery + NEW.labour) / NEW.quantity,
-        NEW.quantity,
-        NEW.date_added
-    )
-    ON CONFLICT(name)
-    DO UPDATE SET
-        stock = stock + excluded.stock,
-        cost_price = excluded.cost_price,
-        date = excluded.date;
-
-    -- Log into products_history
-    INSERT INTO products_history (
-        name, cost_price, stock, date, action
-    ) VALUES (
-        NEW.name,
-        (NEW.price + NEW.machinery + NEW.labour) / NEW.quantity,
-        NEW.quantity,
-        NEW.date_added,
-        'Cost Calculation'
-    );
 END;

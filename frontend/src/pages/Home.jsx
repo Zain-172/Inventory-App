@@ -11,6 +11,7 @@ import {
   FaBuilding,
   FaUserFriends,
   FaPlus,
+  FaBook,
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
@@ -27,6 +28,7 @@ const Home = () => {
   const [customerCount, setCustomerCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
   const [shopCount, setShopCount] = useState(0);
+  const [att, setAtt] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -36,10 +38,11 @@ const Home = () => {
         setExpense(dashboardData.dailyExpense);
         setCustomerCount(dashboardData.customerCount);
         setEmployeeCount(dashboardData.employeeCount);
-        setOrdersToday(dashboardData.dailySale); // Assuming this is the orders today value
-        setSalesToday(dashboardData.dailySale); // Assuming this is the sales today value
+        setOrdersToday(dashboardData.dailyOrders);
+        setSalesToday(dashboardData.dailySale);
         setShopCount(dashboardData.shopCount);
         setProfit(dashboardData.dailyProfit);
+        setAtt(dashboardData.attendance);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }
@@ -67,28 +70,28 @@ const Home = () => {
             to="/materials"
           />
           <MetricsCard
-            title="Expense"
+            title="Expense Today"
             value={"Rs. " + expense}
             icon={<FaExclamationTriangle size={40} />}
             bgColor="bg-gradient-to-r from-red-700 to-red-400"
             to="/expense"
           />
           <MetricsCard
-            title="Profit"
+            title="Profit Today"
             value={`Rs. ${profit}`}
             icon={<FaDollarSign size={40} />}
             bgColor="bg-gradient-to-r from-green-700 to-green-400"
             to="/sales"
           />
           <MetricsCard
-            title="Orders"
+            title="Orders Today"
             value={ordersToday}
             icon={<FaShoppingCart size={40} />}
             bgColor="bg-gradient-to-r from-yellow-700 to-yellow-400"
             to="/sales"
           />
           <MetricsCard
-            title="Sales"
+            title="Sales Today"
             value={salesToday}
             icon={<FaMoneyBill size={40} />}
             bgColor="bg-gradient-to-r from-lime-700 to-lime-400"
@@ -115,10 +118,21 @@ const Home = () => {
             bgColor="bg-gradient-to-r from-pink-700 to-pink-400"
             to="/employee"
           />
+          <MetricsCard
+            title="Reports"
+            value={"Ready"}
+            icon={<FaBook size={40} />}
+            bgColor="bg-gradient-to-r from-zinc-700 to-zinc-400"
+            to="/report"
+          />
+          <MetricsCard
+            title="Attendence"
+            value={att > 0 ? `${att} Presents` : "Pending"}
+            icon={<FaUser size={40} />}
+            bgColor="bg-gradient-to-r from-sky-700 to-sky-400"
+            to="/attendence"
+          />
         </div>
-        <button className="mx-auto flex items-center justify-center p-4 text-white bg-neutral-400 font-bold rounded-full shadow-md shadow-black/30 hover:bg-slate-700 transition-colors">
-          <FaPlus />
-        </button>
       </main>
     </div>
   );

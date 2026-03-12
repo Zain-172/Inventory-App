@@ -1,141 +1,207 @@
 import { useState } from "react";
-import { FaCalculator, FaPlusCircle, FaWarehouse } from "react-icons/fa";
-import RawMaterial from "../models/RawMaterial";
-import TrieSearch from "./Trie";
+import { FaCalculator, FaPlus, FaTrashAlt, FaWarehouse } from "react-icons/fa";
+import DropDown from "./DropDown";
+import Table from "./Table";
+import { useAppData } from "../context/AppDataContext";
 export default function Form({ onSubmit }) {
-  const [formData, setFormData] = useState(new RawMaterial());
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    date: new Date().toISOString().split("T")[0],
+    quantity: "",
+  });
+  const [entry, setEntry] = useState({ id: "", name: "", quantity: "" });
+  const [raw, setRaw] = useState([]);
+  const { products } = useAppData();
 
+  const deleteEntry = (id) => {
+    setEntry((prev) => ({ ...prev, quantity: "", name: "" }));
+    setRaw((prev) => prev.filter((item) => item.id !== id));
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleEntryChange = (e) => {
+    const { name, value } = e.target;
+    setEntry((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddEntry = () => {
+    console.log(entry);
+    if (entry.name && entry.quantity && entry.quantity < products.find((p) => p.id === entry.id)?.stock) {
+      setRaw((prev) => [
+        ...(prev || []),
+        {
+          ...entry,
+          action: (
+            <button
+              onClick={() => deleteEntry(entry.id)}
+              type="button"
+              className="p-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+            >
+              <FaTrashAlt />
+            </button>
+          ),
+        },
+      ]);
+      setEntry({ id: "", name: "", quantity: "" });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = {
-      ID: 5,
-      Material: formData.name,
-      Cost_Price:
-        Number(formData.price) + Number(formData.machinery) + Number(formData.labour),
-      Date: formData.date,
-      Description: formData.description,
-    }
-    console.log("Submitting:", formData);
-    const res = await fetch("http://localhost:5000/raw-material/add-raw-material", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
+
+    if (!onSubmit) return;
+
+    const payload = {
+      form_data: {
+        name: formData.name,
+        cost_price: Number(formData.price || 0),
+        stock: Number(formData.quantity || 0),
+        date: formData.date,
+        type: "production",
       },
-      body: JSON.stringify(formData)
-    });
-    const result = await res.json();
-    console.log(result);
-    onSubmit && onSubmit(data);
-    setFormData(new RawMaterial());
+      raw_materials: raw.map((item) => ({
+        raw_id: Number(item.id),
+        quantity: Number(item.quantity),
+      })),
+    };
+
+    const isSaved = await onSubmit(payload);
+    if (isSaved) {
+      setFormData({
+        name: "",
+        price: "",
+        date: new Date().toISOString().split("T")[0],
+        quantity: "",
+      });
+      setRaw([]);
+      setEntry({ id: "", name: "", quantity: "" });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg w-full border border-white/30 shadow-md shadow-white/10 mb-16">
-      <h2 className="text-3xl font-semibold text-center mb-4 flex justify-center items-end gap-4">
-        <FaWarehouse size={36} />
-        Production Cost
-      </h2>
-      <div className="flex gap-4 w-full">
-        <div className="w-full mb-4">
-          <label className="block text-sm font-medium mb-1">Material</label>
-          <TrieSearch
-            value={formData.name}
-            onChange={(value) => setFormData((prev) => ({ ...prev, name: value }))}
-          />
-        </div>
-
-        <div className="w-full mb-4">
-          <label className="block text-sm font-medium mb-1">
-            No of Items *
-          </label>
-          <input
-            type="number"
-            name="quantity"
-            value={formData.quantity || 0}
-            onChange={handleChange}
-            placeholder="100"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-      </div>
-      <div className="flex gap-4 w-full">
-        <div className="w-full mb-4">
-          <label className="block text-sm font-medium mb-1">Price *</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price || 0}
-            onChange={handleChange}
-            placeholder="200"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div className="w-full mb-4">
-          <label className="block text-sm font-medium mb-1">Machinery *</label>
-          <input
-            type="number"
-            name="machinery"
-            value={formData.machinery || 0}
-            onChange={handleChange}
-            placeholder="200"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-      </div>
-      <div className="flex gap-4 w-full">
-        <div className="w-full mb-4">
-          <label className="block text-sm font-medium mb-1">Labour *</label>
-          <input
-            type="number"
-            name="labour"
-            value={formData.labour || 0}
-            onChange={handleChange}
-            placeholder="Material X"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div className="w-full mb-4">
-          <label className="block text-sm font-medium mb-1">Date *</label>
-          <input
-            type="date"
-            name="date_added"
-            value={formData.date_added || ""}
-            onChange={handleChange}
-            placeholder="100"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-      </div>
-      <div className="flex gap-4 w-full">
-        <div className="w-full mb-4">
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            name="description"
-            value={formData.description || ""}
-            onChange={handleChange}
-            placeholder="Material X"
-            className="w-full px-3 py-2 rounded-lg focus:outline-none bg-white border border-white/20 resize-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-      <button
-        type="submit"
-        className="w-full flex items-center mt-4 justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+    <>
+      <form
+        onSubmit={handleSubmit}
+        className="p-4 rounded-lg w-full border border-white/30 shadow-md shadow-white/10 mb-16"
       >
-        <FaCalculator /> Calculate
-      </button>
-    </form>
+        <h2 className="text-3xl font-semibold text-center mb-4 flex justify-center items-end gap-4">
+          <FaWarehouse size={36} />
+          Production Cost
+        </h2>
+        <div className="flex gap-4 w-full">
+          <div className="w-full mb-4">
+            <label className="block text-sm font-medium mb-1">Material</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name || ""}
+              onChange={handleChange}
+              placeholder="Material Name"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <div className="w-full mb-4">
+            <label className="block text-sm font-medium mb-1">
+              No of Items Produced*
+            </label>
+            <input
+              type="number"
+              name="quantity"
+              value={formData.quantity || 0}
+              onChange={handleChange}
+              placeholder="100"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="flex gap-4 w-full">
+          <div className="w-full mb-4">
+            <label className="block text-sm font-medium mb-1">Price *</label>
+            <input
+              type="number"
+              name="price"
+              value={formData.price || 0}
+              onChange={handleChange}
+              placeholder="100"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+          <div className="w-full mb-4">
+            <label className="block text-sm font-medium mb-1">Date *</label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date || ""}
+              onChange={handleChange}
+              placeholder="100"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+        </div>
+        <div className="flex gap-4 w-full items-center">
+          <div className="w-full mb-4">
+            <label className="block text-sm font-medium mb-1">
+              Raw Material *
+            </label>
+            <DropDown
+              options={products
+                .filter((product) => product.type === "raw")
+                .map((product) => ({ key: product.name, value: product.id }))}
+              onChange={(d) =>
+                setEntry((prev) => ({
+                  ...prev,
+                  id: d.value,
+                  name: d.key,
+                }))
+              }
+              value={entry.name}
+            />
+          </div>
+
+          <div className="w-full mb-4">
+            <label className="block text-sm font-medium mb-1">
+              No of Items Used *
+            </label>
+            <input
+              type="number"
+              name="quantity"
+              value={entry.quantity}
+              onChange={handleEntryChange}
+              placeholder="200"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            { entry.quantity > products.find((p) => p.id === entry.id)?.stock && (
+              <p className="text-[10px] text-red-600 mt-1">
+                Exceeds available stock: {products.find((p) => p.id === entry.id)?.stock}
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleAddEntry}
+            className="bg-green-600 text-white p-2 rounded-lg hover:bg-green-700"
+          >
+            <FaPlus />
+          </button>
+        </div>
+        <Table data={raw} />
+        <button
+          type="submit"
+          className="w-full flex items-center mt-4 justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
+        >
+          <FaCalculator /> Calculate
+        </button>
+      </form>
+    </>
   );
 }
