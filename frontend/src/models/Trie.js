@@ -2,6 +2,7 @@ class TrieNode {
   constructor() {
     this.children = {};
     this.isEndOfWord = false;
+    this.entries = [];
   }
 }
 
@@ -10,14 +11,50 @@ export default class Trie {
     this.root = new TrieNode();
   }
 
-  insert(word) {
+  normalizeEntry(entry) {
+    if (typeof entry === "string") {
+      return {
+        key: entry,
+        value: entry,
+      };
+    }
+
+    return {
+      key: String(entry?.key || ""),
+      value: entry?.value ?? entry?.key ?? "",
+    };
+  }
+
+  appendEntry(node, entry) {
+    const exists = node.entries.some(
+      (item) => item.key === entry.key && item.value === entry.value,
+    );
+
+    if (!exists) {
+      node.entries.push(entry);
+    }
+  }
+
+  insert(entry) {
+    const normalizedEntry = this.normalizeEntry(entry);
+    const normalizedKey = normalizedEntry.key.toLowerCase().trim();
+
+    if (!normalizedKey) {
+      return;
+    }
+
     let current = this.root;
-    for (let char of word.toLowerCase()) {
+
+    this.appendEntry(current, normalizedEntry);
+
+    for (let char of normalizedKey) {
       if (!current.children[char]) {
         current.children[char] = new TrieNode();
       }
       current = current.children[char];
+      this.appendEntry(current, normalizedEntry);
     }
+
     current.isEndOfWord = true;
   }
 
@@ -30,21 +67,10 @@ export default class Trie {
     return current;
   }
 
-  autocomplete(prefix) {
+  autocomplete(prefix, limit = 8) {
     const node = this.searchPrefix(prefix);
     if (!node) return [];
 
-    const results = [];
-
-    const dfs = (currentNode, path) => {
-      if (currentNode.isEndOfWord) results.push(path);
-
-      for (let char in currentNode.children) {
-        dfs(currentNode.children[char], path + char);
-      }
-    };
-
-    dfs(node, prefix.toLowerCase());
-    return results;
+    return node.entries.slice(0, limit);
   }
 }

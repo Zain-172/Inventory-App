@@ -51,7 +51,7 @@ export default function ExpenseForm({onSubmit}) {
       <div className="flex gap-4">
         <label className="text-sm w-full">Title
           <TrieSearch
-            onChange={(value) => setForm({ ...form, title: value })}
+            onChange={(entry) => setForm({ ...form, title: entry.value })}
           />
         </label>
         <label className="text-sm w-full">Amount

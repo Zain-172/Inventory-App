@@ -51,7 +51,7 @@ export default function MaterialForm() {
       <div className="grid grid-cols-2 gap-4">
         <label className="text-sm">Title
         <TrieSearch
-          onChange={(value) => setForm({ ...form, title: value })}
+          onChange={(entry) => setForm({ ...form, title: entry.value })}
         />
         </label>
         <label className="text-sm">Amount

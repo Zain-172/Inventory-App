@@ -1,89 +1,139 @@
 import { useEffect, useRef, useState } from "react";
 import Trie from "../models/Trie";
 
-export default function TrieSearch({value, onChange}) {
+/**
+ * Props:
+ *  items / words — { key, value }[] | string[]
+ *  value         — string | { key, value }
+ *  onChange      — fn({ key, value })
+ *  placeholder — string
+ *  className   — string    — extra classes for the wrapper div
+ */
+export default function TrieSearch({
+  items,
+  words = [],
+  value,
+  onChange,
+  placeholder = "Search…",
+  className = "",
+}) {
   const trieRef = useRef(null);
   const debounceTimer = useRef(null);
+  const sourceItems = items ?? words;
 
-  const [input, setInput] = useState(value || "");
-  const [focus, setFocus] = useState(false);
+  const getDisplayText = (entry) => {
+    if (typeof entry === "string") {
+      return entry;
+    }
+
+    return entry?.key ?? "";
+  };
+
+  const createPayload = (entry) => {
+    if (typeof entry === "string") {
+      return {
+        key: entry,
+        value: entry,
+      };
+    }
+
+    return {
+      key: String(entry?.key || ""),
+      value: entry?.value ?? entry?.key ?? "",
+    };
+  };
+
+  const isControlled = value !== undefined;
+  const [input, setInput] = useState("");
+  const [open, setOpen] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const inputValue = isControlled ? getDisplayText(value) : input;
 
+  // Rebuild trie whenever the words list changes
   useEffect(() => {
     const trie = new Trie();
-
-    const words = [
-      "apple",
-      "application",
-      "apply",
-      "banana",
-      "band",
-      "bandwidth",
-      "cat",
-      "cater",
-      "category",
-    ];
-
-    words.forEach((w) => trie.insert(w));
-
+    sourceItems.forEach((item) => trie.insert(item));
     trieRef.current = trie;
-  }, []);
+  }, [sourceItems]);
 
-  // Debounced search
-  const handleDebouncedSearch = (value) => {
+  const runSearch = (query) => {
     clearTimeout(debounceTimer.current);
-
     debounceTimer.current = setTimeout(() => {
-      if (!value.trim()) {
+      if (!query.trim() || !trieRef.current) {
         setSuggestions([]);
         return;
       }
-      const matches = trieRef.current.autocomplete(value);
+      const matches = trieRef.current.autocomplete(query, 8);
       setSuggestions(matches);
-    }, 300);
+      setActiveIndex(-1);
+    }, 150);
   };
 
   const handleChange = (e) => {
-    const value = e.target.value;
-    setInput(value);
-    handleDebouncedSearch(value);
-    onChange(value);
+    const val = e.target.value;
+    if (!isControlled) {
+      setInput(val);
+    }
+    runSearch(val);
+    onChange && onChange({ key: val, value: null });
   };
 
-  const handleSelect = (word) => {
-    setInput(word);
+  const handleSelect = (entry) => {
+    const payload = createPayload(entry);
+
+    if (!isControlled) {
+      setInput(payload.key);
+    }
     setSuggestions([]);
+    setActiveIndex(-1);
+    setOpen(false);
+    onChange && onChange(payload);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!suggestions.length) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setActiveIndex((i) => Math.min(i + 1, suggestions.length - 1));
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setActiveIndex((i) => Math.max(i - 1, -1));
+    } else if (e.key === "Enter" && activeIndex >= 0) {
+      e.preventDefault();
+      handleSelect(suggestions[activeIndex]);
+    } else if (e.key === "Escape") {
+      setSuggestions([]);
+      setActiveIndex(-1);
+    }
   };
 
   return (
-    <div className="w-full relative">
+    <div className={`w-full relative ${className}`}>
       <input
         type="text"
-        value={input}
+        value={inputValue}
         onChange={handleChange}
-        onFocus={() => setFocus(true)}
-        onBlur={() => setTimeout(() => setFocus(false), 120)}
-        className="w-full p-2 bg-white border rounded-lg mb-3"
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 150)}
+        onKeyDown={handleKeyDown}
+        placeholder={placeholder}
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-neutral-800 dark:border-neutral-600 dark:text-white dark:placeholder-neutral-400 transition-colors"
       />
 
-      {/* Suggestions (only when focused) */}
-      {focus && suggestions.length > 0 && (
-        <ul
-          className="
-            absolute top-[50px] left-0 w-full
-            bg-[#111] border border-gray-300 rounded-lg
-            py-2 list-none shadow-lg z-10 transition-all max-h-60 overflow-y-auto
-          "
-        >
-          {suggestions.map((word, i) => (
+      {open && suggestions.length > 0 && (
+        <ul className="absolute mt-1 w-full border rounded-xl shadow-lg z-10 py-1 list-none bg-white dark:bg-neutral-800 border-gray-200 dark:border-white/20 max-h-52 overflow-y-auto">
+          {suggestions.map((entry, i) => (
             <li
-              key={i}
-              onMouseDown={() => handleSelect(word)}
-              className="
-                px-3 py-2 cursor-pointer
-              "
+              key={`${entry.key}-${entry.value}-${i}`}
+              onMouseDown={() => handleSelect(entry)}
+              className={`px-3 py-2 cursor-pointer text-sm transition-colors ${
+                i === activeIndex
+                  ? "bg-green-600 text-white"
+                  : "hover:bg-gray-100 dark:hover:bg-neutral-700 border-t border-gray-100 dark:border-white/10"
+              }`}
             >
-              {word}
+              {entry.key}
             </li>
           ))}
         </ul>

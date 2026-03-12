@@ -72,7 +72,12 @@ CREATE TABLE IF NOT EXISTS sales (
     salesman TEXT NOT NULL,
     total_amount REAL NOT NULL DEFAULT 0,
     total_items INTEGER NOT NULL DEFAULT 0,
-    total_cost REAL NOT NULL DEFAULT 0
+    total_cost REAL NOT NULL DEFAULT 0,
+    tax REAL NOT NULL DEFAULT 0,
+    customer_id INTEGER,
+    customer TEXT,
+    status TEXT NOT NULL DEFAULT 'paid',
+    delivery_status TEXT NOT NULL DEFAULT 'not_delivered'
 );
 
 ---------------------------------------------------------

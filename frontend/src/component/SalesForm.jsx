@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaPlus, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import Dropdown from "./DropDown";
 import Table from "./Table"
+import Trie from "./Trie";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "./Alerts";
 
@@ -10,14 +11,15 @@ export default function SalesForm({ onSubmit }) {
   const product = [
     ...products.map((item) => ({ key: item.name, value: item.barcode })),
   ];
-  const customerOptions = customers.map((cust) => ({
-    key: cust.customer,
-    value: cust.id,
-  }));
+  const customerOptions = customers.map((cust) => ( { key: cust.customer, value: cust.id } ));
   const paymentStatusOptions = [
     { key: "Paid", value: "paid" },
     { key: "Pending", value: "pending" },
     { key: "Half Payment", value: "half_payment" },
+  ];
+  const deliveryStatusOptions = [
+    { key: "Not Delivered", value: "not_delivered" },
+    { key: "Delivered", value: "delivered" },
   ];
   const salesmen = [
     { key: "John Doe", value: "John Doe" },
@@ -25,12 +27,14 @@ export default function SalesForm({ onSubmit }) {
     { key: "Mike Johnson", value: "Mike Johnson" },
   ];
   const [formData, setFormData] = useState({
-    id: product[0].value,
-    product: product[0].key,
+    id: product[0]?.value,
+    product: product[0]?.key,
     price: "",
     sales_price: "",
     quantity: "",
+    tax: "0",
     status: paymentStatusOptions[0],
+    delivery_status: deliveryStatusOptions[0],
     salesman: salesmen[0],
     customer: customerOptions[0],
     date: new Date().toISOString().split("T")[0],
@@ -40,7 +44,7 @@ export default function SalesForm({ onSubmit }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name === "quantity" && value < 0 || name === "price" && value < 0 || name === "sales_price" && value < 0) return;
+    if (name === "quantity" && value < 0 || name === "price" && value < 0 || name === "sales_price" && value < 0 || name === "tax" && value < 0) return;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -53,6 +57,12 @@ export default function SalesForm({ onSubmit }) {
       );
       return;
     }
+    const subtotal = entry.reduce(
+      (sum, i) => sum + i.quantity * i.sale_price,
+      0,
+    );
+    const taxAmount = Number(formData.tax) || 0;
+    console.log("Form Data:", formData);
     const data = {
       invoice_id: newInvoiceId,
       sale_date: formData.date,
@@ -61,13 +71,13 @@ export default function SalesForm({ onSubmit }) {
         (sum, i) => sum + i.quantity * products.find((p) => p.barcode === i.id)?.cost_price,
         0
       ),
-      total_amount: entry.reduce(
-        (sum, i) => sum + i.quantity * i.sale_price,
-        0
-      ),
+      total_amount: subtotal,
+      tax: taxAmount,
       status: formData.status.value,
+      delivery_status: formData.delivery_status.value,
       total_items: entry.reduce((sum, i) => sum + Number(i.quantity), 0),
-      customer: formData.customer.value,
+      customer: formData.customer.key,
+      customer_id: formData.customer.value,
       items: entry,
     };
     console.log("Submitting Sale:", data);
@@ -176,10 +186,10 @@ export default function SalesForm({ onSubmit }) {
       <div className="flex gap-4 w-full my-4">
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Customer</label>
-          <Dropdown
-            options={customerOptions}
-            value={customerOptions[0]}
-            onChange={(d) => setFormData((prev) => ({ ...prev, customer: d }))}
+          <Trie
+            items={customerOptions}
+            value={formData.customer}
+            onChange={(d) => {setFormData((prev) => ({ ...prev, customer: d })); console.log("Selected customer:", d);}}
           />
         </div>
         <div className="w-full">
@@ -188,6 +198,28 @@ export default function SalesForm({ onSubmit }) {
             options={paymentStatusOptions}
             value={paymentStatusOptions[0]}
             onChange={(d) => setFormData((prev) => ({ ...prev, status: d }))}
+          />
+        </div>
+        <div className="w-full">
+          <label className="block text-sm font-medium mb-1">Delivery</label>
+          <Dropdown
+            options={deliveryStatusOptions}
+            value={deliveryStatusOptions[0]}
+            onChange={(d) => setFormData((prev) => ({ ...prev, delivery_status: d }))}
+          />
+        </div>
+        <div className="w-full">
+          <label className="block text-sm font-medium mb-1">Tax</label>
+          <input
+            type="number"
+            name="tax"
+            value={formData.tax}
+            onChange={handleChange}
+            placeholder="0"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            min="0"
+            step="0.01"
+            required
           />
         </div>
       </div>

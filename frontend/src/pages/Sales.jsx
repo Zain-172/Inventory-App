@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { lazy } from "react";
 const Navigation = lazy(() => import("../component/Navigation"));
 const Table = lazy(() => import("../component/Table"));
@@ -7,6 +7,7 @@ const Modal = lazy(() => import("../component/Modal"));
 const Form = lazy(() => import("../component/SalesForm"));
 const Receipt = lazy(() => import("../component/Receipt"));
 const DropDown = lazy(() => import("../component/DropDown"));
+const Metrics = lazy(() => import("../component/Metrics"));
 import {
   FaArrowsAltH,
   FaCheckCircle,
@@ -15,10 +16,45 @@ import {
   FaPrint,
   FaReceipt,
   FaTrashAlt,
+  FaUsers,
 } from "react-icons/fa";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "../component/Alerts";
 import MessageBox from "../component/MessageBox";
+import {
+  getSalesDuringPeriod,
+  getProfitDuringPeriod,
+  updateSaleDeliveryStatus,
+  updateSaleStatus,
+} from "../api/Sale";
+
+const statusStyles = {
+  paid: "bg-green-800 text-white",
+  half_payment: "bg-yellow-500 text-black",
+  pending: "bg-red-600 text-white",
+};
+
+const nextStatus = {
+  paid: "pending",
+  pending: "half_payment",
+  half_payment: "paid",
+};
+
+const deliveryStyles = {
+  delivered: "bg-green-800 text-white",
+  not_delivered: "bg-red-600 text-white",
+};
+
+const nextDeliveryStatus = {
+  delivered: "not_delivered",
+  not_delivered: "delivered",
+};
+
+const formatStatusLabel = (status) =>
+  status
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
 const Sales = () => {
   const { alertBox } = useAlertBox();
@@ -40,6 +76,10 @@ const Sales = () => {
   const [filter, setFilter] = useState("paid");
   const [custFilter, setCustFilter] = useState("all");
   const receiptRef = useRef(null);
+  const [sale, setSale] = useState(0);
+  const [profit, setProfit] = useState(0);
+  const [updatingSaleId, setUpdatingSaleId] = useState(null);
+  const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
 
   const handleDelete = async (id) => {
     try {
@@ -65,6 +105,79 @@ const Sales = () => {
     setIsMessageBoxOpen(false);
   };
 
+  const handleStatusToggle = async (saleId, currentStatus) => {
+    const next = nextStatus[currentStatus] || "paid";
+
+    setUpdatingSaleId(saleId);
+    setSalesWithItems((prevData) =>
+      prevData.map((entry) =>
+        entry.id === saleId ? { ...entry, status: next } : entry,
+      ),
+    );
+
+    try {
+      await updateSaleStatus(saleId, next);
+    } catch (error) {
+      console.error("Failed to update sale status:", error);
+      setSalesWithItems((prevData) =>
+        prevData.map((entry) =>
+          entry.id === saleId ? { ...entry, status: currentStatus } : entry,
+        ),
+      );
+      alertBox(
+        error.message || "Failed to update sale status",
+        "Error",
+        <FaCheckCircle />,
+      );
+    } finally {
+      setUpdatingSaleId(null);
+    }
+  };
+
+  const handleDeliveryStatusToggle = async (saleId, currentDeliveryStatus) => {
+    const next = nextDeliveryStatus[currentDeliveryStatus] || "not_delivered";
+
+    setUpdatingDeliverySaleId(saleId);
+    setSalesWithItems((prevData) =>
+      prevData.map((entry) =>
+        entry.id === saleId ? { ...entry, delivery_status: next } : entry,
+      ),
+    );
+
+    try {
+      await updateSaleDeliveryStatus(saleId, next);
+    } catch (error) {
+      console.error("Failed to update delivery status:", error);
+      setSalesWithItems((prevData) =>
+        prevData.map((entry) =>
+          entry.id === saleId ? { ...entry, delivery_status: currentDeliveryStatus } : entry,
+        ),
+      );
+      alertBox(
+        error.message || "Failed to update delivery status",
+        "Error",
+        <FaCheckCircle />,
+      );
+    } finally {
+      setUpdatingDeliverySaleId(null);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const totalSales = await getSalesDuringPeriod(from, to).then((res) => res[0]?.total_sales || 0);
+      const totalProfit = await getProfitDuringPeriod(from, to).then((res) => res[0]?.profit || 0);
+      console.log("Fetched total sales during period:", totalSales);
+      console.log("Fetched total profit during period:", totalProfit);
+      setSale(totalSales);
+      setProfit(totalProfit);
+    };
+    if (from && to) {
+      fetchData();
+    }
+  }, [from, to]);
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleSubmit = async (data) => {
     const res = await fetch("http://localhost:5000/sale/add-sale", {
@@ -87,6 +200,7 @@ const Sales = () => {
     half_payment: "bg-yellow-500",
     pending: "bg-red-500",
   };
+
   const options = customers
     .map((cust) => ({
       key: cust.customer,
@@ -111,6 +225,20 @@ const Sales = () => {
         </h1>
       </TopBar>
       <main className="flex flex-col my-16 w-full">
+        <div className="grid grid-cols-2 gap-2 p-4">
+          <Metrics
+            title="Total Sales"
+            value={sale}
+            icon={<FaReceipt />}
+            bgColor="bg-gradient-to-l from-green-400 to-green-600"
+          />
+          <Metrics
+            title="Profit"
+            value={profit}
+            icon={<FaUsers />}
+            bgColor="bg-gradient-to-l from-blue-400 to-blue-600"
+          />
+        </div>
         <div className="flex items-center justify-center gap-4 py-6">
           <button
             className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "paid" ? "bg-green-600 text-white" : "text-green-500"}`}
@@ -129,6 +257,12 @@ const Sales = () => {
             onClick={() => setFilter("half_payment")}
           >
             Half Payment
+          </button>
+          <button
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "all" ? "bg-green-600 text-white" : "text-green-500"}`}
+            onClick={() => setFilter("all")}
+          >
+            All
           </button>
         </div>
         <div className="px-2 py-6">
@@ -175,9 +309,8 @@ const Sales = () => {
           {salesWithItems
             .filter((group) => {
               const statusMatch = group.status === filter || filter === "all";
-              const customerMatch =
-                custFilter === "all" || group.customer_id === custFilter;
-              return statusMatch && customerMatch;
+              const custMatch = group.customer_id === custFilter || custFilter === "all";
+              return statusMatch && custMatch;
             })
             .map((group, index) => (
               <div key={index} className="">
@@ -254,9 +387,36 @@ const Sales = () => {
                     <strong>Customer:</strong> {group.customer}
                   </p>
                   <p className="text-lg text-right">
-                    <strong>Status:</strong>{" "}
-                    {group.status.toUpperCase().replace("_", " ")}
+                    <strong>Tax:</strong> {Number(group.tax || 0).toFixed(2)}
                   </p>
+
+                  <div className="text-lg my-2">
+                    <strong>Status:</strong>{" "}
+                    <button
+                      type="button"
+                      className={`px-3 rounded-md font-semibold transition-colors border shadow-[0_0_10px] shadow-black/40 ${statusStyles[group.status]}`}
+                      onClick={() => handleStatusToggle(group.id, group.status)}
+                      disabled={updatingSaleId === group.id}
+                    >
+                      {formatStatusLabel(group.status)}
+                    </button>
+                  </div>
+                  <div className="text-lg text-right my-2">
+                    <strong>Delivery:</strong>{" "}
+                    <button
+                      type="button"
+                      className={`px-3 rounded-md font-semibold transition-colors border shadow-[0_0_10px] shadow-black/40 ${deliveryStyles[group.delivery_status || "not_delivered"]}`}
+                      onClick={() =>
+                        handleDeliveryStatusToggle(
+                          group.id,
+                          group.delivery_status || "not_delivered",
+                        )
+                      }
+                      disabled={updatingDeliverySaleId === group.id}
+                    >
+                      {formatStatusLabel(group.delivery_status || "not_delivered")}
+                    </button>
+                  </div>
                 </div>
                 <Table data={group.items} accent={colors[group.status]} />
                 <div className="flex justify-between items-center my-4">
@@ -264,7 +424,7 @@ const Sales = () => {
                     Total Items: {group.total_items}
                   </p>
                   <p className="text-lg font-bold">
-                    Total Price: {group.total_amount}
+                    Total Price (Incl Tax): {group.total_amount + group.tax/100 * group.total_amount}
                   </p>
                 </div>
                 <hr className="mb-6 bg-neutral-900 dark:bg-neutral-200" />
