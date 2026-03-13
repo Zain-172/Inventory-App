@@ -79,6 +79,9 @@ export default class RawMaterial {
                 const insertRawMaterial = db.prepare(`
                     INSERT INTO raw_material (raw_id, product_id, quantity, date)
                     VALUES (?, ?, ?, ?)
+                    on conflict(raw_id, product_id) do update
+                    set quantity = quantity + excluded.quantity,
+                        date = excluded.date
                 `);
 
                 for (const entry of raw_materials) {
@@ -89,7 +92,7 @@ export default class RawMaterial {
                         throw new Error("Invalid raw material entry values");
                     }
 
-                    insertRawMaterial.run(rawId, product.id, qty, date);
+                    insertRawMaterial.run(rawId, product.id, qty/stock, date);
                 }
 
                 const insertHistory = db.prepare(`

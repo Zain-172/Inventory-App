@@ -2,7 +2,7 @@ const API_BASE_URL = 'http://localhost:5000';
 
 export async function getDashboardData() {
     try {
-        const [employeeRes, customerRes, expenseRes, saleRes, ordersRes, profitRes, shopRes, attendenceRes] = await Promise.all([
+        const [employeeRes, customerRes, expenseRes, saleRes, ordersRes, profitRes, shopRes, attendenceRes, khataRes] = await Promise.all([
             fetch(`${API_BASE_URL}/employee/count`),
             fetch(`${API_BASE_URL}/customer/count/cust`),
             fetch(`${API_BASE_URL}/expense/by-date`),
@@ -10,9 +10,10 @@ export async function getDashboardData() {
             fetch(`${API_BASE_URL}/sale/orders-today`),
             fetch(`${API_BASE_URL}/sale/profit-today`),
             fetch(`${API_BASE_URL}/customer/count/shop`),
-            fetch(`${API_BASE_URL}/attendence/count-today`)
+            fetch(`${API_BASE_URL}/attendence/count-today`),
+            fetch(`${API_BASE_URL}/khata/count`)
         ]);
-        if (!employeeRes.ok || !customerRes.ok || !expenseRes.ok || !saleRes.ok || !ordersRes.ok || !profitRes.ok || !shopRes.ok || !attendenceRes.ok) {
+        if (!employeeRes.ok || !customerRes.ok || !expenseRes.ok || !saleRes.ok || !ordersRes.ok || !profitRes.ok || !shopRes.ok || !attendenceRes.ok || !khataRes.ok) {
             throw new Error('Failed to fetch dashboard data');
         } else {
             const employeeData = await employeeRes.json();
@@ -23,6 +24,7 @@ export async function getDashboardData() {
             const shopData = await shopRes.json();
             const profitData = await profitRes.json();
             const attendenceData = await attendenceRes.json();
+            const khataData = await khataRes.json();
             return {
                 employeeCount: employeeData.count,
                 customerCount: customerData.count,
@@ -31,7 +33,8 @@ export async function getDashboardData() {
                 dailyOrders: ordersData.orders,
                 dailyProfit: profitData.profit,
                 shopCount: shopData.count,
-                attendance: attendenceData.count
+                attendance: attendenceData.count,
+                khataCount: khataData.count
             };
         }
     } catch (error) {

@@ -10,8 +10,8 @@ import {
   FaUser,
   FaBuilding,
   FaUserFriends,
-  FaPlus,
   FaBook,
+  FaAddressBook,
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
@@ -27,6 +27,7 @@ const Home = () => {
   const [salesToday, setSalesToday] = useState(0);
   const [customerCount, setCustomerCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
+  const [khataCount, setKhataCount] = useState(0);
   const [shopCount, setShopCount] = useState(0);
   const [att, setAtt] = useState(0);
 
@@ -43,6 +44,7 @@ const Home = () => {
         setShopCount(dashboardData.shopCount);
         setProfit(dashboardData.dailyProfit);
         setAtt(dashboardData.attendance);
+        setKhataCount(dashboardData.khataCount);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }
@@ -124,6 +126,13 @@ const Home = () => {
             icon={<FaBook size={40} />}
             bgColor="bg-gradient-to-r from-zinc-700 to-zinc-400"
             to="/report"
+          />
+          <MetricsCard
+            title="Khata"
+            value={khataCount}
+            icon={<FaAddressBook size={40} />}
+            bgColor="bg-gradient-to-r from-teal-700 to-teal-400"
+            to="/khata"
           />
           <MetricsCard
             title="Attendence"

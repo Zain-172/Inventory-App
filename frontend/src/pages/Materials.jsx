@@ -10,6 +10,7 @@ import {
   FaPlusCircle,
   FaTrashAlt,
   FaWarehouse,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 import Modal from "../component/Modal";
 import { Link } from "react-router-dom";
@@ -52,7 +53,7 @@ const Material = () => {
         fetchProducts();
         setFormData(new Product());
       } else {
-        console.error("Failed to add product:", result.message);
+        alertBox("Failed to add product: " + result.message, "Error", <FaExclamationTriangle />);
       }
     } catch (err) {
       console.log("Error: ", err);

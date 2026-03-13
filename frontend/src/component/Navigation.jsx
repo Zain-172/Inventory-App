@@ -6,6 +6,7 @@ import {
   FaUserAlt,
   FaCreditCard,
   FaHandshake,
+  FaBook,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
@@ -15,7 +16,7 @@ const Navigation = () => {
     <nav
       className={`bg-white dark:bg-neutral-900 fixed left-0 bottom-0 right-0 flex overflow-hidden transition-all duration-300 z-1 rounded-t-lg shadow-[0_0px_1px] dark:shadow-white shadow-black`}
     >
-      <ul className="grid grid-cols-7 items-center w-full">
+      <ul className="grid grid-cols-8 items-center w-full">
         <li>
           <Link
             className="flex flex-col justify-center border-r gap-1 items-center my-2"
@@ -68,6 +69,15 @@ const Navigation = () => {
           >
             <FaHandshake style={{ minWidth: "50px", fontSize: "1.5rem" }} />
             <p className="text-sm font-bold">Customer</p>
+          </Link>
+        </li>
+        <li>
+          <Link
+            className="flex flex-col justify-center border-r gap-1 items-center my-2"
+            to="/khata"
+          >
+            <FaBook style={{ minWidth: "50px", fontSize: "1.5rem" }} />
+            <p className="text-sm font-bold">Khata</p>
           </Link>
         </li>
         <li>

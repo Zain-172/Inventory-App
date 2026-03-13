@@ -10,16 +10,21 @@ export function AlertProvider({ children }) {
     resolve: null,
     title: "Alert",
     icon: <FaExclamationCircle />,
+    hideCloseButton: true,
   });
 
-  function alertBox(message, title = "Alert", icon = <FaExclamationCircle />) {
+  function alertBox(message, title = "Alert", icon = <FaExclamationCircle />, hideCloseButton = true) {
     return new Promise((resolve) => {
-      setAlertState({ open: true, message, resolve, title, icon });
+      setAlertState({ open: true, message, resolve, title, icon, hideCloseButton });
     });
   }
 
   function handleOk() {
-    alertState.resolve?.(); // return control back
+    alertState.resolve?.(true); // return control back
+    setAlertState({ ...alertState, open: false });
+  }
+  function handleCancel() {
+    alertState.resolve?.(false); // return control back
     setAlertState({ ...alertState, open: false });
   }
 
@@ -32,8 +37,9 @@ export function AlertProvider({ children }) {
         title={alertState.title}
         message={alertState.message}
         icon={alertState.icon}
-        hideCloseButton={true}
+        hideCloseButton={alertState.hideCloseButton}
         onOk={handleOk}
+        onCancel={handleCancel}
       />
     </AlertContext.Provider>
   );

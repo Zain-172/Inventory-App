@@ -387,14 +387,14 @@ const Sales = () => {
                     <strong>Customer:</strong> {group.customer}
                   </p>
                   <p className="text-lg text-right">
-                    <strong>Tax:</strong> {Number(group.tax || 0).toFixed(2)}
+                    <strong>Tax:</strong> {Number(group.tax || 0).toFixed(2)} %
                   </p>
 
                   <div className="text-lg my-2">
                     <strong>Status:</strong>{" "}
                     <button
                       type="button"
-                      className={`px-3 rounded-md font-semibold transition-colors border shadow-[0_0_10px] shadow-black/40 ${statusStyles[group.status]}`}
+                      className={`px-3 rounded-md font-semibold transition-colors border ${statusStyles[group.status]}`}
                       onClick={() => handleStatusToggle(group.id, group.status)}
                       disabled={updatingSaleId === group.id}
                     >
@@ -405,7 +405,7 @@ const Sales = () => {
                     <strong>Delivery:</strong>{" "}
                     <button
                       type="button"
-                      className={`px-3 rounded-md font-semibold transition-colors border shadow-[0_0_10px] shadow-black/40 ${deliveryStyles[group.delivery_status || "not_delivered"]}`}
+                      className={`px-3 rounded-md font-semibold transition-colors border ${deliveryStyles[group.delivery_status || "not_delivered"]}`}
                       onClick={() =>
                         handleDeliveryStatusToggle(
                           group.id,

@@ -6,7 +6,7 @@ import { useAppData } from "../context/AppDataContext";
 export default function Form({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",
-    price: "",
+    price: 0,
     date: new Date().toISOString().split("T")[0],
     quantity: "",
   });
@@ -47,6 +47,7 @@ export default function Form({ onSubmit }) {
         },
       ]);
       setEntry({ id: "", name: "", quantity: "" });
+      setFormData((prev) => ({ ...prev, price: Number(prev.price) + products.find((p) => p.id === entry.id)?.cost_price * Number(entry.quantity) }));
     }
   };
 
@@ -86,7 +87,7 @@ export default function Form({ onSubmit }) {
     <>
       <form
         onSubmit={handleSubmit}
-        className="p-4 rounded-lg w-full border border-white/30 shadow-md shadow-white/10 mb-16"
+        className="px-4 py-6 rounded-lg w-full border dark:border-white/30 border-black/30 shadow-lg"
       >
         <h2 className="text-3xl font-semibold text-center mb-4 flex justify-center items-end gap-4">
           <FaWarehouse size={36} />

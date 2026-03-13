@@ -9,6 +9,7 @@ const Expense = lazy(() => import("./pages/Expense"));
 const Employees = lazy(() => import("./pages/Employees"));
 const Attendence = lazy(() => import("./pages/Attendence"));
 const Customer = lazy(() => import("./pages/Customer"));
+const Khata = lazy(() => import("./pages/Khata"));
 const Raw = lazy(() => import("./pages/Raw"));
 const EmployeeAccount = lazy(() => import("./pages/EmployeeAccount"));
 const Login = lazy(() => import("./pages/Login"));
@@ -32,6 +33,7 @@ function App() {
           <Route path="/employee" element={<Employees />} />
           <Route path="/attendence" element={<Attendence />} />
           <Route path="/customer" element={<Customer />} />
+          <Route path="/khata" element={<Khata />} />
           <Route path="/raw" element={<Raw />} />
           <Route path="/account/:id" element={<EmployeeAccount />} />
           <Route path="/" element={<Login />} />

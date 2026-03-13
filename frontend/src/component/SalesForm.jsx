@@ -51,7 +51,7 @@ export default function SalesForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newInvoiceId = generateInvoiceId();
-    if (!formData.salesman || entry.length === 0) {
+    if (!formData.salesman || entry.length === 0 || !formData.customer) {
       alert(
         "Please fill in all required fields and add at least one product entry."
       );
@@ -156,7 +156,7 @@ export default function SalesForm({ onSubmit }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white border border-white/40 p-6 rounded-xl shadow-[0px_0px_10px] shadow-white/20 w-[90vw] max-w-3xl max-h-screen overflow-y-auto"
+      className="bg-white border border-white/40 p-6 rounded-xl shadow-[0px_0px_10px] shadow-white/20 w-[90vw] max-w-4xl max-h-screen overflow-y-auto"
     >
       <h2 className="text-3xl font-semibold text-center">Sales</h2>
 
@@ -226,16 +226,13 @@ export default function SalesForm({ onSubmit }) {
       <div className="flex gap-4 w-full justify-center items-end mb-8">
         <div className="w-full relative">
           <label className="block text-sm font-medium mb-1">Product</label>
-          <Dropdown
-            options={product}
-            value={product[0]}
-            onChange={(value) =>
-              setFormData((prev) => ({
-                ...prev,
-                product: value.key,
-                id: value.value,
-              }))
-            }
+          <Trie
+            items={product}
+            value={formData.product}
+            onChange={(d) => {
+              setFormData((prev) => ({ ...prev, product: d.key, id: d.value }));
+              console.log("Selected product:", d);
+            }}
           />
           {formData.id && (
             <span className="absolute -bottom-5 left-1 text-sm text-gray-400 italic">

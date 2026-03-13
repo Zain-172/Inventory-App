@@ -9,6 +9,7 @@ export default class Product {
     this.date = date;
     this.type = type;
   }
+
   getProduct = (req, res) => {
     try {
       const row = db.prepare("SELECT id, name, cost_price, stock, date, type, barcode FROM products").all();
@@ -18,7 +19,7 @@ export default class Product {
       res.json(row);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json({ message: "Insufficient raw material stock" });
     }
   };
 
@@ -122,7 +123,7 @@ export default class Product {
   deleteProduct = (req, res) => {
     const { id } = req.params;
     try {
-      const stmt = db.prepare("DELETE FROM products WHERE id = ?");
+      const stmt = db.prepare("UPDATE products SET stock = 0 WHERE id = ?");
       const info = stmt.run(id);
       if (info.changes === 0) {
         return res.status(404).json({ message: "Product not found" });

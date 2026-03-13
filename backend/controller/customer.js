@@ -163,7 +163,7 @@ export default class Customer {
   countShop = (req, res) => {
     try {
       const row = db
-        .prepare("SELECT COUNT(id) AS count FROM customers WHERE type != 'normal' GROUP BY type")
+        .prepare("SELECT COUNT(id) AS count FROM customers WHERE type != 'normal'")
         .get();
       res.json({ count: row.count });
     } catch (err) {

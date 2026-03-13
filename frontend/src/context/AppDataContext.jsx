@@ -11,6 +11,7 @@ export const AppDataProvider = ({ children }) => {
   const [expenses, setExpenses] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [khatas, setKhatas] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
@@ -30,6 +31,11 @@ export const AppDataProvider = ({ children }) => {
     const resCustomers = await fetch("http://localhost:5000/customer/");
     const customersData = await resCustomers.json();
     setCustomers(customersData);
+  };
+  const fetchKhatas = async () => {
+    const resKhata = await fetch("http://localhost:5000/khata/");
+    const khataData = await resKhata.json();
+    setKhatas(khataData);
   };
   const fetchEmployees = async () => {
     const resEmployees = await fetch("http://localhost:5000/employee/");
@@ -108,6 +114,9 @@ export const AppDataProvider = ({ children }) => {
         // CUSTOMERS
         await fetchCustomers();
 
+        // KHATA
+        await fetchKhatas();
+
         // MATERIALS
         await fetchMaterials();
       } catch (err) {
@@ -156,6 +165,8 @@ export const AppDataProvider = ({ children }) => {
         setEmployees,
         customers,
         setCustomers,
+        khatas,
+        setKhatas,
         materials,
         setMaterials,
         loading,
@@ -166,6 +177,7 @@ export const AppDataProvider = ({ children }) => {
         fetchCostCalculation,
         fetchEmployees,
         fetchCustomers,
+        fetchKhatas,
         fetchExpenses,
         fetchMaterials,
         fetchProducts,

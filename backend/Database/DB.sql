@@ -96,6 +96,21 @@ CREATE TABLE IF NOT EXISTS sale_items (
 );
 
 ---------------------------------------------------------
+-- KHATA ACCOUNTS TABLE
+---------------------------------------------------------
+CREATE TABLE IF NOT EXISTS khata_accounts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    phone TEXT,
+    address TEXT,
+    opening_balance REAL NOT NULL DEFAULT 0,
+    current_balance REAL NOT NULL DEFAULT 0,
+    note TEXT,
+    date_added TEXT NOT NULL DEFAULT (date('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+);
+
+---------------------------------------------------------
 -- TRIGGER: RESTORE STOCK ON DELETE
 ---------------------------------------------------------
 
