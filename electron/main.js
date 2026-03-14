@@ -82,9 +82,7 @@ function setupAutoUpdater() {
     console.error("Update error:", err);
   });
 
-  app.on("ready", () => {
-    autoUpdater.checkForUpdatesAndNotify();
-  });
+  autoUpdater.checkForUpdatesAndNotify();
 }
 
 
