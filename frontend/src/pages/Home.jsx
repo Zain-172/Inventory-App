@@ -111,7 +111,7 @@ const Home = () => {
             value={shopCount}
             icon={<FaBuilding size={40} />}
             bgColor="bg-gradient-to-r from-indigo-700 to-indigo-400"
-            to="/shops"
+            to="/customer"
           />
           <MetricsCard
             title="Employees"

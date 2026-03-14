@@ -99,9 +99,12 @@ export default function TrieSearch({
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
       setActiveIndex((i) => Math.max(i - 1, -1));
-    } else if (e.key === "Enter" && activeIndex >= 0) {
+    } else if (e.key === "Enter" || e.key === "Tab") {
       e.preventDefault();
-      handleSelect(suggestions[activeIndex]);
+      if (activeIndex >= 0)
+        handleSelect(suggestions[activeIndex]);
+      else
+        handleSelect(suggestions[0]);
     } else if (e.key === "Escape") {
       setSuggestions([]);
       setActiveIndex(-1);

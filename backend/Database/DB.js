@@ -1,6 +1,17 @@
+import path from "path";
+import os from "os";
 import Database from "better-sqlite3";
-const db = new Database("./Database/Database.db");
-db.pragma('foreign_keys = ON'); // enable foreign key constraints
-db.pragma('journal_mode = WAL'); // enable concurrent read/write
+
+// User home directory
+const homeDir = os.homedir();
+
+// Absolute path to Roaming (Windows)
+const dbPath = path.join(homeDir, "AppData", "Roaming", "Inventory-Manager", "Database.db");
+
+// Use with better-sqlite3
+const db = new Database(dbPath);
+
+db.pragma("foreign_keys = ON");
+db.pragma("journal_mode = WAL");
 
 export default db;

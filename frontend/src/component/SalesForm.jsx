@@ -7,9 +7,9 @@ import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "./Alerts";
 
 export default function SalesForm({ onSubmit }) {
-  const { products, customers } = useAppData();
+  const { products, customers, employees } = useAppData();
   const product = [
-    ...products.map((item) => ({ key: item.name, value: item.barcode })),
+    ...products.filter((item) => item.stock > 0 && item.type !== "raw").map((item) => ({ key: item.name, value: item.barcode })),
   ];
   const customerOptions = customers.map((cust) => ( { key: cust.customer, value: cust.id } ));
   const paymentStatusOptions = [
@@ -22,9 +22,7 @@ export default function SalesForm({ onSubmit }) {
     { key: "Delivered", value: "delivered" },
   ];
   const salesmen = [
-    { key: "John Doe", value: "John Doe" },
-    { key: "Jane Smith", value: "Jane Smith" },
-    { key: "Mike Johnson", value: "Mike Johnson" },
+    ...employees.filter((emp) => emp.position.toLowerCase() === "salesman").map((emp) => ({ key: emp.name, value: emp.id })),
   ];
   const [formData, setFormData] = useState({
     id: product[0]?.value,
@@ -246,7 +244,7 @@ export default function SalesForm({ onSubmit }) {
           <div
             className="w-full px-3 py-2 border rounded-lg dark:border-white/20 border-black"
           >
-            {formData.id}
+            {formData.id || "--"}
           </div>
         </div>
         <div className="w-full relative">

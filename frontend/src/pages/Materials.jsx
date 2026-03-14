@@ -6,11 +6,11 @@ import {
   FaBroom,
   FaCheckCircle,
   FaCalculator,
-  FaEllipsisV,
   FaPlusCircle,
-  FaTrashAlt,
-  FaWarehouse,
   FaExclamationTriangle,
+  FaTrashAlt,
+  FaMinus,
+  FaMinusCircle,
 } from "react-icons/fa";
 import Modal from "../component/Modal";
 import { Link } from "react-router-dom";
@@ -18,11 +18,11 @@ import Dropdown from "../component/DropDown";
 import { useAppData } from "../context/AppDataContext";
 import Product from "../models/Product";
 import { useAlertBox } from "../component/Alerts";
+import Trie from "../component/Trie";
 
 const Material = () => {
   const [open, setOpen] = useState(false);
   const { products, setProducts, loading, fetchProducts } = useAppData();
-  // const [openMenuIndex, setOpenMenuIndex] = useState(false);
   const [filter, setFilter] = useState("production");
   const [formData, setFormData] = useState({
     name: "",
@@ -47,13 +47,20 @@ const Material = () => {
         },
         body: JSON.stringify(data),
       });
-      const result = await res.json();
       if (res.ok) {
-        alertBox("The Product is added successfully", "Success", <FaCheckCircle />);
+        alertBox(
+          "The Product is added successfully",
+          "Success",
+          <FaCheckCircle />,
+        );
         fetchProducts();
         setFormData(new Product());
       } else {
-        alertBox("Failed to add product: " + result.message, "Error", <FaExclamationTriangle />);
+        alertBox(
+          "Failed to add product: Insufficient Raw Materials or Invalid Data",
+          "Error",
+          <FaExclamationTriangle />,
+        );
       }
     } catch (err) {
       console.log("Error: ", err);
@@ -77,7 +84,7 @@ const Material = () => {
       formData.cost_price,
       -formData.stock,
       formData.date,
-      filter
+      filter,
     );
     data.action = "REMOVE";
     try {
@@ -90,7 +97,11 @@ const Material = () => {
       });
       const result = await res.json();
       if (res.ok) {
-        alertBox("The Product stock is removed successfully", "Success", <FaCheckCircle />);
+        alertBox(
+          "The Product stock is removed successfully",
+          "Success",
+          <FaCheckCircle />,
+        );
         fetchProducts();
         setRemoveModal(false);
         setFormData(new Product());
@@ -110,12 +121,12 @@ const Material = () => {
       });
       if (response.ok) {
         setProducts((prevData) =>
-          prevData.filter((product) => product.id !== id)
+          prevData.filter((product) => product.id !== id),
         );
         alertBox(
           "The Product is deleted successfully",
           "Success",
-          <FaCheckCircle />
+          <FaCheckCircle />,
         );
       } else {
         console.error("Failed to delete product");
@@ -134,25 +145,43 @@ const Material = () => {
         <Navigation />
       </nav>
       <TopBar>
-        <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2"><FaBroom />Products</h1>
+        <h1 className="text-2xl py-2 font-bold flex items-center justify-center gap-2">
+          <FaBroom />
+          Products
+        </h1>
       </TopBar>
       <main className="flex flex-col my-16 w-screen">
         <div className="flex items-center justify-center gap-4 py-6">
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "raw" ? "bg-green-600 text-white" : "text-green-500"}`} onClick={() => setFilter("raw")}>
+          <button
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "raw" ? "bg-green-600 text-white" : "text-green-500"}`}
+            onClick={() => setFilter("raw")}
+          >
             Raw Materials
           </button>
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "production" ? "bg-green-600 text-white" : "text-green-500"}`} onClick={() => setFilter("production")}>
+          <button
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "production" ? "bg-green-600 text-white" : "text-green-500"}`}
+            onClick={() => setFilter("production")}
+          >
             Production Made
           </button>
-          <button className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "ready" ? "bg-green-600 text-white" : "text-green-500"}`} onClick={() => setFilter("ready")}>
+          <button
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "ready" ? "bg-green-600 text-white" : "text-green-500"}`}
+            onClick={() => setFilter("ready")}
+          >
             Ready Made
           </button>
         </div>
         <div className="px-2 py-2">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold">{ filter === "raw" ? "Raw Materials" : filter === "production" ? "Production Made" : "Ready Made" }</h2>
+            <h2 className="text-2xl font-bold">
+              {filter === "raw"
+                ? "Raw Materials"
+                : filter === "production"
+                  ? "Production Made"
+                  : "Ready Made"}
+            </h2>
             <div className="flex items-center justify-center gap-4">
-              { filter == "production" && (
+              {filter == "production" && (
                 <Link
                   to="/cost-calculator"
                   className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
@@ -161,49 +190,33 @@ const Material = () => {
                 </Link>
               )}
               <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
-                >
-                  <FaPlusCircle /> Add Stock
-                </button>
-              {/* <button
-                className="py-3 px-2 rounded-lg bg-green-600 hover:bg-green-600 text-white"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setOpenMenuIndex((prev) => !prev);
-                }}
+                onClick={() => setIsModalOpen(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
               >
-                <FaEllipsisV />
-              </button> */}
-              {/* {openMenuIndex && (
-                <div className="absolute right-0 mt-32 w-48 bg-white border border-black text-white rounded-lg shadow-lg flex flex-col">
-                  <button
-                    onClick={() => setIsModalOpen(true)}
-                    className="px-4 py-2  hover:bg-green-600 text-white rounded-t border-b font-bold flex items-center gap-2"
-                  >
-                    <FaPlusCircle /> Add Stock
-                  </button>
-                  <button
-                    onClick={() => setRemoveModal(true)}
-                    className="px-4 py-2  hover:bg-green-600 text-white rounded-b font-bold flex items-center gap-2"
-                  >
-                    <FaTrashAlt /> Remove Stock
-                  </button>
-                </div>
-              )} */}
+                <FaPlusCircle /> Add Stock
+              </button>
+
+              <button
+                onClick={() => setRemoveModal(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
+              >
+                <FaTrashAlt /> Remove Stock
+              </button>
             </div>
           </div>
           <Table
             open={open}
             setOpen={setOpen}
-            data={products.filter((product) => product.type === filter).map((product) => ({
-              id: product.id,
-              name: product.name,
-              barcode: product.barcode,
-              cost_price: product.cost_price,
-              stock: product.stock,
-              date: product.date,
-            }))}
+            data={products
+              .filter((product) => product.type === filter && product.stock > 0)
+              .map((product) => ({
+                id: product.id,
+                name: product.name,
+                barcode: product.barcode,
+                cost_price: product.cost_price,
+                stock: product.stock,
+                date: product.date,
+              }))}
             onDelete={handleDelete}
             nonEditable="Delete"
             accent="bg-green-600"
@@ -226,22 +239,21 @@ const Material = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={(e) =>
+              <Trie
+                items={products.map((product) => product.name)}
+                onChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
-                    name: e.target.value,
+                    name: value.key,
+                    cost_price: products.find((prod) => prod.name === value.key)?.cost_price || "",
                   }))
                 }
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
-                required
               />
             </div>
             <div className="w-full">
-              <label className="block text-sm font-medium mb-1">Cost Price</label>
+              <label className="block text-sm font-medium mb-1">
+                Cost Price
+              </label>
               <input
                 type="number"
                 name="costPrice"
@@ -274,12 +286,10 @@ const Material = () => {
             </div>
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">Type</label>
-              <div
-                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
-              >
+              <div className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white">
                 <span>
-                  { filter === "raw" && "Raw Material" }
-                  { filter === "ready" && "Ready Made" }
+                  {filter === "raw" && "Raw Material"}
+                  {filter === "ready" && "Ready Made"}
                 </span>
               </div>
             </div>
@@ -327,18 +337,25 @@ const Material = () => {
               <label className="block text-sm font-medium mb-1">Name</label>
               <Dropdown
                 className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
-                options={products.filter((product) => product.type === "production").map((product) => ({ key: product.name, value: product.cost_price }))}
+                options={products
+                  .filter((product) => product.type === "production")
+                  .map((product) => ({
+                    key: product.name,
+                    value: product.cost_price,
+                  }))}
                 onChange={(d) =>
                   setFormData((prev) => ({
                     ...prev,
                     name: d.key,
-                    cost_price: d.value
+                    cost_price: d.value,
                   }))
                 }
               />
             </div>
             <div className="w-full">
-              <label className="block text-sm font-medium mb-1">Cost Price</label>
+              <label className="block text-sm font-medium mb-1">
+                Cost Price
+              </label>
               <input
                 type="number"
                 name="costPrice"
@@ -371,12 +388,8 @@ const Material = () => {
             </div>
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">Type</label>
-              <div
-                className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
-              >
-                <span>
-                  Production
-                </span>
+              <div className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white">
+                <span>Production</span>
               </div>
             </div>
             <div className="w-full col-span-2">
@@ -411,7 +424,7 @@ const Material = () => {
       >
         <form
           onSubmit={handleRemove}
-          className="bg-white rounded-lg p-6 flex flex-col border border-black w-96"
+          className="bg-white rounded-lg p-6 flex flex-col gap-4 border border-black w-[50vw]"
         >
           <h2 className="flex items-center justify-center text-2xl font-bold mb-6 gap-2">
             <FaBroom />
@@ -419,18 +432,16 @@ const Material = () => {
           </h2>
           <div className="w-full">
             <label className="block text-sm font-medium mb-1">Name</label>
-            <input
-              type="number"
-              name="name"
-              value={formData.name}
-              onChange={(e) =>
+            <Dropdown
+              options={products.map((product) => ({ key: product.name, value: product.id }))}
+              onChange={(data) =>
                 setFormData((prev) => ({
                   ...prev,
-                  name: e.target.value,
+                  name: data.key,
+                  id: data.value,
+                  cost_price: products.find((prod) => prod.id === data.value)?.cost_price || "",
                 }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
-              required
             />
           </div>
           <div className="w-full relative">
@@ -468,7 +479,7 @@ const Material = () => {
                   date: e.target.value,
                 }))
               }
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none bg-white focus:ring-2 focus:ring-blue-500 mb-4"
               required
             />
           </div>
@@ -476,7 +487,7 @@ const Material = () => {
             type="submit"
             className="w-full flex items-center justify-center gap-2 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors"
           >
-            <FaPlusCircle /> Add Stock
+            <FaMinusCircle /> Remove Stock
           </button>
         </form>
       </Modal>

@@ -29,8 +29,8 @@ export default function Form({ onSubmit }) {
   };
 
   const handleAddEntry = () => {
-    console.log(entry);
-    if (entry.name && entry.quantity && entry.quantity < products.find((p) => p.id === entry.id)?.stock) {
+    console.log(entry.quantity, ' <= ', products.find((p) => p.id === entry.id)?.stock + (raw.find((r) => r.id === entry.id)?.quantity || 0));
+    if (entry.name && entry.quantity && entry.quantity <= products.find((p) => p.id === entry.id)?.stock + (raw.find((r) => r.id === entry.id)?.quantity || 0)) {
       setRaw((prev) => [
         ...(prev || []),
         {
@@ -87,7 +87,7 @@ export default function Form({ onSubmit }) {
     <>
       <form
         onSubmit={handleSubmit}
-        className="px-4 py-6 rounded-lg w-full border dark:border-white/30 border-black/30 shadow-lg"
+        className="px-4 py-6 rounded-lg w-full border dark:border-white/30 border-black/30 shadow-lg mb-16"
       >
         <h2 className="text-3xl font-semibold text-center mb-4 flex justify-center items-end gap-4">
           <FaWarehouse size={36} />
@@ -181,7 +181,7 @@ export default function Form({ onSubmit }) {
               placeholder="200"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            { entry.quantity > products.find((p) => p.id === entry.id)?.stock && (
+            { entry.quantity > products.find((p) => p.id === entry.id)?.stock + (raw.find((r) => r.id === entry.id)?.quantity || 0) && (
               <p className="text-[10px] text-red-600 mt-1">
                 Exceeds available stock: {products.find((p) => p.id === entry.id)?.stock}
               </p>

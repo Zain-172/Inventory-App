@@ -110,7 +110,7 @@ const Employees = () => {
         </div>
       </main>
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <EmployeeForm onSubmit={handleSubmit} />
+        <EmployeeForm onSubmit={handleSubmit} modifyData={{name: "", position: "", salary: "", phone: "", address: ""}} />
       </Modal>
     </div>
   );

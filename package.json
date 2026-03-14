@@ -1,6 +1,6 @@
 {
   "name": "desktop-app",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "private": true,
   "type": "module",
   "main": "electron/main.js",
@@ -8,23 +8,28 @@
     "dev": "concurrently -k \"npm:dev:frontend\" \"npm:dev:backend\" \"npm:dev:electron\"",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && nodemon server.js",
-    "dev:electron": "wait-on http://localhost:5173 && electron electron/main.js",
+    "dev:electron": "wait-on http://localhost:5173 && cross-env NODE_ENV=development electron electron/main.js",
+    "build:backend": "node scripts/build-backend.js",
     "build:frontend": "cd frontend && npm run build",
-    "build": "npm run build:frontend",
-    "dist": "npm run build && electron-builder"
+    "build": "npm run build:backend && npm run build:frontend",
+    "release": "npm run build && electron-builder"
   },
   "devDependencies": {
-    "baseline-browser-mapping": "^2.10.0",
     "concurrently": "^9.2.1",
-    "electron": "^39.2.3",
+    "cross-env": "^7.0.3",
+    "electron": "^39.8.2",
     "electron-builder": "^26.8.1",
+    "esbuild": "^0.27.4",
     "nodemon": "^3.1.0",
     "wait-on": "^9.0.3"
   },
   "build": {
-    "asar": false,
+    "asar": true,
+    "asarUnpack": [
+      "electron/**"
+    ],
     "appId": "com.desktop.app",
-    "productName": "Inventory Manager",
+    "productName": "Inventory-Manager",
     "publish": [
       {
         "provider": "github",
@@ -37,25 +42,25 @@
       "buildResources": "resources"
     },
     "files": [
-      "dist-frontend/**",
       "electron/**",
-      "backend/**",
       "package.json"
     ],
     "extraResources": [
       {
-        "from": "backend/",
-        "to": "backend/",
-        "filter": [
-          "**/*"
-        ]
+        "from": "dist-backend/",
+        "to": "backend/"
+      },
+      {
+        "from": "backend/node_modules/better-sqlite3/",
+        "to": "backend/"
+      },
+      {
+        "from": "backend/Database/",
+        "to": "backend/Database/"
       },
       {
         "from": "dist-frontend/",
-        "to": "dist-frontend/",
-        "filter": [
-          "**/*"
-        ]
+        "to": "dist-frontend/"
       }
     ],
     "win": {
@@ -70,7 +75,7 @@
     }
   },
   "dependencies": {
-    "@electron/get": "^4.0.2",
-    "electron-updater": "^6.6.2"
+    "electron-log": "^5.4.3",
+    "electron-updater": "^6.8.3"
   }
 }

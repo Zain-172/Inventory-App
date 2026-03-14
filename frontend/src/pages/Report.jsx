@@ -179,40 +179,44 @@ const Report = () => {
     }
   };
 
-  const GenerateProductionReport = async () => {
-    let filteredProduction = [];
-    let title = "Production Report";
+  const GenerateAttendenceReport = async () => {
+    let filteredAttendence = [];
+    let title = "Attendance Report";
+    const selectedYearValue = selectedYear?.value || new Date().getFullYear().toString();
+
     if (selectedPeriod.value === "daily") {
-        const res = await fetch("http://localhost:5000/product/stock-history-date?date=" + selectedDate);
-        filteredProduction = await res.json();
-        title = "Production " + selectedDate;
+        console.log("Fetching attendance for date:", selectedDate);
+        const res = await fetch("http://localhost:5000/attendence/by-date/" + selectedDate);
+        filteredAttendence = await res.json();
+        title = "Attendance " + selectedDate;
       } else if (selectedPeriod.value === "monthly") {
-        const res = await fetch("http://localhost:5000/product/stock-history-month?date=" + new Date().getFullYear() + "-" + selectedMonth.value );
-        filteredProduction = await res.json();
-        title = "Monthly Production " + selectedMonth.key + " " + new Date().getFullYear();
+        const y = new Date().getFullYear();
+        console.log("Fetching attendance for month:", selectedMonth.value);
+        const res = await fetch("http://localhost:5000/attendence/by-month/" + y + "-" + selectedMonth.value );
+        filteredAttendence = await res.json();
+        title = "Monthly Attendance " + selectedMonth.key + " " + selectedYearValue;
     } else if (selectedPeriod.value === "annually") {
-        const res = await fetch("http://localhost:5000/product/stock-history-year?date=" + selectedYear.value);
-        filteredProduction = await res.json();
-        title = "Annual Production Report " + selectedYear.key;
+        console.log("Fetching attendance for year:", selectedYearValue);
+        const res = await fetch("http://localhost:5000/attendence/by-year/" + selectedYearValue);
+        filteredAttendence = await res.json();
+        title = "Annual Attendance Report " + selectedYearValue;
     }
-    if (filteredProduction.length === 0) {
+    if (filteredAttendence.length === 0) {
       await alertBox("No data found for the selected period.", "Data Not Found");
       return;
     }
-    console.log("Filtered production: ", filteredProduction);
+    console.log("Filtered attendance: ", filteredAttendence);
     try {
-      const response = await fetch("http://localhost:5000/report/generate", {
+      const response = await fetch("http://localhost:5000/report/generate-attendance", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title,
           company: "My Company",
-          data: filteredProduction.map((p, i) => ({
-            "#": i + 1,
-            Product: p.name,
-            "Stock Added": p.stock,
-            "Cost Price": "Rs. " + p.cost_price,
-            Date: p.date,
+          data: filteredAttendence.map((a) => ({
+            Name: a.name || a.employee_name || a.employee,
+            Status: a.status,
+            Date: a.date || selectedDate,
           }))
         }),
       });
@@ -355,7 +359,7 @@ const Report = () => {
           <div className="grid grid-cols-4 gap-4 w-full">
             <button
               onClick={GenerateSalesReport}
-              className="flex flex-col items-center justify-center bg-blue-500 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center text-white bg-blue-500 p-4 rounded-lg w-full"
             >
               <FaReceipt className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
@@ -374,7 +378,7 @@ const Report = () => {
             </button>
             <button
               onClick={GenerateProductSaleReport}
-              className="flex flex-col items-center justify-center bg-green-600 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center text-white bg-green-600 p-4 rounded-lg w-full"
             >
               <FaShoppingCart className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
@@ -392,13 +396,13 @@ const Report = () => {
               </p>
             </button>
             <button
-              onClick={GenerateProductionReport}
-              className="flex flex-col items-center justify-center bg-yellow-500 p-4 rounded-lg w-full"
+              onClick={GenerateAttendenceReport}
+              className="flex flex-col items-center justify-center text-white bg-yellow-500 p-4 rounded-lg w-full"
             >
               <FaBroom className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
               <p className="text-md text-center flex gap-1">
-                Production Report
+                Attendence Report
                 {selectedPeriod.value === "daily" && (
                   <span className="italic font-bold">{selectedDate}</span>
                 )}
@@ -412,7 +416,7 @@ const Report = () => {
             </button>
             <button
               onClick={GenerateExpensesReport}
-              className="flex flex-col items-center justify-center bg-red-500 p-4 rounded-lg w-full"
+              className="flex flex-col items-center justify-center text-white bg-red-500 p-4 rounded-lg w-full"
             >
               <FaRegMoneyBillAlt className="text-7xl mx-auto mb-2" />
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>

@@ -61,6 +61,7 @@ electron-out/
 # Keep the dist folder
 # --------------------
 dist/
+dist-backend/
 
 # --------------------
 # Keep only the installer in dist
