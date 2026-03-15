@@ -50,8 +50,12 @@ export default function ExpenseForm({onSubmit}) {
       <h2 className="text-xl font-bold mb-4 flex gap-2 justify-center"><FaCreditCard /> Expense</h2>
       <div className="flex gap-4">
         <label className="text-sm w-full">Title
-          <TrieSearch
-            onChange={(entry) => setForm({ ...form, title: entry.value })}
+          <input
+          type="text"
+          className="w-full p-2 border rounded-lg mb-3"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+          required
           />
         </label>
         <label className="text-sm w-full">Amount

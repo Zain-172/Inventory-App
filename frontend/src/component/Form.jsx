@@ -8,7 +8,7 @@ export default function Form({ onSubmit }) {
     name: "",
     price: 0,
     date: new Date().toISOString().split("T")[0],
-    quantity: "",
+    quantity: 1,
   });
   const [entry, setEntry] = useState({ id: "", name: "", quantity: "" });
   const [raw, setRaw] = useState([]);
@@ -47,7 +47,7 @@ export default function Form({ onSubmit }) {
         },
       ]);
       setEntry({ id: "", name: "", quantity: "" });
-      setFormData((prev) => ({ ...prev, price: Number(prev.price) + products.find((p) => p.id === entry.id)?.cost_price * Number(entry.quantity) }));
+      setFormData((prev) => ({ ...prev, price: Number(prev.price) + products.find((p) => p.id === entry.id)?.cost_price * Number(entry.quantity) / Number(formData.quantity) }));
     }
   };
 

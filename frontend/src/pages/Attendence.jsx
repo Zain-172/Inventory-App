@@ -15,13 +15,15 @@ const statusStyles = {
 	Absent: "bg-red-600 text-white",
 	Leave: "bg-yellow-500 text-black",
 	"Half Day": "bg-orange-500 text-white",
+	Late: "bg-purple-500 text-white",
 };
 
 const nextStatus = {
 	Present: "Absent",
 	Absent: "Leave",
 	Leave: "Half Day",
-	"Half Day": "Present",
+	"Half Day": "Late",
+	Late: "Present"
 };
 
 const Attendence = () => {
