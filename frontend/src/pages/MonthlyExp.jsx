@@ -8,12 +8,16 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle, FaArrowsAltH } from "react-icons/fa";
 import { useAlertBox } from "../component/Alerts";
 
-const Monthly = ({ filterVal = 'factory' }) => {
+const Monthly = ({ filterVal = "factory" }) => {
   const [openModal, setOpenModal] = useState(false);
   const { loading, expenses, setExpenses, fetchExpenses } = useAppData();
 
   const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
-  const [from, setFrom] = useState(new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split("T")[0]);
+  const [from, setFrom] = useState(
+    new Date(new Date().setDate(new Date().getDate() - 30))
+      .toISOString()
+      .split("T")[0],
+  );
   const [open, setOpen] = useState(false);
   const { alertBox } = useAlertBox();
 
@@ -27,32 +31,42 @@ const Monthly = ({ filterVal = 'factory' }) => {
         method: "DELETE",
       });
       if (response.ok) {
-        setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
-        alertBox("The Expense is deleted successfully", "Success", <FaCheckCircle />);
+        setExpenses((prevExpenses) =>
+          prevExpenses.filter((expense) => expense.id !== id),
+        );
+        alertBox(
+          "The Expense is deleted successfully",
+          "Success",
+          <FaCheckCircle />,
+        );
       } else {
         console.error("Failed to delete expense");
       }
     } catch (err) {
       console.error("Failed to delete expense:", err);
     }
-  }
+  };
 
   const handleModify = async (editedData, deleteId) => {
-    console.log(editedData)
+    console.log(editedData);
     const res = await fetch(`http://localhost:5000/expense/${deleteId}`, {
       method: "PUT",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(new Expense(editedData))
+      body: JSON.stringify(new Expense(editedData)),
     });
     if (res.ok) {
       fetchExpenses();
-      alertBox("The Expense is modified successfully", "Success", <FaCheckCircle />);
+      alertBox(
+        "The Expense is modified successfully",
+        "Success",
+        <FaCheckCircle />,
+      );
     } else {
       console.error("Failed to modify");
     }
-  }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -60,56 +74,63 @@ const Monthly = ({ filterVal = 'factory' }) => {
   return (
     <div className="grid w-full">
       <main className="flex flex-col w-full">
-
         <div className="px-2 py-6 flex justify-between items-center">
           <h2 className="text-2xl font-bold">
-            {
-              filterVal === "factory" ? "Factory Expenses"
-              : filterVal === "home" ? "Home Expenses"
-              : filterVal === "bill" ? "Utility Bills"
-              : ""
-            }
+            {filterVal === "factory"
+              ? "Factory Expenses"
+              : filterVal === "home"
+                ? "Home Expenses"
+                : filterVal === "bill"
+                  ? "Utility Bills"
+                  : ""}
           </h2>
           <div>
-
-
-
-              <div className="flex flex-row justify-end items-center gap-2 py-2">
-                <div className="flex flex-col items-center">
-                  <p className="gap-2 font-semibold">From</p>
-                </div>
-                <input
-                  type="date"
-                  value={from}
-                  onChange={(e) => setFrom(e.target.value)}
-                  className="border px-2 py-1 rounded-md"
-                />
-                <FaArrowsAltH />
-                <div className="flex flex-col items-center">
-                  <p className="gap-2 font-semibold">To</p>
-                </div>
-                <input
-                  type="date"
-                  value={to}
-                  onChange={(e) => setTo(e.target.value)}
-                  className="border px-2 py-1 rounded-lg "
-                />
+            <div className="flex flex-row justify-end items-center gap-2 py-2">
+              <div className="flex flex-col items-center">
+                <p className="gap-2 font-semibold">From</p>
               </div>
+              <input
+                type="date"
+                value={from}
+                onChange={(e) => setFrom(e.target.value)}
+                className="border px-2 py-1 rounded-md"
+              />
+              <FaArrowsAltH />
+              <div className="flex flex-col items-center">
+                <p className="gap-2 font-semibold">To</p>
+              </div>
+              <input
+                type="date"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+                className="border px-2 py-1 rounded-lg "
+              />
+            </div>
           </div>
         </div>
 
         <div className="px-2 mb-8">
-          <Table data={expenses.
-            filter(item => (item.title.toLowerCase()).includes(filterVal) || filterVal === "factory" && (item.title.toLowerCase()).includes("salary") )
-            } onDelete={handleDelete} accent="bg-green-600" open={open} setOpen={setOpen} onUpdate={handleModify} />
+          <Table
+            data={expenses.filter(
+              (item) =>
+                item.title.toLowerCase().includes(filterVal) ||
+                (filterVal === "factory" &&
+                  item.title.toLowerCase().includes("salary")),
+            )}
+            onDelete={handleDelete}
+            accent="bg-green-600"
+            open={open}
+            setOpen={setOpen}
+            onUpdate={handleModify}
+          />
         </div>
 
-          <button
-            onClick={() => setOpenModal(true)}
-            className="px-4 py-2 w-56 grid place-self-center bg-green-600 rounded-lg text-white font-bold"
-          >
-            + Add Expense
-          </button>
+        <button
+          onClick={() => setOpenModal(true)}
+          className="px-4 py-2 w-56 grid place-self-center bg-green-600 rounded-lg text-white font-bold"
+        >
+          + Add Expense
+        </button>
       </main>
 
       <Navigation />

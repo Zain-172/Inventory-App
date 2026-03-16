@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Navigation from "../component/Navigation";
-import Daily from "./DailyExp";
 import Monthly from "./MonthlyExp";
 import TopBar from "../component/TopBar";
 import { FaCreditCard } from "react-icons/fa";

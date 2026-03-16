@@ -1,38 +1,3 @@
-import path from "path";
-import os from "os";
-import fs from "fs";
-import Database from "better-sqlite3";
-
-function getAppDataDir(appName) {
-  const platform = process.platform;
-  let baseDir;
-
-  if (platform === "win32") {
-    baseDir =
-      process.env.APPDATA || path.join(os.homedir(), "AppData", "Roaming");
-  } else if (platform === "darwin") {
-    baseDir = path.join(os.homedir(), "Library", "Application Support");
-  } else {
-    baseDir = process.env.XDG_CONFIG_HOME || path.join(os.homedir(), ".config");
-  }
-
-  return path.join(baseDir, appName);
-}
-
-// ── Paths ──────────────────────────────────────────────────────
-const appDir = getAppDataDir("desktop-app");
-const dbPath = path.join(appDir, "Database.db");
-
-console.log("Resource Path:", process.resourcesPath ?? process.cwd());
-console.log("App Data Directory:", appDir);
-console.log("Database Path:", dbPath);
-// ── Ensure directory exists ────────────────────────────────────
-fs.mkdirSync(appDir, { recursive: true });
-const dbExist = fs.existsSync(dbPath)
-const db = new Database(dbPath)
-// ── Copy seed DB if no DB exists yet ──────────────────────────
-if (!dbExist) {
-  const sql = `
 BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "attendence" (
 	"id"	INTEGER,
@@ -251,20 +216,3 @@ BEGIN
     WHERE barcode = OLD.barcode;
 END;
 COMMIT;
-`;
-  try {
-    db.exec(sql);
-    console.log("New Database created");
-  } catch (err) {
-    console.error("Error : ", err);
-  }
-
-}
-
-db.pragma("foreign_keys = ON");
-db.pragma("journal_mode = WAL");
-
-console.log("✅ Database connected at:", dbPath);
-
-export default db;
-
