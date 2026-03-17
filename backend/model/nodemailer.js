@@ -1,17 +1,19 @@
 import nodemailer from "nodemailer";
 
 export default function node_mailer(to, subject, text) {
-    console.log("Sending email to:", process.env.MAIL_APP_EMAIL, process.env.MAIL_APP_PASSWORD);
+    const password = "ilnv gsoo pglm ewju";
+    const email = "twintechdeveloper@gmail.com";
+    console.log("Sending email to:", email, password);
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: process.env.MAIL_APP_EMAIL,
-            pass: process.env.MAIL_APP_PASSWORD
+            user: email,
+            pass: password
         }
     });
 
     const mailOptions = {
-        from: process.env.MAIL_APP_EMAIL,
+        from: email,
         to: to,
         subject: subject,
         text: text
