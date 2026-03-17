@@ -14,12 +14,44 @@ export const AppDataProvider = ({ children }) => {
   const [khatas, setKhatas] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [to, setTo] = useState(new Date().toISOString().split("T")[0]);
-  const [from, setFrom] = useState(
-    new Date(new Date().setMonth(new Date().getMonth() - 1))
-      .toISOString()
-      .split("T")[0]
-  );
+    const period = [
+      { value: "daily", key: "Daily" },
+      { value: "monthly", key: "Monthly" },
+      { value: "annually", key: "Annually" },
+    ];
+    const [selectedPeriod, setSelectedPeriod] = useState(period[0]);
+    const [selectedDate, setSelectedDate] = useState(
+      new Date().toISOString().split("T")[0],
+    );
+  
+    const month = [
+      { key: "January", value: "01" },
+      { key: "February", value: "02" },
+      { key: "March", value: "03" },
+      { key: "April", value: "04" },
+      { key: "May", value: "05" },
+      { key: "June", value: "06" },
+      { key: "July", value: "07" },
+      { key: "August", value: "08" },
+      { key: "September", value: "09" },
+      { key: "October", value: "10" },
+      { key: "November", value: "11" },
+      { key: "December", value: "12" },
+    ];
+  
+    const minimumYear = 2026;
+    const currentYear = new Date().getFullYear();
+    const years = Array.from(
+      { length: Math.max(currentYear - minimumYear + 1, 0) },
+      (_, i) => {
+        const year = currentYear - i;
+        return { key: year.toString(), value: year.toString() };
+      }
+    );
+  
+    const [selectedMonth, setSelectedMonth] = useState(month[0]);
+    const [selectedYear, setSelectedYear] = useState(years[years.length - 1]);
+  
 
   const fetchMaterials = async () => {
     const resRaw = await fetch("http://localhost:5000/material/");
@@ -129,22 +161,28 @@ export const AppDataProvider = ({ children }) => {
     fetchAllData();
   }, []);
 
-  
-  const fetchSalesWithItems = async (to, from) => {
-    try {
-      const res = await fetch(
-        `http://localhost:5000/sale/with-items?to=${to}&from=${from}`
-      );
-      const data = await res.json();
-      console.log("Fetched sales with items:", data);
-      setSalesWithItems(data);
-    } catch (err) {
-      console.error(err);
-    }
+  const fetchSalesWithItems = async (period, date) => {
+    console.log(`Fetching sales with items for period: ${period}, date: ${date}`);
+    const res = await fetch(
+      `http://localhost:5000/sale/with-items/${period}/${date}`
+    );
+    const salesData = await res.json();
+    console.log("Fetched sales with items:", salesData);
+    setSalesWithItems(salesData);
   };
+
   useEffect(() => {
-    fetchSalesWithItems(to, from);
-  }, [to, from]);
+    const fetchData = async () => {
+      try {
+        await fetchSalesWithItems(selectedPeriod.value, selectedPeriod.value === 'daily' ? selectedDate : selectedPeriod.value === 'monthly' ? new Date().getFullYear() + '-' + String(selectedMonth.value).padStart(2, '0') : selectedYear.value);
+      } catch (error) {
+        console.error("Error fetching sales with items:", error);
+      }
+    };
+
+    fetchData();
+  }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
+
 
   return (
     <AppDataContext.Provider
@@ -170,10 +208,6 @@ export const AppDataProvider = ({ children }) => {
         materials,
         setMaterials,
         loading,
-        to,
-        setTo,
-        from,
-        setFrom,
         fetchCostCalculation,
         fetchEmployees,
         fetchCustomers,
@@ -184,6 +218,17 @@ export const AppDataProvider = ({ children }) => {
         fetchSales,
         fetchInventory,
         fetchSalesWithItems,
+        period,
+        selectedPeriod,
+        setSelectedPeriod,
+        selectedDate,
+        setSelectedDate,
+        month,
+        selectedMonth,
+        setSelectedMonth,
+        years,
+        selectedYear,
+        setSelectedYear,
       }}
     >
       {children}

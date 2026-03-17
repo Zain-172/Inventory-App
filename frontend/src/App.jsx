@@ -15,6 +15,7 @@ const EmployeeAccount = lazy(() => import("./pages/EmployeeAccount"));
 const Login = lazy(() => import("./pages/Login"));
 const SignUp = lazy(() => import("./pages/SignUp"));
 const ForgetPassword = lazy(() => import("./pages/Forget"));
+const Profit = lazy(() => import("./pages/Profit"));
 import { AppDataProvider } from "./context/AppDataContext";
 import { AlertProvider } from "./component/Alerts";
 
@@ -39,6 +40,7 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/forget-password" element={<ForgetPassword />} />
+          <Route path="/profit" element={<Profit />} />
         </Routes>
       </HashRouter>
       </AlertProvider>

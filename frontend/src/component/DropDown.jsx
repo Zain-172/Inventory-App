@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import { FaChevronCircleDown } from "react-icons/fa";
 
-export default function Dropdown({
+export default function DropDown({
   label = { value: 0, key: "Select" },
   options = [],
   onChange,
@@ -12,7 +12,7 @@ export default function Dropdown({
 }) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(value || label);
-  const dropdownRef = useRef(null);
+  const DropDownRef = useRef(null);
 
   const handleSelect = (option) => {
     setSelected(option);
@@ -20,10 +20,10 @@ export default function Dropdown({
     onChange && onChange(option);
   };
 
-  // Close dropdown on outside click
+  // Close DropDown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (DropDownRef.current && !DropDownRef.current.contains(event.target)) {
         setOpen(false);
       }
     };
@@ -36,7 +36,7 @@ export default function Dropdown({
   }, []);
 
   return (
-    <div className="relative inline-block w-full" ref={dropdownRef}>
+    <div className="relative inline-block w-full" ref={DropDownRef}>
       <button
         onClick={() => setOpen(!open)}
         className={className}

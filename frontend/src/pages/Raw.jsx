@@ -2,7 +2,7 @@ import Navigation from "../component/Navigation";
 import Modal from "../component/Modal";
 import Table from "../component/Table";
 import MaterialForm from "../component/MaterialForm";
-import Dropdown from "../component/DropDown";
+import DropDown from "../component/DropDown";
 import Expense from "../models/Expense";
 import { useAppData } from "../context/AppDataContext";
 import { useState } from "react";
@@ -74,7 +74,7 @@ const Raw = () => {
           <h2 className="text-2xl font-bold">Expense</h2>
           <div>
 
-          <Dropdown options={month} className="flex items-center justify-between w-56 px-4 py-2 border border-white/40 bg-[#111] mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />
+          <DropDown options={month} className="flex items-center justify-between w-56 px-4 py-2 border border-white/40 bg-[#111] mb-2 rounded-lg" value={month.find(m => m.key === selectedMonth)} onChange={(value) => setSelectedMonth(value.key)} />
           </div>
         </div>
 

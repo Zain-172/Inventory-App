@@ -22,8 +22,12 @@ import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "../component/Alerts";
 import MessageBox from "../component/MessageBox";
 import {
-  getSalesDuringPeriod,
-  getProfitDuringPeriod,
+  getSalesByDate,
+  getSalesByMonth,
+  getSalesByYear,
+  getProfitByDate,
+  getProfitByMonth,
+  getProfitByYear,
   updateSaleDeliveryStatus,
   updateSaleStatus,
 } from "../api/Sale";
@@ -67,10 +71,19 @@ const Sales = () => {
     customers,
     loading,
     from,
-    setFrom,
     to,
-    setTo,
     fetchSalesWithItems,
+    selectedPeriod,
+    setSelectedPeriod,
+    selectedDate,
+    setSelectedDate,
+    selectedMonth,
+    setSelectedMonth,
+    selectedYear,
+    setSelectedYear,
+    period,
+    month,
+    years,
   } = useAppData();
   const [selectedSale, setSelectedSale] = useState(null);
   const [filter, setFilter] = useState("paid");
@@ -80,6 +93,46 @@ const Sales = () => {
   const [profit, setProfit] = useState(0);
   const [updatingSaleId, setUpdatingSaleId] = useState(null);
   const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
+
+  useEffect(() => {
+      const fetchData = async () => {
+        let totalProfit = 0;
+        if (selectedPeriod.value === "daily") {
+          totalProfit = await getProfitByDate(selectedDate);
+        } else if (selectedPeriod.value === "monthly") {
+          totalProfit = await getProfitByMonth(new Date().getFullYear() + "-" + selectedMonth.value);
+        } else if (selectedPeriod.value === "annually") {
+          totalProfit = await getProfitByYear(selectedYear.value);
+        }
+        console.log(`Fetched total profit for ${selectedPeriod.value}:`, totalProfit);
+        setProfit(totalProfit);
+      };
+      if ((selectedPeriod.value === "daily" && selectedDate) ||
+          (selectedPeriod.value === "monthly" && selectedMonth) ||
+          (selectedPeriod.value === "annually" && selectedYear)) {
+        fetchData();
+      }
+    }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        let totalSale = 0;
+        if (selectedPeriod.value === "daily") {
+          totalSale = await getSalesByDate(selectedDate);
+        } else if (selectedPeriod.value === "monthly") {
+          totalSale = await getSalesByMonth(new Date().getFullYear() + "-" + selectedMonth.value);
+        } else if (selectedPeriod.value === "annually") {
+          totalSale = await getSalesByYear(selectedYear.value);
+        }
+        console.log(`Fetched total sale for ${selectedPeriod.value}:`, totalSale);
+        setSale(totalSale);
+      };
+      if ((selectedPeriod.value === "daily" && selectedDate) ||
+          (selectedPeriod.value === "monthly" && selectedMonth) ||
+          (selectedPeriod.value === "annually" && selectedYear)) {
+        fetchData();
+      }
+    }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
 
   const handleDelete = async (id) => {
     try {
@@ -163,21 +216,6 @@ const Sales = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const totalSales = await getSalesDuringPeriod(from, to).then((res) => res[0]?.total_sales || 0);
-      const totalProfit = await getProfitDuringPeriod(from, to).then((res) => res[0]?.profit || 0);
-      console.log("Fetched total sales during period:", totalSales);
-      console.log("Fetched total profit during period:", totalProfit);
-      setSale(totalSales);
-      setProfit(totalProfit);
-    };
-    if (from && to) {
-      fetchData();
-    }
-  }, [from, to]);
-
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleSubmit = async (data) => {
     const res = await fetch("http://localhost:5000/sale/add-sale", {
@@ -224,8 +262,47 @@ const Sales = () => {
           Sales
         </h1>
       </TopBar>
-      <main className="flex flex-col my-16 w-full">
-        <div className="grid grid-cols-2 gap-2 p-4">
+      <main className="flex flex-col my-16 w-full p-4">
+        <div className="flex gap-6 w-full">
+          <div className="flex flex-col font-bold gap-2 mb-4 w-full">
+            <label htmlFor="report-frequency">Period:</label>
+            <DropDown
+              options={period}
+              value={period[0]}
+              onChange={(data) => setSelectedPeriod(data)}
+            />
+          </div>
+          <div className="flex flex-col font-bold gap-2 mb-4 w-full">
+            <label htmlFor="report-date">
+              {selectedPeriod.value === "monthly" && "Month : "}
+              {selectedPeriod.value === "daily" && "Date : "}
+              {selectedPeriod.value === "annually" && "Year : "}
+            </label>
+            {selectedPeriod.value === "monthly" && (
+              <DropDown
+                options={month}
+                value={month[0]}
+                onChange={(data) => setSelectedMonth(data)}
+              />
+            )}
+            {selectedPeriod.value === "daily" && (
+              <input
+                type="date"
+                className="border p-2 rounded-lg w-full bg-white"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+            )}
+            {selectedPeriod.value === "annually" && (
+              <DropDown
+                options={years}
+                value={years[years.length - 1]}
+                onChange={(data) => setSelectedYear(data)}
+              />
+            )}
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
           <Metrics
             title="Total Sales"
             value={sale}
@@ -282,27 +359,6 @@ const Sales = () => {
                   className="w-40 px-4 py-2 border border-[#555] rounded-lg flex justify-between items-center cursor-pointer"
                 />
               </div>
-            </div>
-            <div className="flex flex-row justify-end items-center gap-2 py-2">
-              <div className="flex flex-col items-center">
-                <p className="gap-2 font-semibold">From</p>
-              </div>
-              <input
-                type="date"
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
-                className="border px-2 py-1 rounded-md"
-              />
-              <FaArrowsAltH />
-              <div className="flex flex-col items-center">
-                <p className="gap-2 font-semibold">To</p>
-              </div>
-              <input
-                type="date"
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-                className="border px-2 py-1 rounded-lg "
-              />
             </div>
           </div>
           <hr className="mb-4 bg-neutral-900 dark:bg-neutral-200" />

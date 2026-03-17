@@ -10,11 +10,8 @@ sale_router.post("/add-sale", (req, res) => {
 sale_router.get("/", (req, res) => {
     saleInstance.getSales(req, res);
 });
-sale_router.get("/with-items", (req, res) => {
+sale_router.get("/with-items/:period/:date", (req, res) => {
     saleInstance.getSaleWithItems(req, res);
-});
-sale_router.get("/by-date", (req, res) => {
-    saleInstance.getSaleByDate(req, res);
 });
 sale_router.get("/cost-by-date", (req, res) => {
     saleInstance.getCostByDate(req, res)
@@ -49,8 +46,22 @@ sale_router.get("/profit-today", (req, res) => {
 sale_router.get("/period/:from/:to", (req, res) => {
     saleInstance.getSalesDuringPeriod(req, res);
 });
-sale_router.get("/profit/:from/:to", (req, res) => {
-    saleInstance.getProfitDuringPeriod(req, res);
+sale_router.get("/profit-date/:date", (req, res) => {
+    saleInstance.getProfitByDate(req, res);
 });
-
+sale_router.get("/profit-month/:month", (req, res) => {
+    saleInstance.getProfitByMonth(req, res);
+});
+sale_router.get("/profit-year/:year", (req, res) => {
+    saleInstance.getProfitByYear(req, res);
+});
+sale_router.get("/sale-date/:date", (req, res) => {
+    saleInstance.getSaleByDate(req, res);
+});
+sale_router.get("/sale-month/:month", (req, res) => {
+    saleInstance.getSaleByMonth(req, res);
+});
+sale_router.get("/sale-year/:year", (req, res) => {
+    saleInstance.getSaleByYear(req, res);
+});
 export default sale_router;

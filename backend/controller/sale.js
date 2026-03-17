@@ -102,20 +102,49 @@ export default class Sale {
     }
   };
   getSaleWithItems = (req, res) => {
-    const { from, to } = req.query;
+    const { period, date } = req.params;
     try {
-      const rows = db
+      let rows;
+      if (period === 'daily') {
+      rows = db
         .prepare(
           `
   SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, s.tax, s.delivery_status, si.barcode,
          si.product_name, si.quantity, si.price as price, s.customer, s.customer_id
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
-  WHERE s.sale_date BETWEEN ? AND ?
+  WHERE s.sale_date = ?
   ORDER BY s.id DESC
 `
         )
-        .all(from, to);
+        .all(date);
+      } else if (period === 'monthly') {
+        rows = db
+        .prepare(
+          `
+  SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, s.tax, s.delivery_status, si.barcode,
+         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id
+  FROM sales s
+  JOIN sale_items si ON s.id = si.sale_id
+  WHERE strftime('%Y-%m', s.sale_date) = ?
+  ORDER BY s.id DESC
+`
+        )
+        .all(date);
+      } else if (period === 'annually') {
+        rows = db
+        .prepare(
+          `
+  SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, s.tax, s.delivery_status, si.barcode,
+         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id
+         FROM sales s
+         JOIN sale_items si ON s.id = si.sale_id
+         WHERE strftime('%Y', s.sale_date) = ?
+          ORDER BY s.id DESC
+`
+        )
+        .all(date);
+      }
       const groupedSales = [];
 
       const map = new Map();
@@ -184,7 +213,7 @@ export default class Sale {
     const { date } = req.query;
     try {
       const rows = db
-        .prepare("SELECT product_name, sum(quantity) as total_quantity, price FROM sale_items join sales on sale_items.sale_id = sales.id WHERE strf('%Y', sale_date) = ? GROUP BY product_name")
+        .prepare("SELECT product_name, sum(quantity) as total_quantity, price FROM sale_items join sales on sale_items.sale_id = sales.id WHERE strftime('%Y', sale_date) = ? GROUP BY product_name")
         .all(date);
       res.json(rows);
     } catch (err) {
@@ -193,17 +222,46 @@ export default class Sale {
     }
   };
   getSaleByDate = (req, res) => {
-    const { date } = req.query;
+    const { date } = req.params;
     try {
       const rows = db
         .prepare("SELECT sum(total_amount) FROM sales WHERE sale_date = ? group by sale_date")
         .all(date);
-      res.json(rows);
+      res.json(rows[0]?.["sum(total_amount)"] || 0);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+
+  getSaleByMonth = (req, res) => {
+    const { month } = req.params;
+    try {
+      const rows = db
+        .prepare("SELECT sum(total_amount) FROM sales WHERE strftime('%Y-%m', sale_date) = ? group by sale_date")
+        .all(month);
+      console.log("Fetched profit for month:", rows);
+      res.json(rows[0]?.["sum(total_amount)"] || 0);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+
+  getSaleByYear = (req, res) => {
+    const { year } = req.params;
+    try {
+      const rows = db
+        .prepare("SELECT sum(total_amount) FROM sales WHERE strftime('%Y', sale_date) = ? group by sale_date")
+        .all(year);
+      console.log("Fetched profit for year:", rows);
+      res.json(rows[0]?.["sum(total_amount)"] || 0);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+
   getCostByDate = (req, res) => {
     const { date } = req.query;
     try {
@@ -310,32 +368,47 @@ export default class Sale {
     }
   };
 
-  getProfitDuringPeriod = (req, res) => {
-    const { from, to } = req.params;
+  getProfitByDate = (req, res) => {
+    const { date } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount - total_cost) as profit FROM sales WHERE sale_date BETWEEN ? AND ?")
-        .all(from, to);
-      console.log("Fetched profit during period:", rows);
-      res.json(rows);
+        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE sale_date = ? group by sale_date")
+        .all(date);
+      console.log("Fetched profit for date:", rows);
+      res.json(rows[0]?.profit || 0);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
 
-  getSalesDuringPeriod = (req, res) => {
-    const { from, to } = req.params;
-    console.log("Received dates for sales during period:", from, to);
+
+  getProfitByMonth = (req, res) => {
+    const { month } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount) as total_sales FROM sales WHERE sale_date BETWEEN ? AND ?")
-        .all(from, to);
-      console.log("Fetched sales during period:", rows);
-      res.json(rows);
+        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE strftime('%Y-%m', sale_date) = ? group by sale_date")
+        .all(month);
+      console.log("Fetched profit for month:", rows);
+      res.json(rows[0]?.profit || 0);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+
+  getProfitByYear = (req, res) => {
+    const { year } = req.params;
+    try {
+      const rows = db
+        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE strftime('%Y', sale_date) = ? group by sale_date")
+        .all(year);
+      console.log("Fetched profit for year:", rows);
+      res.json(rows[0]?.profit || 0);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+
 }

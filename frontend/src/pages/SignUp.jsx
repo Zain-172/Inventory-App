@@ -1,4 +1,4 @@
-import { FaUserCircle } from "react-icons/fa";
+import { FaRegEye, FaRegEyeSlash, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { lazy, useState } from "react";
 const OTP = lazy(() => import("../component/OTP"));
@@ -10,6 +10,8 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [otpOpen, setOtpOpen] = useState(false);
   const [data, setData] = useState(null);
+  const [show, setShow] = useState(false);
+  const [confirmShow, setConfirmShow] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, username, password, confirmPassword } = e.target.elements;
@@ -65,23 +67,37 @@ export default function SignUp() {
               placeholder="Enter your username"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block">Password</label>
             <input
-              type="password"
+              type={show ? "text" : "password"}
               name="password"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
               placeholder="Enter your password"
             />
+            <button
+              type="button"
+              onClick={() => setShow((prev) => !prev)}
+              className="text-green-500 hover:text-green-700 mt-2 absolute right-4 top-7"
+            >
+              {show ? <FaRegEyeSlash /> : <FaRegEye />}
+            </button>
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block">Confirm Password</label>
             <input
-              type="password"
+              type={confirmShow ? "text" : "password"}
               name="confirmPassword"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
               placeholder="Confirm your password"
             />
+            <button
+              type="button"
+              onClick={() => setConfirmShow((prev) => !prev)}
+              className="text-green-500 hover:text-green-700 mt-2 absolute right-4 top-7"
+            >
+              {confirmShow ? <FaRegEyeSlash /> : <FaRegEye />}
+            </button>
           </div>
           <button
             type="submit"

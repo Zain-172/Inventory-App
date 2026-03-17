@@ -34,7 +34,7 @@ const EmployeesAccount = () => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isModifyOpen, setIsModifyOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [DropDownOpen, setDropDownOpen] = useState(false);
   const { loading, employees } = useAppData();
   const [accounts, setAccounts] = useState([]);
   const { alertBox } = useAlertBox();
@@ -154,7 +154,7 @@ const EmployeesAccount = () => {
       </div>
     );
   return (
-    <div className="grid" onClick={() => setDropdownOpen(false)}>
+    <div className="grid" onClick={() => setDropDownOpen(false)}>
       <nav>
         <Navigation />
       </nav>
@@ -200,12 +200,12 @@ const EmployeesAccount = () => {
               className={`p-2 rounded-lg hover:bg-green-700 bg-green-600 text-white`}
               onClick={(e) => {
                 e.stopPropagation();
-                setDropdownOpen((prev) => !prev);
+                setDropDownOpen((prev) => !prev);
               }}
             >
               <FaEllipsisV />
             </button>
-            {dropdownOpen && (
+            {DropDownOpen && (
               <div className="absolute right-0 mt-10 w-40 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
                 <button
                   className="flex items-center gap-2 hover:bg-gray-700 px-4 py-2 font-bold rounded-t-lg border-b border-white/40"

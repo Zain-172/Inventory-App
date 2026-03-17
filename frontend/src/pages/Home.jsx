@@ -62,13 +62,14 @@ const Home = () => {
       <TopBar>
         <h1 className="text-2xl font-bold flex gap-2 items-center py-2"><FaThLarge />Dashboard</h1>
       </TopBar>
-      <main className="flex flex-col my-16">
+      <main className="flex flex-col my-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 py-6 px-2">
           <MetricsCard
             title="Products"
             value={products.length}
             icon={<FaBox size={40} />}
             bgColor="bg-gradient-to-r from-blue-700 to-blue-400"
+            shadow="shadow-blue-600/60"
             to="/materials"
           />
           <MetricsCard
@@ -76,6 +77,7 @@ const Home = () => {
             value={"Rs. " + expense}
             icon={<FaExclamationTriangle size={40} />}
             bgColor="bg-gradient-to-r from-red-700 to-red-400"
+            shadow="shadow-red-600/60"
             to="/expense"
           />
           <MetricsCard
@@ -83,13 +85,15 @@ const Home = () => {
             value={`Rs. ${profit}`}
             icon={<FaDollarSign size={40} />}
             bgColor="bg-gradient-to-r from-green-700 to-green-400"
-            to="/sales"
+            shadow="shadow-green-600/60"
+            to="/profit"
           />
           <MetricsCard
             title="Orders Today"
             value={ordersToday}
             icon={<FaShoppingCart size={40} />}
             bgColor="bg-gradient-to-r from-yellow-700 to-yellow-400"
+            shadow="shadow-yellow-600/60"
             to="/sales"
           />
           <MetricsCard
@@ -97,6 +101,7 @@ const Home = () => {
             value={salesToday}
             icon={<FaMoneyBill size={40} />}
             bgColor="bg-gradient-to-r from-lime-700 to-lime-400"
+            shadow="shadow-lime-600/60"
             to="/sales"
           />
           <MetricsCard
@@ -104,6 +109,7 @@ const Home = () => {
             value={customerCount}
             icon={<FaUserFriends size={40} />}
             bgColor="bg-gradient-to-r from-cyan-700 to-cyan-400"
+            shadow="shadow-cyan-600/60"
             to="/customer"
           />
           <MetricsCard
@@ -111,6 +117,7 @@ const Home = () => {
             value={shopCount}
             icon={<FaBuilding size={40} />}
             bgColor="bg-gradient-to-r from-indigo-700 to-indigo-400"
+              shadow="shadow-indigo-600/60"
             to="/customer"
           />
           <MetricsCard
@@ -118,6 +125,7 @@ const Home = () => {
             value={employeeCount}
             icon={<FaUser size={40} />}
             bgColor="bg-gradient-to-r from-pink-700 to-pink-400"
+            shadow="shadow-pink-600/60"
             to="/employee"
           />
           <MetricsCard
@@ -125,6 +133,8 @@ const Home = () => {
             value={"Ready"}
             icon={<FaBook size={40} />}
             bgColor="bg-gradient-to-r from-zinc-700 to-zinc-400"
+            shadow="shadow-zinc-600/60"
+
             to="/report"
           />
           <MetricsCard
@@ -132,6 +142,7 @@ const Home = () => {
             value={khataCount}
             icon={<FaAddressBook size={40} />}
             bgColor="bg-gradient-to-r from-teal-700 to-teal-400"
+            shadow="shadow-teal-600/60"
             to="/khata"
           />
           <MetricsCard
@@ -139,6 +150,7 @@ const Home = () => {
             value={att > 0 ? `${att} Presents` : "Pending"}
             icon={<FaUser size={40} />}
             bgColor="bg-gradient-to-r from-sky-700 to-sky-400"
+            shadow="shadow-sky-600/60"
             to="/attendence"
           />
         </div>

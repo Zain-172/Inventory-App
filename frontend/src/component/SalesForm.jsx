@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaPlus, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
-import Dropdown from "./DropDown";
+import DropDown from "./DropDown";
 import Table from "./Table"
 import Trie from "./Trie";
 import { useAppData } from "../context/AppDataContext";
@@ -161,7 +161,7 @@ export default function SalesForm({ onSubmit }) {
       <div className="flex gap-4 w-full my-4">
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Salesman</label>
-          <Dropdown
+          <DropDown
             options={salesmen}
             value={salesmen[0]}
             onChange={(d) => setFormData((prev) => ({ ...prev, salesman: d }))}
@@ -192,7 +192,7 @@ export default function SalesForm({ onSubmit }) {
         </div>
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Status</label>
-          <Dropdown
+          <DropDown
             options={paymentStatusOptions}
             value={paymentStatusOptions[0]}
             onChange={(d) => setFormData((prev) => ({ ...prev, status: d }))}
@@ -200,7 +200,7 @@ export default function SalesForm({ onSubmit }) {
         </div>
         <div className="w-full">
           <label className="block text-sm font-medium mb-1">Delivery</label>
-          <Dropdown
+          <DropDown
             options={deliveryStatusOptions}
             value={deliveryStatusOptions[0]}
             onChange={(d) => setFormData((prev) => ({ ...prev, delivery_status: d }))}

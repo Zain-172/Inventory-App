@@ -69,4 +69,4 @@ dist-backend/
 # !dist/*.exe
 # !dist/*latest.yml
 
-backend/model/
+model/

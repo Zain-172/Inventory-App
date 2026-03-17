@@ -3,7 +3,6 @@ import nodemailer from "nodemailer";
 export default function node_mailer(to, subject, text) {
     const password = "ilnv gsoo pglm ewju";
     const email = "twintechdeveloper@gmail.com";
-    console.log("Sending email to:", email, password);
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {

@@ -5,7 +5,7 @@ export default function Modal({ isOpen, onClose, children }) {
   if (typeof window === "undefined") return null;
 
   return ReactDOM.createPortal(
-    <div className="modal-wrapper">
+    <div className="modal-wrapper z-50">
       <AnimatePresence>
         {isOpen && (
           <Motion.div
