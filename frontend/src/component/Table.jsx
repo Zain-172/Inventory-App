@@ -32,8 +32,8 @@ export default function Table({
               {Object.keys(data[0]).map((key, index) => (
                 <th key={index} className={`px-4 py-2 border text-left ${key.toLowerCase() === "id" ? "text-center" : ""}`}>
                   {key === "Action"
-                    ? ""
-                    : key.toUpperCase().replaceAll("_", " ")}
+                    ? "" : key === "cost_price" ? "Price"
+                    : key.toUpperCase()}
                 </th>
               ))}
             </tr>

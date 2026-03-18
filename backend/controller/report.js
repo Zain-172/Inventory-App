@@ -81,7 +81,7 @@ export const generateAttendenceReport = (req, res) => {
       });
     }
 
-    const doc = new PDFDocument({ margin: 40, size: "3" });
+    const doc = new PDFDocument({ margin: 40, size: "A3" });
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline; filename=attendence-report.pdf");
     doc.pipe(res);

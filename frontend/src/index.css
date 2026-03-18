@@ -79,7 +79,17 @@ input {
   border-radius: 4px;
   transition: all 0.3s ease;
 }
-
+#label {
+  width: 60mm;
+  height: 40mm;
+  padding: 2mm;
+  font-size: 12px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .dark input {
   background-color: #1b1b1b;
   border: 1px solid #ffffff3c;

@@ -129,6 +129,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"username"	TEXT NOT NULL,
 	"email"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT NOT NULL,
+	"mpin"	TEXT,
 	"date_created"	date DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("user_id" AUTOINCREMENT)
 );

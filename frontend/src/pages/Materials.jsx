@@ -252,7 +252,7 @@ const Material = () => {
             </div>
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">
-                Cost Price
+                Price
               </label>
               <input
                 type="number"
@@ -354,7 +354,7 @@ const Material = () => {
             </div>
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">
-                Cost Price
+                Price
               </label>
               <input
                 type="number"

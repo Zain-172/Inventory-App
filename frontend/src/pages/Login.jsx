@@ -16,6 +16,14 @@ export default function Login() {
     try {
       const response = await login(username, password);
       if (response.login) {
+        localStorage.setItem(
+          "inventory_user",
+          JSON.stringify({
+            id: response.id,
+            username: response.username,
+            email: response.email,
+          })
+        );
         navigate("/home");
       } else {
         alertBox(response.message, "Login Failed", <FaUserCircle />);

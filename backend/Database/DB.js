@@ -164,6 +164,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"username"	TEXT NOT NULL,
 	"email"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT NOT NULL,
+	"mpin"	TEXT,
 	"date_created"	date DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("user_id" AUTOINCREMENT)
 );
@@ -263,6 +264,12 @@ COMMIT;
 
 db.pragma("foreign_keys = ON");
 db.pragma("journal_mode = WAL");
+
+// Ensure older databases also get the mpin column.
+const userColumns = db.prepare("PRAGMA table_info('user')").all();
+if (!userColumns.some((column) => column.name === "mpin")) {
+	db.prepare("ALTER TABLE user ADD COLUMN mpin TEXT").run();
+}
 
 console.log("✅ Database connected at:", dbPath);
 

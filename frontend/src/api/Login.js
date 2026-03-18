@@ -27,3 +27,30 @@ export async function resetPassword(email, password) {
   return response.json();
 
 }
+
+export async function getMpinStatus(userId) {
+  const response = await fetch(`${API_BASE_URL}/login/mpin-status/${userId}`);
+  return response.json();
+}
+
+export async function setMpin(userId, mpin) {
+  const response = await fetch(`${API_BASE_URL}/login/set-mpin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, mpin }),
+  });
+  return response.json();
+}
+
+export async function verifyMpin(userId, mpin) {
+  const response = await fetch(`${API_BASE_URL}/login/verify-mpin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, mpin }),
+  });
+  return response.json();
+}

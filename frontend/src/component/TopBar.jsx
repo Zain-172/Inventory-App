@@ -1,20 +1,14 @@
-import { FaArrowCircleLeft, FaPowerOff } from "react-icons/fa";
+import { FaArrowCircleLeft, FaPowerOff, FaUserAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 import ThemeToggle from "./ThemeToggle";
-import { useAlertBox } from "./Alerts";
 
 export default function TopBar({ children }) {
   const navigate = useNavigate();
-  const { alertBox } = useAlertBox();
-
-  const handleLogout = async () => {
-    // Clear any authentication tokens or user data here
-    const reponse = await alertBox("Are you want to Log out", "Success", <FaPowerOff />);
-    console.log(reponse);
-    if (reponse) {
-      navigate("/");
-    }
-  }
+  const user = useMemo(() => {
+    const storedUser = localStorage.getItem("inventory_user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  }, []);
 
 
   return (
@@ -26,8 +20,15 @@ export default function TopBar({ children }) {
         {children}
       </div>
       <div className="flex items-center justify-center gap-4 px-4">
+        <Link
+          to="/user-account"
+          className="flex flex-col leading-tight text-right hover:text-green-600 transition-colors"
+        >
+          <span className="text-sm font-semibold max-w-44 truncate">{user?.username || "User Account"}</span>
+          <span className="text-xs text-neutral-600 dark:text-neutral-300 max-w-44 truncate">{user?.email || "View profile"}</span>
+        </Link>
+        <Link to="/user-account" className="bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full"><FaUserAlt /></Link>
         <ThemeToggle />
-        <button className="bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full" onClick={handleLogout}><FaPowerOff /></button>
       </div>
     </header>
   );

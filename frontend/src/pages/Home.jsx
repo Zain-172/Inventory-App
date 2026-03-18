@@ -12,6 +12,7 @@ import {
   FaUserFriends,
   FaBook,
   FaAddressBook,
+  FaBarcode,
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
@@ -152,6 +153,14 @@ const Home = () => {
             bgColor="bg-gradient-to-r from-sky-700 to-sky-400"
             shadow="shadow-sky-600/60"
             to="/attendence"
+          />
+          <MetricsCard
+            title="Barcode"
+            value={"Ready"}
+            icon={<FaBarcode size={40} />}
+            bgColor="bg-gradient-to-r from-purple-700 to-purple-400"
+            shadow="shadow-purple-600/60"
+            to="/barcode"
           />
         </div>
       </main>

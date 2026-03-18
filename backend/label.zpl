@@ -1,0 +1,25 @@
+
+^XA
+^PW600
+^LH0,0
+
+^CF0,25
+
+^FO40,20
+^FB520,1,0,C,0
+^FDMy Company^FS
+
+^FO40,60
+^BY2
+^BCN,80,Y,N,N
+^FDBR00001^FS
+
+^FO40,150
+^FB260,1,0,L,0
+^FDRs. 120^FS
+
+^FO300,150
+^FB260,1,0,R,0
+^FDBroom^FS
+
+^XZ

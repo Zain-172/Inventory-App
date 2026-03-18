@@ -234,7 +234,7 @@ export default function SalesForm({ onSubmit }) {
           />
           {formData.id && (
             <span className="absolute -bottom-5 left-1 text-sm text-gray-400 italic">
-              Cost Price:{" "}
+              Price:{" "}
               {products.find((p) => p.barcode === formData.id)?.cost_price}
             </span>
           )}
