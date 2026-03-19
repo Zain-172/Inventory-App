@@ -121,7 +121,7 @@ export default function TrieSearch({
         onBlur={() => setTimeout(() => setOpen(false), 150)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-neutral-800 dark:border-neutral-600 dark:text-white dark:placeholder-neutral-400 transition-colors"
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-neutral-900 dark:border-neutral-600 dark:text-white dark:placeholder-neutral-400 transition-colors"
       />
 
       {open && suggestions.length > 0 && (

@@ -1,4 +1,5 @@
 import PDFDocument from "pdfkit";
+import db from "../Database/DB.js";
 
 const DATE_KEYS = ["date", "Date", "attendance_date", "Attendance Date"];
 const EMPLOYEE_KEYS = [
@@ -48,6 +49,39 @@ const drawReportFooter = (doc, pageWidth) => {
       doc.page.height - doc.page.margins.bottom - 20,
       { align: "left", width: pageWidth }
     );
+};
+
+const fetchRawMaterialPurchasingReport = (res, whereClause, filterValue) => {
+  try {
+    const rows = db
+      .prepare(
+        `SELECT id, name, stock, cost_price, date, action, (stock * cost_price) AS amount
+         FROM products_history
+         WHERE type = 'raw' AND stock > 0 AND ${whereClause}
+         ORDER BY date DESC, id DESC`
+      )
+      .all(filterValue);
+
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getRawMaterialPurchasingReportByDate = (req, res) => {
+  const { date } = req.query;
+  fetchRawMaterialPurchasingReport(res, "date = ?", date);
+};
+
+export const getRawMaterialPurchasingReportByMonth = (req, res) => {
+  const { date } = req.query;
+  fetchRawMaterialPurchasingReport(res, "strftime('%Y-%m', date) = ?", date);
+};
+
+export const getRawMaterialPurchasingReportByYear = (req, res) => {
+  const { date } = req.query;
+  fetchRawMaterialPurchasingReport(res, "strftime('%Y', date) = ?", date);
 };
 
 export const generateAttendenceReport = (req, res) => {

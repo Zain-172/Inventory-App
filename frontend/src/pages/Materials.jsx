@@ -136,6 +136,13 @@ const Material = () => {
     }
   };
 
+  const handleModify = async (editedData) => {
+    console.log("Edited Data: ", editedData);
+    setFormData(editedData);
+    setIsModalOpen(true);
+  }
+
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -189,6 +196,14 @@ const Material = () => {
                   <FaCalculator /> Calculate Cost
                 </Link>
               )}
+              {filter == "raw" && (
+                <Link
+                  to="/report"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
+                >
+                  <FaCalculator /> Raw Material Report
+                </Link>
+              )}
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
@@ -218,7 +233,8 @@ const Material = () => {
                 date: product.date,
               }))}
             onDelete={handleDelete}
-            nonEditable="Delete"
+            onUpdate={handleModify}
+            nonEditable="back"
             accent="bg-green-600"
           />
         </div>
@@ -248,6 +264,7 @@ const Material = () => {
                     cost_price: products.find((prod) => prod.name === value.key)?.cost_price || "",
                   }))
                 }
+                value={formData.name}
               />
             </div>
             <div className="w-full">

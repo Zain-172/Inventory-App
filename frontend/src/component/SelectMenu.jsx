@@ -58,16 +58,16 @@ const SelectMenu = ({
               Please select the action you would like to perform.
             </p>
             <div className="flex justify-evenly items-center">
-              { !buttons && <button
+              <button
                 className="flex gap-2 justify-center items-center w-32 bg-green-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-green-600 transition-colors text-white font-bold"
                 onClick={() => {
-                  setModify(true);
+                  !buttons && setModify(true);
                   onModify();
                 }}
               >
                 <FaPencilAlt />
                 Modify
-              </button> }
+              </button>
               <button
                 className="flex gap-2 justify-center items-center w-32 bg-red-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition-colors text-white font-bold"
                 onClick={onDelete}

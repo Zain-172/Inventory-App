@@ -18,6 +18,10 @@ const ensureSalesColumns = () => {
   if (!columnNames.has("delivery_status")) {
     db.prepare("ALTER TABLE sales ADD COLUMN delivery_status TEXT NOT NULL DEFAULT 'not_delivered'").run();
   }
+
+  if (!columnNames.has("type")) {
+    db.prepare("ALTER TABLE sales ADD COLUMN type TEXT NOT NULL DEFAULT 'sale'").run();
+  }
 };
 
 ensureSalesColumns();
@@ -39,6 +43,7 @@ export default class Sale {
         customer_id,
         status,
         delivery_status = "not_delivered",
+        type = "sale",
       } = req.body;
       console.log("Received sale data:", req.body);
 
@@ -55,8 +60,8 @@ export default class Sale {
       }
 
       const insertSaleStmt = db.prepare(`
-        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items, total_cost, tax, customer_id, customer, status, delivery_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO sales (invoice_id, sale_date, salesman, total_amount, total_items, total_cost, tax, customer_id, customer, status, delivery_status, type)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       const transaction = db.transaction(() => {
@@ -72,6 +77,7 @@ export default class Sale {
           customer,
           status,
           delivery_status,
+          type
         );
         const sale_id = saleInfo.lastInsertRowid;
 
@@ -110,7 +116,7 @@ export default class Sale {
         .prepare(
           `
   SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, s.tax, s.delivery_status, si.barcode,
-         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id
+         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id, s.type
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
   WHERE s.sale_date = ?
@@ -123,7 +129,7 @@ export default class Sale {
         .prepare(
           `
   SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, s.tax, s.delivery_status, si.barcode,
-         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id
+         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id, s.type
   FROM sales s
   JOIN sale_items si ON s.id = si.sale_id
   WHERE strftime('%Y-%m', s.sale_date) = ?
@@ -136,7 +142,7 @@ export default class Sale {
         .prepare(
           `
   SELECT s.id, s.invoice_id, s.sale_date, s.salesman, s.total_amount, s.total_items, s.status, s.tax, s.delivery_status, si.barcode,
-         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id
+         si.product_name, si.quantity, si.price as price, s.customer, s.customer_id, s.type
          FROM sales s
          JOIN sale_items si ON s.id = si.sale_id
          WHERE strftime('%Y', s.sale_date) = ?
@@ -163,6 +169,7 @@ export default class Sale {
             delivery_status: row.delivery_status,
             customer: row.customer,
             customer_id: row.customer_id,
+            type: row.type,
             items: [],
           };
           map.set(row.invoice_id, saleObj);
@@ -225,7 +232,7 @@ export default class Sale {
     const { date } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount) FROM sales WHERE sale_date = ? group by sale_date")
+        .prepare("SELECT sum(total_amount) FROM sales WHERE sale_date = ? and type = 'sale' group by sale_date")
         .all(date);
       res.json(rows[0]?.["sum(total_amount)"] || 0);
     } catch (err) {
@@ -238,7 +245,7 @@ export default class Sale {
     const { month } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount) FROM sales WHERE strftime('%Y-%m', sale_date) = ? group by sale_date")
+        .prepare("SELECT sum(total_amount) FROM sales WHERE strftime('%Y-%m', sale_date) = ? and type = 'sale'")
         .all(month);
       console.log("Fetched profit for month:", rows);
       res.json(rows[0]?.["sum(total_amount)"] || 0);
@@ -252,7 +259,7 @@ export default class Sale {
     const { year } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount) FROM sales WHERE strftime('%Y', sale_date) = ? group by sale_date")
+        .prepare("SELECT sum(total_amount) FROM sales WHERE strftime('%Y', sale_date) = ? and type = 'sale'")
         .all(year);
       console.log("Fetched profit for year:", rows);
       res.json(rows[0]?.["sum(total_amount)"] || 0);
@@ -347,7 +354,7 @@ export default class Sale {
   getOrdersToday = (req, res) => {
     try {
       const row = db
-        .prepare("SELECT COUNT(id) as orders FROM sales WHERE sale_date = CURRENT_DATE")
+        .prepare("SELECT COUNT(id) as orders FROM sales WHERE sale_date = CURRENT_DATE and type = 'order'")
         .get();
       res.json({ orders: row?.orders || 0 });
     } catch (err) {
@@ -359,7 +366,7 @@ export default class Sale {
   getSaleToday = (req, res) => {
     try {
       const row = db
-        .prepare("SELECT COALESCE(sum(total_amount), 0) as sale FROM sales WHERE sale_date = CURRENT_DATE")
+        .prepare("SELECT COALESCE(sum(total_amount), 0) as sale FROM sales WHERE sale_date = CURRENT_DATE and type = 'sale'")
         .get();
       res.json({ sale: row?.sale || 0 });
     } catch (err) {
@@ -372,7 +379,7 @@ export default class Sale {
     const { date } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE sale_date = ? group by sale_date")
+        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE sale_date = ? and type = 'sale' group by sale_date")
         .all(date);
       console.log("Fetched profit for date:", rows);
       res.json(rows[0]?.profit || 0);
@@ -387,7 +394,7 @@ export default class Sale {
     const { month } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE strftime('%Y-%m', sale_date) = ? group by sale_date")
+        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE strftime('%Y-%m', sale_date) = ?")
         .all(month);
       console.log("Fetched profit for month:", rows);
       res.json(rows[0]?.profit || 0);
@@ -401,7 +408,7 @@ export default class Sale {
     const { year } = req.params;
     try {
       const rows = db
-        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE strftime('%Y', sale_date) = ? group by sale_date")
+        .prepare("SELECT sum(total_amount) - sum(total_cost) as profit FROM sales WHERE strftime('%Y', sale_date) = ?")
         .all(year);
       console.log("Fetched profit for year:", rows);
       res.json(rows[0]?.profit || 0);

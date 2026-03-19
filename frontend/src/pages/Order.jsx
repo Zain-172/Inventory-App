@@ -1,15 +1,15 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { lazy } from "react";
 const Navigation = lazy(() => import("../component/Navigation"));
 const Table = lazy(() => import("../component/Table"));
 const TopBar = lazy(() => import("../component/TopBar"));
 const Modal = lazy(() => import("../component/Modal"));
-const Form = lazy(() => import("../component/SalesForm"));
+const Form = lazy(() => import("../component/OrderForm"));
 const Receipt = lazy(() => import("../component/Receipt"));
 const DropDown = lazy(() => import("../component/DropDown"));
-const Metrics = lazy(() => import("../component/Metrics"));
 import {
   FaArrowsAltH,
+  FaCartPlus,
   FaCheckCircle,
   FaEllipsisV,
   FaPlusCircle,
@@ -22,12 +22,6 @@ import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "../component/Alerts";
 import MessageBox from "../component/MessageBox";
 import {
-  getSalesByDate,
-  getSalesByMonth,
-  getSalesByYear,
-  getProfitByDate,
-  getProfitByMonth,
-  getProfitByYear,
   updateSaleDeliveryStatus,
   updateSaleStatus,
 } from "../api/Sale";
@@ -46,7 +40,7 @@ const nextStatus = {
 
 const deliveryStyles = {
   delivered: "bg-green-800 text-white",
-  not_delivered: "bg-red-600 text-white",
+  not_delivered: "bg-yellow-600 text-white",
 };
 
 const nextDeliveryStatus = {
@@ -55,12 +49,12 @@ const nextDeliveryStatus = {
 };
 
 const formatStatusLabel = (status) =>
-  status
+  status === "delivered" ? "Completed" : status === "not_delivered" ? "Pending" : status
     .split("_")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
-const Sales = () => {
+const Order = () => {
   const { alertBox } = useAlertBox();
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
@@ -74,62 +68,18 @@ const Sales = () => {
     setSelectedPeriod,
     selectedDate,
     setSelectedDate,
-    selectedMonth,
     setSelectedMonth,
-    selectedYear,
     setSelectedYear,
     period,
     month,
     years,
   } = useAppData();
   const [selectedSale, setSelectedSale] = useState(null);
-  const [filter, setFilter] = useState("paid");
+  const [filter, setFilter] = useState("delivered");
   const [custFilter, setCustFilter] = useState("all");
   const receiptRef = useRef(null);
-  const [sale, setSale] = useState(0);
-  const [profit, setProfit] = useState(0);
   const [updatingSaleId, setUpdatingSaleId] = useState(null);
   const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
-
-  useEffect(() => {
-      const fetchData = async () => {
-        let totalProfit = 0;
-        if (selectedPeriod.value === "daily") {
-          totalProfit = await getProfitByDate(selectedDate);
-        } else if (selectedPeriod.value === "monthly") {
-          totalProfit = await getProfitByMonth(new Date().getFullYear() + "-" + selectedMonth.value);
-        } else if (selectedPeriod.value === "annually") {
-          totalProfit = await getProfitByYear(selectedYear.value);
-        }
-        console.log(`Fetched total profit for ${selectedPeriod.value}:`, totalProfit);
-        setProfit(totalProfit);
-      };
-      if ((selectedPeriod.value === "daily" && selectedDate) ||
-          (selectedPeriod.value === "monthly" && selectedMonth) ||
-          (selectedPeriod.value === "annually" && selectedYear)) {
-        fetchData();
-      }
-    }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
-
-    useEffect(() => {
-      const fetchData = async () => {
-        let totalSale = 0;
-        if (selectedPeriod.value === "daily") {
-          totalSale = await getSalesByDate(selectedDate);
-        } else if (selectedPeriod.value === "monthly") {
-          totalSale = await getSalesByMonth(new Date().getFullYear() + "-" + selectedMonth.value);
-        } else if (selectedPeriod.value === "annually") {
-          totalSale = await getSalesByYear(selectedYear.value);
-        }
-        console.log(`Fetched total sale for ${selectedPeriod.value}:`, totalSale);
-        setSale(totalSale);
-      };
-      if ((selectedPeriod.value === "daily" && selectedDate) ||
-          (selectedPeriod.value === "monthly" && selectedMonth) ||
-          (selectedPeriod.value === "annually" && selectedYear)) {
-        fetchData();
-      }
-    }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
 
   const handleDelete = async (id) => {
     try {
@@ -231,9 +181,8 @@ const Sales = () => {
     }
   };
   const colors = {
-    paid: "bg-green-600",
-    half_payment: "bg-yellow-500",
-    pending: "bg-red-500",
+    delivered: "bg-green-600",
+    not_delivered: "bg-yellow-500",
   };
 
   const options = customers
@@ -255,8 +204,8 @@ const Sales = () => {
       </nav>
       <TopBar>
         <h1 className="text-2xl font-bold flex items-center py-2 gap-2">
-          <FaReceipt />
-          Sales
+          <FaCartPlus />
+          Orders
         </h1>
       </TopBar>
       <main className="flex flex-col my-16 w-full p-4">
@@ -299,38 +248,18 @@ const Sales = () => {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2">
-          <Metrics
-            title="Total Sales"
-            value={sale}
-            icon={<FaReceipt />}
-            bgColor="bg-gradient-to-l from-green-400 to-green-600"
-          />
-          <Metrics
-            title="Profit"
-            value={profit}
-            icon={<FaUsers />}
-            bgColor="bg-gradient-to-l from-blue-400 to-blue-600"
-          />
-        </div>
         <div className="flex items-center justify-center gap-4 py-6">
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "paid" ? "bg-green-600 text-white" : "text-green-500"}`}
-            onClick={() => setFilter("paid")}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "delivered" ? "bg-green-600 text-white" : "text-green-500"}`}
+            onClick={() => setFilter("delivered")}
           >
-            Full Payment
+            Completed
           </button>
           <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "pending" ? "bg-green-600 text-white" : "text-green-500"}`}
-            onClick={() => setFilter("pending")}
+            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "not_delivered" ? "bg-green-600 text-white" : "text-green-500"}`}
+            onClick={() => setFilter("not_delivered")}
           >
             Pending
-          </button>
-          <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "half_payment" ? "bg-green-600 text-white" : "text-green-500"}`}
-            onClick={() => setFilter("half_payment")}
-          >
-            Half Payment
           </button>
           <button
             className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "all" ? "bg-green-600 text-white" : "text-green-500"}`}
@@ -342,13 +271,13 @@ const Sales = () => {
         <div className="px-2 py-6">
           <div>
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold mb-4">Sales</h2>
+              <h2 className="text-2xl font-bold mb-4">Order</h2>
               <div className="flex items-center justeify-center gap-4 mb-4">
                 <button
                   onClick={() => setIsModalOpen(true)}
                   className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center justify-center gap-2"
                 >
-                  <FaPlusCircle /> Sales
+                  <FaPlusCircle /> Order
                 </button>
                 <DropDown
                   options={options}
@@ -361,20 +290,20 @@ const Sales = () => {
           <hr className="mb-4 bg-neutral-900 dark:bg-neutral-200" />
           {salesWithItems
             .filter((group) => {
-              const statusMatch = group.status === filter || filter === "all";
+              const statusMatch = group.delivery_status === filter || filter === "all";
               const custMatch = group.customer_id === custFilter || custFilter === "all";
-              const typeMatch = group.type === "sale";
+              const typeMatch = group.type === "order";
               return statusMatch && custMatch && typeMatch;
             })
             .map((group, index) => (
               <div key={index} className="">
                 <div className="grid grid-cols-2 mb-2">
                   <p className="text-lg">
-                    <strong>Invoice:</strong> {group.invoice_id}
+                    <strong>Customer:</strong> {group.customer}
                   </p>
                   <div className="flex justify-end">
                     <button
-                      className={`p-2 rounded-lg ${colors[group.status]} hover:bg-gray-700 text-white`}
+                      className={`p-2 rounded-lg ${colors[group.delivery_status]} hover:bg-gray-700 text-white`}
                       onClick={(e) => {
                         e.stopPropagation();
                         setOpenMenuIndex(
@@ -421,7 +350,7 @@ const Sales = () => {
                               </h2>
                               <p className="text-center text-sm">
                                 Do you want to delete this{" "}
-                                <strong>Sale Record</strong> from your sales
+                                <strong>Order Record</strong> from your orders
                                 records?. <br /> <strong> Warning: </strong> If
                                 you delete this the quantity is added to stock.
                               </p>
@@ -432,18 +361,11 @@ const Sales = () => {
                     )}
                   </div>
                   <p className="text-lg">
-                    <strong>Salesman:</strong> {group.salesman}
+                    <strong>Order Taker:</strong> {group.salesman}
                   </p>
                   <p className="text-lg text-right">
                     <strong>Date:</strong> {group.sale_date}
                   </p>
-                  <p className="text-lg">
-                    <strong>Customer:</strong> {group.customer}
-                  </p>
-                  <p className="text-lg text-right">
-                    <strong>Tax:</strong> {Number(group.tax || 0).toFixed(2)} %
-                  </p>
-
                   <div className="text-lg my-2">
                     <strong>Status:</strong>{" "}
                     <button
@@ -456,7 +378,7 @@ const Sales = () => {
                     </button>
                   </div>
                   <div className="text-lg text-right my-2">
-                    <strong>Delivery:</strong>{" "}
+                    <strong>Completed:</strong>{" "}
                     <button
                       type="button"
                       className={`px-3 rounded-md font-semibold transition-colors border ${deliveryStyles[group.delivery_status || "not_delivered"]}`}
@@ -478,7 +400,7 @@ const Sales = () => {
                     Total Items: {group.total_items}
                   </p>
                   <p className="text-lg font-bold">
-                    Total Price (Incl Tax): {group.total_amount + group.tax/100 * group.total_amount}
+                    Total Price: {group.total_amount}
                   </p>
                 </div>
                 <hr className="mb-6 bg-neutral-900 dark:bg-neutral-200" />
@@ -491,7 +413,7 @@ const Sales = () => {
         onClose={() => setIsModalOpen(false)}
         title="Add New Material"
       >
-        <Form onSubmit={handleSubmit} type="sale" />
+        <Form onSubmit={handleSubmit} type="order" />
       </Modal>
       <Modal
         isOpen={isPrintModalOpen}
@@ -504,4 +426,4 @@ const Sales = () => {
   );
 };
 
-export default Sales;
+export default Order;

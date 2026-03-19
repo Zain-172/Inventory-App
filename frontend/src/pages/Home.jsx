@@ -88,6 +88,7 @@ const Home = () => {
             bgColor="bg-gradient-to-r from-green-700 to-green-400"
             shadow="shadow-green-600/60"
             to="/profit"
+            enableToggle={false}
           />
           <MetricsCard
             title="Orders Today"
@@ -95,11 +96,11 @@ const Home = () => {
             icon={<FaShoppingCart size={40} />}
             bgColor="bg-gradient-to-r from-yellow-700 to-yellow-400"
             shadow="shadow-yellow-600/60"
-            to="/sales"
+            to="/order"
           />
           <MetricsCard
             title="Sales Today"
-            value={salesToday}
+            value={`Rs. ${salesToday}`}
             icon={<FaMoneyBill size={40} />}
             bgColor="bg-gradient-to-r from-lime-700 to-lime-400"
             shadow="shadow-lime-600/60"

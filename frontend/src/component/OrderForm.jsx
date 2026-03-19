@@ -6,7 +6,7 @@ import Trie from "./Trie";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "./Alerts";
 
-export default function SalesForm({ onSubmit, type = "sale" }) {
+export default function SalesForm({ onSubmit }) {
   const { products, customers, employees } = useAppData();
   const product = [
     ...products.filter((item) => item.stock > 0 && item.type !== "raw").map((item) => ({ key: item.name, value: item.barcode })),
@@ -22,7 +22,7 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
     { key: "Delivered", value: "delivered" },
   ];
   const salesmen = [
-    ...employees.filter((emp) => emp.position.toLowerCase() === "salesman").map((emp) => ({ key: emp.name, value: emp.id })),
+    ...employees.map((emp) => ({ key: emp.name, value: emp.id })),
   ];
   const [formData, setFormData] = useState({
     id: product[0]?.value,
@@ -76,7 +76,7 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
       total_items: entry.reduce((sum, i) => sum + Number(i.quantity), 0),
       customer: formData.customer.key,
       customer_id: formData.customer.value,
-      type: type,
+      type: "order",
       items: entry,
     };
     console.log("Submitting Sale:", data);
@@ -205,20 +205,6 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
             options={deliveryStatusOptions}
             value={deliveryStatusOptions[0]}
             onChange={(d) => setFormData((prev) => ({ ...prev, delivery_status: d }))}
-          />
-        </div>
-        <div className="w-full">
-          <label className="block text-sm font-medium mb-1">Tax</label>
-          <input
-            type="number"
-            name="tax"
-            value={formData.tax}
-            onChange={handleChange}
-            placeholder="0"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            min="0"
-            step="0.01"
-            required
           />
         </div>
       </div>

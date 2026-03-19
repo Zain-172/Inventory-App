@@ -14,44 +14,43 @@ export const AppDataProvider = ({ children }) => {
   const [khatas, setKhatas] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
-    const period = [
-      { value: "daily", key: "Daily" },
-      { value: "monthly", key: "Monthly" },
-      { value: "annually", key: "Annually" },
-    ];
-    const [selectedPeriod, setSelectedPeriod] = useState(period[0]);
-    const [selectedDate, setSelectedDate] = useState(
-      new Date().toISOString().split("T")[0],
-    );
-  
-    const month = [
-      { key: "January", value: "01" },
-      { key: "February", value: "02" },
-      { key: "March", value: "03" },
-      { key: "April", value: "04" },
-      { key: "May", value: "05" },
-      { key: "June", value: "06" },
-      { key: "July", value: "07" },
-      { key: "August", value: "08" },
-      { key: "September", value: "09" },
-      { key: "October", value: "10" },
-      { key: "November", value: "11" },
-      { key: "December", value: "12" },
-    ];
-  
-    const minimumYear = 2026;
-    const currentYear = new Date().getFullYear();
-    const years = Array.from(
-      { length: Math.max(currentYear - minimumYear + 1, 0) },
-      (_, i) => {
-        const year = currentYear - i;
-        return { key: year.toString(), value: year.toString() };
-      }
-    );
-  
-    const [selectedMonth, setSelectedMonth] = useState(month[0]);
-    const [selectedYear, setSelectedYear] = useState(years[years.length - 1]);
-  
+  const period = [
+    { value: "annually", key: "Annually" },
+    { value: "monthly", key: "Monthly" },
+    { value: "daily", key: "Daily" },
+  ];
+  const [selectedPeriod, setSelectedPeriod] = useState(period[0]);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split("T")[0],
+  );
+
+  const month = [
+    { key: "January", value: "01" },
+    { key: "February", value: "02" },
+    { key: "March", value: "03" },
+    { key: "April", value: "04" },
+    { key: "May", value: "05" },
+    { key: "June", value: "06" },
+    { key: "July", value: "07" },
+    { key: "August", value: "08" },
+    { key: "September", value: "09" },
+    { key: "October", value: "10" },
+    { key: "November", value: "11" },
+    { key: "December", value: "12" },
+  ];
+
+  const minimumYear = 2026;
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(
+    { length: Math.max(currentYear - minimumYear + 1, 0) },
+    (_, i) => {
+      const year = currentYear - i;
+      return { key: year.toString(), value: year.toString() };
+    },
+  );
+
+  const [selectedMonth, setSelectedMonth] = useState(month[0]);
+  const [selectedYear, setSelectedYear] = useState(years[years.length - 1]);
 
   const fetchMaterials = async () => {
     const resRaw = await fetch("http://localhost:5000/material/");
@@ -90,7 +89,7 @@ export const AppDataProvider = ({ children }) => {
     const resSales = await fetch(
       `http://localhost:5000/sale/?date=${
         new Date().toISOString().split("T")[0]
-      }`
+      }`,
     );
     const salesData = await resSales.json();
     console.log("Fetched sales:", salesData);
@@ -162,9 +161,11 @@ export const AppDataProvider = ({ children }) => {
   }, []);
 
   const fetchSalesWithItems = async (period, date) => {
-    console.log(`Fetching sales with items for period: ${period}, date: ${date}`);
+    console.log(
+      `Fetching sales with items for period: ${period}, date: ${date}`,
+    );
     const res = await fetch(
-      `http://localhost:5000/sale/with-items/${period}/${date}`
+      `http://localhost:5000/sale/with-items/${period}/${date}`,
     );
     const salesData = await res.json();
     console.log("Fetched sales with items:", salesData);
@@ -174,7 +175,16 @@ export const AppDataProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await fetchSalesWithItems(selectedPeriod.value, selectedPeriod.value === 'daily' ? selectedDate : selectedPeriod.value === 'monthly' ? new Date().getFullYear() + '-' + String(selectedMonth.value).padStart(2, '0') : selectedYear.value);
+        await fetchSalesWithItems(
+          selectedPeriod.value,
+          selectedPeriod.value === "daily"
+            ? selectedDate
+            : selectedPeriod.value === "monthly"
+              ? new Date().getFullYear() +
+                "-" +
+                String(selectedMonth.value).padStart(2, "0")
+              : selectedYear.value,
+        );
       } catch (error) {
         console.error("Error fetching sales with items:", error);
       }
@@ -182,7 +192,6 @@ export const AppDataProvider = ({ children }) => {
 
     fetchData();
   }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
-
 
   return (
     <AppDataContext.Provider

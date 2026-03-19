@@ -81,6 +81,7 @@ export default function Table({
           open={open}
           setOpen={setOpen}
           onSave={() => {
+            console.log(editedData, deleteId);
             onUpdate(editedData, deleteId);
             setOpen(false);
             setEnable(false);
@@ -91,13 +92,13 @@ export default function Table({
           }}
           onModify={() => {
             setEditedData(data.find((item) => item.id === deleteId));
-            setEnable(true);
+            nonEditable === "back" ? onUpdate(editedData, deleteId): setEnable(true);
           }}
           onDelete={() => {
             setModalOpen(true);
             setOpen(false);
           }}
-          buttons={nonEditable === "Delete"}
+          buttons={nonEditable === "back"}
         />
         <MessageBox
           isOpen={modalOpen}

@@ -34,7 +34,7 @@ const Customer = () => {
     }
   };
   const handleModify = async (editedData, deleteId) => {
-    console.log(editedData);
+    console.log(editedData, deleteId);
     try {
       const res = await fetch(`http://localhost:5000/customer/${deleteId}`, {
         method: "PUT",

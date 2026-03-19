@@ -354,6 +354,94 @@ const Report = () => {
       console.error("Error generating report:", error);
     }
   };
+
+  const GenerateRawMaterialReport = async () => {
+    let filteredRawMaterials = [];
+    let title = "Raw Materials Purchasing Report";
+    const selectedYearValue =
+      selectedYear?.value || new Date().getFullYear().toString();
+
+    if (selectedPeriod.value === "daily") {
+      const res = await fetch(
+        "http://localhost:5000/report/raw-material-purchasing-date?date=" +
+          selectedDate,
+      );
+      filteredRawMaterials = await res.json();
+      title = "Raw Materials Purchasing " + selectedDate;
+    } else if (selectedPeriod.value === "monthly") {
+      const res = await fetch(
+        "http://localhost:5000/report/raw-material-purchasing-month?date=" +
+          selectedYearValue +
+          "-" +
+          selectedMonth.value,
+      );
+      filteredRawMaterials = await res.json();
+      title =
+        "Monthly Raw Materials Purchasing " +
+        selectedMonth.key +
+        " " +
+        selectedYearValue;
+    } else if (selectedPeriod.value === "annually") {
+      const res = await fetch(
+        "http://localhost:5000/report/raw-material-purchasing-year?date=" +
+          selectedYearValue,
+      );
+      filteredRawMaterials = await res.json();
+      title = "Annual Raw Materials Purchasing " + selectedYearValue;
+    }
+
+    if (filteredRawMaterials.length === 0) {
+      await alertBox(
+        "No raw material purchasing data found for the selected period.",
+        "No Data Found !",
+      );
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/report/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          company: "My Company",
+          data: filteredRawMaterials.map((item, index) => ({
+            "#": index + 1,
+            Name: item.name,
+            Date: item.date,
+            "Cost Price": "Rs. " + item.cost_price,
+            Quantity: item.stock,
+            Amount: "Rs. " + Number(item.amount),
+          })),
+          total: [
+            Number(
+              filteredRawMaterials.reduce(
+                (sum, item) => sum + Number(item.stock || 0),
+                0,
+              ),
+            ),
+            "Rs. " +
+              Number(
+                filteredRawMaterials.reduce(
+                  (sum, item) => sum + Number(item.amount || 0),
+                  0,
+                ),
+              ),
+          ],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+    } catch (error) {
+      console.error("Error generating raw material report:", error);
+    }
+  };
   return (
     <div className="grid">
       <nav>
@@ -409,6 +497,25 @@ const Report = () => {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 w-full">
+            <button
+              onClick={GenerateRawMaterialReport}
+              className="flex flex-col items-center justify-center gap-2 text-white bg-gradient-to-r from-pink-700 to-pink-400 p-4 rounded-lg w-full shadow-md"
+            >
+              <FaRegMoneyBillAlt className="text-8xl mx-auto mb-2 bg-white rounded-full text-pink-500 p-3" />
+              <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
+              <p className="text-md text-center flex gap-1">
+                Raw Materials Report
+                {selectedPeriod.value === "daily" && (
+                  <span className="italic font-bold">{selectedDate}</span>
+                )}
+                {selectedPeriod.value === "monthly" && (
+                  <span className="italic font-bold">{selectedMonth.key}</span>
+                )}
+                {selectedPeriod.value === "annually" && (
+                  <span className="italic font-bold">{selectedYear.key}</span>
+                )}
+              </p>
+            </button>
             <button
               onClick={GenerateSalesReport}
               className="flex flex-col items-center justify-center gap-2 text-white bg-gradient-to-r from-blue-700 to-blue-400 p-4 rounded-lg w-full shadow-md"
@@ -474,25 +581,6 @@ const Report = () => {
               <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
               <p className="text-md text-center flex gap-1">
                 Expense Report
-                {selectedPeriod.value === "daily" && (
-                  <span className="italic font-bold">{selectedDate}</span>
-                )}
-                {selectedPeriod.value === "monthly" && (
-                  <span className="italic font-bold">{selectedMonth.key}</span>
-                )}
-                {selectedPeriod.value === "annually" && (
-                  <span className="italic font-bold">{selectedYear.key}</span>
-                )}
-              </p>
-            </button>
-            <button
-              onClick={GenerateExpensesReport}
-              className="flex flex-col items-center justify-center gap-2 text-white bg-gradient-to-r from-pink-700 to-pink-400 p-4 rounded-lg w-full shadow-md"
-            >
-              <FaRegMoneyBillAlt className="text-8xl mx-auto mb-2 bg-white rounded-full text-pink-500 p-3" />
-              <h3 className="text-2xl text-center mb-2 font-bold">Generate</h3>
-              <p className="text-md text-center flex gap-1">
-                Raw Materials Report
                 {selectedPeriod.value === "daily" && (
                   <span className="italic font-bold">{selectedDate}</span>
                 )}

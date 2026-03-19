@@ -18,6 +18,7 @@ const ForgetPassword = lazy(() => import("./pages/Forget"));
 const Profit = lazy(() => import("./pages/Profit"));
 const Barcode = lazy(() => import("./pages/Barcode"));
 const UserAccount = lazy(() => import("./pages/UserAccount"));
+const Order = lazy(() => import("./pages/Order"));
 import { AppDataProvider } from "./context/AppDataContext";
 import { AlertProvider } from "./component/Alerts";
 
@@ -45,6 +46,7 @@ function App() {
           <Route path="/profit" element={<Profit />} />
           <Route path="/barcode" element={<Barcode />} />
           <Route path="/user-account" element={<UserAccount />} />
+          <Route path="/order" element={<Order />} />
         </Routes>
       </HashRouter>
       </AlertProvider>
