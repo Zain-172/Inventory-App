@@ -20,8 +20,7 @@ const Receipt = forwardRef(({ saleData }, ref) => {
     <div ref={ref} className="relative p-4 bg-white text-black w-[550px] min-h-80 print:bg-white print:text-black print:h-full print:w-full print:absolute print:top-0 print:left-0 print:right-0">
       <div className="flex justify-between items-center gap-4 mb-4">
         <div>
-          <h1>Company Name</h1>
-          <span>Company Address</span>
+          <img src="/logo.png" alt="Company Logo" className="w-16 h-16" />
         </div>
         <h2 className="text-xl font-bold mb-2 text-center">Sales Receipt</h2>
       </div>

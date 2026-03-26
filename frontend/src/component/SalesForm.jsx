@@ -92,20 +92,6 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
     }
     if (formData.product && formData.quantity && formData.sales_price) {
       setEntry((prev) => {
-        const exists = prev.find((item) => item.id === formData.id);
-
-        if (exists) {
-          return prev.map((item) =>
-            item.id === formData.id
-              ? {
-                  ...item,
-                  product: formData.product,
-                  quantity: Number(item.quantity) + Number(formData.quantity),
-                  sale_price: formData.sales_price,
-                }
-              : item
-          );
-        }
 
         return [
           ...prev,
@@ -117,6 +103,7 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
           },
         ];
       });
+      setFormData((prev) => ({ ...prev, id: "", product: "", quantity: "", sales_price: "" }));
     }
   };
 
@@ -249,7 +236,6 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
             onChange={handleChange}
             placeholder="Barcode"
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            required
           />
         </div>
         <div className="w-full relative">
@@ -261,7 +247,6 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
             onChange={handleChange}
             placeholder="1"
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            required
           />
           {formData.quantity >
             products.find((p) => p.barcode === formData.id)?.stock && (
@@ -279,7 +264,6 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
             onChange={handleChange}
             placeholder="1"
             className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-            required
           />
         </div>
         <button

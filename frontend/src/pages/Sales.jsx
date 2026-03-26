@@ -25,9 +25,6 @@ import {
   getSalesByDate,
   getSalesByMonth,
   getSalesByYear,
-  getProfitByDate,
-  getProfitByMonth,
-  getProfitByYear,
   updateSaleDeliveryStatus,
   updateSaleStatus,
 } from "../api/Sale";
@@ -87,29 +84,8 @@ const Sales = () => {
   const [custFilter, setCustFilter] = useState("all");
   const receiptRef = useRef(null);
   const [sale, setSale] = useState(0);
-  const [profit, setProfit] = useState(0);
   const [updatingSaleId, setUpdatingSaleId] = useState(null);
   const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
-
-  useEffect(() => {
-      const fetchData = async () => {
-        let totalProfit = 0;
-        if (selectedPeriod.value === "daily") {
-          totalProfit = await getProfitByDate(selectedDate);
-        } else if (selectedPeriod.value === "monthly") {
-          totalProfit = await getProfitByMonth(new Date().getFullYear() + "-" + selectedMonth.value);
-        } else if (selectedPeriod.value === "annually") {
-          totalProfit = await getProfitByYear(selectedYear.value);
-        }
-        console.log(`Fetched total profit for ${selectedPeriod.value}:`, totalProfit);
-        setProfit(totalProfit);
-      };
-      if ((selectedPeriod.value === "daily" && selectedDate) ||
-          (selectedPeriod.value === "monthly" && selectedMonth) ||
-          (selectedPeriod.value === "annually" && selectedYear)) {
-        fetchData();
-      }
-    }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
 
     useEffect(() => {
       const fetchData = async () => {
@@ -299,18 +275,12 @@ const Sales = () => {
             )}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="">
           <Metrics
             title="Total Sales"
             value={sale}
             icon={<FaReceipt />}
             bgColor="bg-gradient-to-l from-green-400 to-green-600"
-          />
-          <Metrics
-            title="Profit"
-            value={profit}
-            icon={<FaUsers />}
-            bgColor="bg-gradient-to-l from-blue-400 to-blue-600"
           />
         </div>
         <div className="flex items-center justify-center gap-4 py-6">

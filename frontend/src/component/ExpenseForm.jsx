@@ -25,9 +25,9 @@ export default function ExpenseForm({onSubmit}) {
         {
           id: data.expenseId,
           title: form.title,
-          description: form.description,
           amount: form.amount,
           date: form.date,
+          description: form.description,
         },
       ]);
       setForm(new Expense());

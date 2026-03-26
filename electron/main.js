@@ -87,9 +87,12 @@ if (!isDev) {
 
   // Create main window
   function createWindow() {
+    const iconPath = path.join(process.resourcesPath, "dist-frontend", "logo.png");
+
     mainWindow = new BrowserWindow({
       width: 1200,
       height: 800,
+      icon: iconPath,
       show: false,
       webPreferences: {
         nodeIntegration: false,
@@ -122,9 +125,12 @@ if (!isDev) {
 } else {
   // Function to create main Electron window
   function createWindow() {
+    const iconPath = path.join(__dirname, "..", "frontend", "public", "logo.ico");
+
     mainWindow = new BrowserWindow({
       width: 1200,
       height: 800,
+      icon: iconPath,
       show: false,
       webPreferences: {
         nodeIntegration: false,
