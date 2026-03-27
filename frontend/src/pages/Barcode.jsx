@@ -32,12 +32,6 @@ const Barcode = () => {
     }
   }, [value]);
 
-  useEffect(() => {
-    if (value) {
-      const selectedProduct = products.find((p) => p.barcode === value);
-      setProduct(selectedProduct);
-    }
-  }, [value, products]);
   const productOptions = products.map((product) => ({
     key: product.name,
     value: product.barcode,
@@ -50,7 +44,8 @@ const Barcode = () => {
       code: value,
       price: product?.cost_price || "",
       name: product?.name || "",
-      company: "My Company",
+      company: "Easy Clean",
+      no: no,
     };
     const response = await printLabel(labelData);
     console.log(response);
@@ -81,6 +76,8 @@ const Barcode = () => {
             options={productOptions}
             onChange={(e) => {
               setValue(e.value);
+              const selectedProduct = products.find((p) => p.barcode === value);
+              setProduct(selectedProduct);
             }}
             placeholder="Select a product"
           />
@@ -146,7 +143,7 @@ const Barcode = () => {
           </form>
           <div className="flex items-center justify-end">
             <div id="label" className="border border-black p-4 rounded-lg flex flex-col items-center justify-center">
-              {company && <span>Company Name</span>}
+              {company && <span>Easy Clean</span>}
               <svg ref={barcodeRef} width="220px" height="120px" />
               <div className="flex items-center justify-evenly w-full">
                 {price && <span>{"Rs. " + (product?.cost_price || "")}</span>}

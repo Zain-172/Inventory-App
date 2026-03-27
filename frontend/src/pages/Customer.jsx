@@ -110,6 +110,7 @@ const Customer = () => {
             open={open}
             setOpen={setOpen}
             accent="bg-green-600"
+            options="view"
           />
         </div>
       </main>

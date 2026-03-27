@@ -6,6 +6,7 @@ const TopBar = lazy(() => import("../component/TopBar"));
 const Modal = lazy(() => import("../component/Modal"));
 const Form = lazy(() => import("../component/SalesForm"));
 const Receipt = lazy(() => import("../component/Receipt"));
+const Invoice = lazy(() => import("../component/Invoice"));
 const DropDown = lazy(() => import("../component/DropDown"));
 const Metrics = lazy(() => import("../component/Metrics"));
 import {
@@ -62,6 +63,7 @@ const Sales = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const {
     salesWithItems,
     setSalesWithItems,
@@ -83,6 +85,7 @@ const Sales = () => {
   const [filter, setFilter] = useState("paid");
   const [custFilter, setCustFilter] = useState("all");
   const receiptRef = useRef(null);
+  const invoiceRef = useRef(null);
   const [sale, setSale] = useState(0);
   const [updatingSaleId, setUpdatingSaleId] = useState(null);
   const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
@@ -344,7 +347,7 @@ const Sales = () => {
                   </p>
                   <div className="flex justify-end">
                     <button
-                      className={`p-2 rounded-lg ${colors[group.status]} hover:bg-gray-700 text-white`}
+                      className={`p-2 rounded-lg ${colors[group.status]} text-white`}
                       onClick={(e) => {
                         e.stopPropagation();
                         setOpenMenuIndex(
@@ -355,9 +358,9 @@ const Sales = () => {
                       <FaEllipsisV />
                     </button>
                     {openMenuIndex === index && (
-                      <div className="absolute right-0 mt-10 w-40 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
+                      <div className="absolute right-0 mt-10 w-40 dark:bg-neutral-900 bg-white border rounded-lg shadow-lg flex flex-col">
                         <button
-                          className="flex items-center gap-2 hover:bg-gray-700 px-4 py-2 font-bold rounded-t-lg border-b border-white/40"
+                          className="flex items-center gap-2 px-4 py-2 font-bold rounded-t-lg border-b text-red-600 dark:border-white/40 border-black/40"
                           onClick={(e) => {
                             e.stopPropagation();
                             setIsMessageBoxOpen(true);
@@ -367,7 +370,7 @@ const Sales = () => {
                           Delete
                         </button>
                         <button
-                          className="flex items-center gap-2 hover:bg-gray-700 px-4 py-2 font-bold rounded-b-lg"
+                          className="flex items-center gap-2 px-4 py-2 font-bold border-b text-blue-600 dark:border-white/40 border-black/40"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedSale(group);
@@ -375,7 +378,19 @@ const Sales = () => {
                           }}
                         >
                           <FaPrint />
-                          Print
+                          Sale Receipt
+                        </button>
+
+                        <button
+                          className="flex items-center gap-2 px-4 py-2 font-bold rounded-b-lg text-green-600"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedSale(group);
+                            setIsInvoiceModalOpen(true);
+                          }}
+                        >
+                          <FaReceipt />
+                          Invoice
                         </button>
                         {isMessageBoxOpen && openMenuIndex === index && (
                           <MessageBox
@@ -469,6 +484,13 @@ const Sales = () => {
         title="Print Receipt"
       >
         <Receipt saleData={selectedSale} ref={receiptRef} />
+      </Modal>
+      <Modal
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setIsInvoiceModalOpen(false)}
+        title="Print Invoice"
+      >
+        <Invoice saleData={selectedSale} ref={invoiceRef} />
       </Modal>
     </div>
   );

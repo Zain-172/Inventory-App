@@ -1,4 +1,5 @@
 import { lazy, useState } from "react";
+import { Link } from "react-router-dom";
 const OTP = lazy(() => import("../component/OTP"));
 const Modal = lazy(() => import("../component/Modal"));
 import { resetPassword } from "../api/Login";
@@ -46,14 +47,18 @@ export default function Forget() {
 
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen gap-4">
+        <div className="flex flex-col items-center justify-center h-screen gap-4 bg-neutral-200 dark:bg-neutral-800">
             <div className="flex items-center justify-center flex-col bg-white shadow-lg p-4 w-full max-w-xl rounded-lg">
                 <h1 className="text-2xl font-bold">Forgot Password</h1>
                 <div className="mb-4 w-full">
                     <label className="block">Email</label>
                     <input type="email" name="email" id="email" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="Enter your email" value={email} onChange={handleEmailChange} />
                 </div>
-
+                <div className="text-right w-full mb-2">
+                    <Link to="/" className="text-green-500 hover:underline">
+                        Remember password?
+                    </Link>
+                </div>
                 <button type="button" onClick={sendOTP} className="w-full py-2 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 transition-colors">
                     Send OTP
                 </button>

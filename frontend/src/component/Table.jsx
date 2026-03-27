@@ -11,6 +11,7 @@ export default function Table({
   onDelete,
   onUpdate,
   nonEditable,
+  options
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [enable, setEnable] = useState(false);
@@ -99,6 +100,7 @@ export default function Table({
             setOpen(false);
           }}
           buttons={nonEditable === "back"}
+          options={options}
         />
         <MessageBox
           isOpen={modalOpen}

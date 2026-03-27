@@ -5,6 +5,7 @@ import {
   FaTimes,
   FaTrashAlt,
   FaHandPointer,
+  FaEye,
 } from "react-icons/fa";
 import Modal from "./Modal";
 
@@ -16,11 +17,52 @@ const SelectMenu = ({
   onSave,
   onDiscard,
   buttons,
+  options
 }) => {
   const [modify, setModify] = useState(false);
   return (
     <>
-      {modify ? (
+      {options === "view" ? (
+        <Modal isOpen={open} onClose={() => setOpen(false)}>
+          <div className="bg-white dark:bg-neutral-900 w-88 min-h-48 grid grid-rows-2 gap-4 p-4 rounded-2xl shadow-lg shadow-white/10 border border-white/30">
+            <h1 className="flex items-center justify-center gap-2 font-bold text-2xl">
+              <FaHandPointer /> Action
+            </h1>
+            <p className="text-center text-sm mx-4">
+              Please select the action you would like to perform.
+            </p>
+            <div className="flex justify-evenly items-center">
+              <button
+                className="flex gap-2 justify-center items-center w-24 bg-yellow-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-yellow-600 transition-colors text-white font-bold"
+                onClick={() => {
+                  !buttons && setModify(true);
+                  onModify();
+                }}
+              >
+                <FaPencilAlt />
+                Modify
+              </button>
+              <button
+                className="flex gap-2 justify-center items-center w-24 bg-green-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-green-600 transition-colors text-white font-bold"
+                onClick={() => {
+                  !buttons && setModify(true);
+                  onModify();
+                }}
+              >
+                <FaEye />
+                View
+              </button>
+              <button
+                className="flex gap-2 justify-center items-center w-24 bg-red-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition-colors text-white font-bold"
+                onClick={onDelete}
+              >
+                <FaTrashAlt />
+                Delete
+              </button>
+            </div>
+          </div>
+        </Modal>
+      ) : modify ? (
         <div
           onClick={(e) => e.stopPropagation()}
           className={`flex items-center justify-evenly fixed dark:bg-neutral-800 bg-neutral-50 p-4 rounded-lg shadow-md border dark:border-white/40 border-black/40 gap-4 left-96 bottom-4 right-96 z-30 ${
