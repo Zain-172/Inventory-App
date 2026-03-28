@@ -9,11 +9,26 @@ export const printLabel = (data) => {
     })
     .then(res => {
         if (!res.ok) {
-            throw new Error("Failed to print label");
+            console.error("Failed to print label");
         }
+        return res.json();
     })
     .catch(err => {
         console.error("Failed to print label", err);
         throw err;
     });
+};
+
+export const getPrinters = () => {
+    return fetch("http://localhost:5000/barcode/printers")
+        .then(res => {
+            if (!res.ok) {
+                throw new Error("Failed to fetch printers");
+            }
+            return res.json();
+        })
+        .catch(err => {
+            console.error("Failed to fetch printers", err);
+            throw err;
+        });
 };

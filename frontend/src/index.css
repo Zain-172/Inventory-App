@@ -64,7 +64,9 @@ th:hover {
   cursor: pointer;
   transition: all 0.3s ease;
 }
-
+ol {
+  list-style-type: decimal;
+}
 form {
   background: #fff;
 }

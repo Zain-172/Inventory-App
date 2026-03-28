@@ -19,6 +19,7 @@ const Profit = lazy(() => import("./pages/Profit"));
 const Barcode = lazy(() => import("./pages/Barcode"));
 const UserAccount = lazy(() => import("./pages/UserAccount"));
 const Order = lazy(() => import("./pages/Order"));
+const Configure = lazy(() => import("./pages/Configure"));
 import { AppDataProvider } from "./context/AppDataContext";
 import { AlertProvider } from "./component/Alerts";
 
@@ -47,6 +48,7 @@ function App() {
           <Route path="/barcode" element={<Barcode />} />
           <Route path="/user-account" element={<UserAccount />} />
           <Route path="/order" element={<Order />} />
+          <Route path="/configure" element={<Configure />} />
         </Routes>
       </HashRouter>
       </AlertProvider>

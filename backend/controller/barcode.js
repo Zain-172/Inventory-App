@@ -2,16 +2,40 @@ import fs from "fs";
 import { exec } from "child_process";
 
 export const printLabel = (req, res) => {
-  const { name, company, price, code, no } = req.body;
+  const { name, company, price, code, no, printerName } = req.body;
+
+  if (!printerName) {
+    return res.status(400).json({
+      success: false,
+      message: "Printer Configuration is required",
+    });
+  }
+
   const zpl = generateLabelZPL({ name, company, price, code, no });
-  const printerName = "Microsoft Print to PDF"; // Change this to your actual printer name
 
   fs.writeFileSync("label.zpl", zpl);
 
-  exec(`copy /b label.zpl \\\\localhost\\${printerName}`, (err) => {
-    if (err) console.error(err);
+  // IMPORTANT: correct UNC format (NO extra quotes inside path)
+  const command = `copy /b label.zpl "\\\\localhost\\${printerName}"`;
+
+  console.log("Executing:", command);
+
+  exec(command, (err, stdout, stderr) => {
+    if (err) {
+      console.error("Print Error:", err);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to Find Printer. Please ensure the printer is shared and installed.",
+      });
+    }
+
+    console.log("Print Success:", stdout);
+
+    return res.json({
+      success: true,
+      message: "Label sent to printer",
+    });
   });
-  res.json({ success: true });
 };
 
 const generateLabelZPL = ({ name, company, price, code, no }) => {
@@ -53,18 +77,19 @@ const generateLabelZPL = ({ name, company, price, code, no }) => {
 };
 
 export const getPrinter = () => {
-  const printers = [];
-  exec("powershell \"Get-Printer | Format-Table Name\"", (err, stdout) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    const lines = stdout.split("\n").slice(2); // Skip the first two lines
-    lines.forEach((line) => {
-      const printerName = line.trim();
-      if (printerName) printers.push(printerName);
+  return new Promise((resolve, reject) => {
+    exec('powershell \"Get-Printer | Select-Object -ExpandProperty Name\"', (err, stdout) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      console.log("Raw printer output:", stdout);
+      const printers = stdout
+        .split("\n")
+        .map(p => p.trim())
+        .filter(p => p);
+
+      resolve(printers);
     });
   });
-
-  return printers;
-}
+};

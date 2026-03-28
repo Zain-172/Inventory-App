@@ -1,4 +1,4 @@
-import { FaBarcode } from "react-icons/fa";
+import { FaBarcode, FaCheckCircle } from "react-icons/fa";
 import { lazy, useEffect, useState, useRef } from "react";
 import JsBarcode from "jsbarcode";
 import { useAppData } from "../context/AppDataContext";
@@ -7,6 +7,9 @@ const Navigation = lazy(() => import("../component/Navigation"));
 const Dropdown = lazy(() => import("../component/DropDown"));
 import { useAlertBox } from "../component/Alerts";
 import { printLabel } from "../api/Barcode";
+import { Link } from "react-router-dom";
+
+const PRINTER_STORAGE_KEY = "inventory_selected_printer";
 
 const Barcode = () => {
   const barcodeRef = useRef(null);
@@ -40,19 +43,22 @@ const Barcode = () => {
   const handlePrint = async () => {
     if (!value) return;
 
+    const selectedPrinter = localStorage.getItem(PRINTER_STORAGE_KEY);
+
     const labelData = {
       code: value,
       price: product?.cost_price || "",
       name: product?.name || "",
       company: "Easy Clean",
       no: no,
+      printerName: selectedPrinter || "",
     };
     const response = await printLabel(labelData);
     console.log(response);
-    if (response) {
-      alertBox("Label sent to printer successfully!");
+    if (response.success) {
+      alertBox("Label sent to printer successfully!", "Success", <FaCheckCircle />);
     } else {
-      alertBox("Failed to print label. Please try again.");
+      alertBox(response.message || "Failed to print label. Please try again.", "Error");
     }
   };
   return (
@@ -70,6 +76,9 @@ const Barcode = () => {
       <main className="p-4 my-12">
         <div className="flex items-center justify-between my-4">
           <h1>Barcode Content</h1>
+          <Link to="/configure" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+            Configure Printer
+          </Link>
         </div>
         <div>
           <Dropdown
