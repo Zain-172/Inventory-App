@@ -17,7 +17,7 @@ export default function MetricsCard({ title, value, icon, bgColor = "bg-green-60
       </div>
       <div className="ml-20">
         <div className="flex items-center justify-between w-full ">
-          <p className="text-xl font-bold text-white">{isShown ? value : "••••"}</p>
+          <p className="text-lg font-bold text-white">{isShown ? value : "••••"}</p>
           {enableToggle && (
             <button className="text-white hover:text-gray-200" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIsShown(!isShown); }}>
               {isShown ? <FaEyeSlash /> : <FaEye />}

@@ -7,7 +7,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
   background-color: #fbfbfb;
 
@@ -38,6 +37,26 @@
     height: 100%;
     width: 100%;
   }
+}
+
+div {
+  border-color: #0000005c;
+  transition: all 0.3s ease;
+}
+
+.dark div {
+  border-color: #ffffff5c;
+  transition: all 0.3s ease;
+}
+
+section {
+  border-color: #0000005c;
+  transition: all 0.3s ease;
+}
+
+.dark section {
+  border-color: #ffffff5c;
+  transition: all 0.3s ease;
 }
 
 table {
@@ -137,4 +156,17 @@ li:hover {
   transition: all 0.3s ease;
 }
 
+hr {
+  border: none;
+  border-top: 1px solid #0000005c;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}
 
+
+.dark hr {
+  border: none;
+  border-top: 1px solid #ffffff5c;
+  margin: 1rem 0;
+  transition: all 0.3s ease;
+}

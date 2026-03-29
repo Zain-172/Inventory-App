@@ -101,6 +101,7 @@ export default function Table({
           }}
           buttons={nonEditable === "back"}
           options={options}
+          id={deleteId}
         />
         <MessageBox
           isOpen={modalOpen}

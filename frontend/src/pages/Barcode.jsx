@@ -85,7 +85,7 @@ const Barcode = () => {
             options={productOptions}
             onChange={(e) => {
               setValue(e.value);
-              const selectedProduct = products.find((p) => p.barcode === value);
+              const selectedProduct = products.find((p) => p.barcode === e.value);
               setProduct(selectedProduct);
             }}
             placeholder="Select a product"

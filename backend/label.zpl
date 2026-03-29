@@ -24,11 +24,11 @@
 
 ^FO6,170
 ^FB406,1,0,L,0
-^FDRs. ^FS
+^FDRs. 120^FS
 
 ^FO0,170
 ^FB400,1,0,R,0
-^FD^FS
+^FDBroom^FS
 
-^PQ1
+^PQ5
 ^XZ

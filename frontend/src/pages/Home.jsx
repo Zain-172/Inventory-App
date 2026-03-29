@@ -13,6 +13,7 @@ import {
   FaBook,
   FaAddressBook,
   FaBarcode,
+  FaPrint,
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
@@ -26,10 +27,10 @@ const Home = () => {
   const [profit, setProfit] = useState(0);
   const [ordersToday, setOrdersToday] = useState(0);
   const [salesToday, setSalesToday] = useState(0);
-  const [customerCount, setCustomerCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
   const [khataCount, setKhataCount] = useState(0);
   const [shopCount, setShopCount] = useState(0);
+  const [printer, setPrinter] = useState("Not Set");
   const [att, setAtt] = useState(0);
 
   useEffect(() => {
@@ -38,7 +39,6 @@ const Home = () => {
         const dashboardData = await getDashboardData();
         console.log("Dashboard Data:", dashboardData);
         setExpense(dashboardData.dailyExpense);
-        setCustomerCount(dashboardData.customerCount);
         setEmployeeCount(dashboardData.employeeCount);
         setOrdersToday(dashboardData.dailyOrders);
         setSalesToday(dashboardData.dailySale);
@@ -46,6 +46,8 @@ const Home = () => {
         setProfit(dashboardData.dailyProfit);
         setAtt(dashboardData.attendance);
         setKhataCount(dashboardData.khataCount);
+        const savedPrinter = localStorage.getItem("inventory_selected_printer");
+        setPrinter(savedPrinter || "Not Set");
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }
@@ -94,66 +96,33 @@ const Home = () => {
             title="Orders Today"
             value={ordersToday}
             icon={<FaShoppingCart size={40} />}
-            bgColor="bg-gradient-to-r from-yellow-700 to-yellow-400"
-            shadow="shadow-yellow-600/60"
+            bgColor="bg-gradient-to-r from-pink-700 to-pink-400"
+            shadow="shadow-pink-600/60"
             to="/order"
-          />
-          <MetricsCard
-            title="Sales Today"
-            value={`Rs. ${salesToday}`}
-            icon={<FaMoneyBill size={40} />}
-            bgColor="bg-gradient-to-r from-lime-700 to-lime-400"
-            shadow="shadow-lime-600/60"
-            to="/sales"
-          />
-          <MetricsCard
-            title="Customers"
-            value={customerCount}
-            icon={<FaUserFriends size={40} />}
-            bgColor="bg-gradient-to-r from-cyan-700 to-cyan-400"
-            shadow="shadow-cyan-600/60"
-            to="/customer"
-          />
-          <MetricsCard
-            title="Shops"
-            value={shopCount}
-            icon={<FaBuilding size={40} />}
-            bgColor="bg-gradient-to-r from-indigo-700 to-indigo-400"
-              shadow="shadow-indigo-600/60"
-            to="/customer"
           />
           <MetricsCard
             title="Employees"
             value={employeeCount}
             icon={<FaUser size={40} />}
-            bgColor="bg-gradient-to-r from-pink-700 to-pink-400"
-            shadow="shadow-pink-600/60"
+            bgColor="bg-gradient-to-r from-sky-700 to-sky-400"
+            shadow="shadow-sky-600/60"
             to="/employee"
           />
           <MetricsCard
-            title="Reports"
-            value={"Ready"}
-            icon={<FaBook size={40} />}
-            bgColor="bg-gradient-to-r from-zinc-700 to-zinc-400"
-            shadow="shadow-zinc-600/60"
-
-            to="/report"
+            title="Customers"
+            value={shopCount}
+            icon={<FaUserFriends size={40} />}
+            bgColor="bg-gradient-to-r from-orange-700 to-orange-400"
+            shadow="shadow-orange-600/60"
+            to="/customer"
           />
           <MetricsCard
-            title="Khata"
-            value={khataCount}
-            icon={<FaAddressBook size={40} />}
+            title="Sales Today"
+            value={`Rs. ${salesToday}`}
+            icon={<FaMoneyBill size={40} />}
             bgColor="bg-gradient-to-r from-teal-700 to-teal-400"
             shadow="shadow-teal-600/60"
-            to="/khata"
-          />
-          <MetricsCard
-            title="Attendence"
-            value={att > 0 ? `${att} Presents` : "Pending"}
-            icon={<FaUser size={40} />}
-            bgColor="bg-gradient-to-r from-sky-700 to-sky-400"
-            shadow="shadow-sky-600/60"
-            to="/attendence"
+            to="/sales"
           />
           <MetricsCard
             title="Barcode"
@@ -162,6 +131,38 @@ const Home = () => {
             bgColor="bg-gradient-to-r from-purple-700 to-purple-400"
             shadow="shadow-purple-600/60"
             to="/barcode"
+          />
+          <MetricsCard
+            title="Attendence"
+            value={att > 0 ? `${att} Presents` : "Pending"}
+            icon={<FaUser size={40} />}
+            bgColor="bg-gradient-to-r from-cyan-700 to-cyan-400"
+            shadow="shadow-cyan-600/60"
+            to="/attendence"
+          />
+          <MetricsCard
+            title="Khata"
+            value={khataCount}
+            icon={<FaAddressBook size={40} />}
+            bgColor="bg-gradient-to-r from-yellow-700 to-yellow-400"
+            shadow="shadow-yellow-600/60"
+            to="/khata"
+          />
+          <MetricsCard
+            title="Reports"
+            value={"Ready"}
+            icon={<FaBook size={40} />}
+            bgColor="bg-gradient-to-r from-lime-700 to-lime-400"
+            shadow="shadow-lime-600/60"
+            to="/report"
+          />
+          <MetricsCard
+            title="Printer"
+            value={printer}
+            icon={<FaPrint size={40} />}
+            bgColor="bg-gradient-to-r from-indigo-700 to-indigo-400"
+              shadow="shadow-indigo-600/60"
+            to="/configure"
           />
         </div>
       </main>

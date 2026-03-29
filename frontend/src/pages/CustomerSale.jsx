@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { lazy } from "react";
 const Navigation = lazy(() => import("../component/Navigation"));
 const Table = lazy(() => import("../component/Table"));
@@ -8,27 +8,23 @@ const Form = lazy(() => import("../component/SalesForm"));
 const Receipt = lazy(() => import("../component/Receipt"));
 const Invoice = lazy(() => import("../component/Invoice"));
 const DropDown = lazy(() => import("../component/DropDown"));
-const Metrics = lazy(() => import("../component/Metrics"));
 import {
-  FaArrowsAltH,
   FaCheckCircle,
   FaEllipsisV,
   FaPlusCircle,
   FaPrint,
   FaReceipt,
   FaTrashAlt,
-  FaUsers,
+  FaUser,
 } from "react-icons/fa";
 import { useAppData } from "../context/AppDataContext";
 import { useAlertBox } from "../component/Alerts";
 import MessageBox from "../component/MessageBox";
 import {
-  getSalesByDate,
-  getSalesByMonth,
-  getSalesByYear,
   updateSaleDeliveryStatus,
   updateSaleStatus,
 } from "../api/Sale";
+import { useParams } from "react-router-dom";
 
 const statusStyles = {
   paid: "bg-green-800 text-white",
@@ -58,7 +54,8 @@ const formatStatusLabel = (status) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 
-const Sales = () => {
+const CustomerSales = () => {
+  const { id } = useParams();
   const { alertBox } = useAlertBox();
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
@@ -67,48 +64,23 @@ const Sales = () => {
   const {
     salesWithItems,
     setSalesWithItems,
-    customers,
     loading,
     selectedPeriod,
     setSelectedPeriod,
     selectedDate,
     setSelectedDate,
-    selectedMonth,
     setSelectedMonth,
-    selectedYear,
     setSelectedYear,
     period,
     month,
     years,
   } = useAppData();
   const [selectedSale, setSelectedSale] = useState(null);
-  const [filter, setFilter] = useState("paid");
-  const [custFilter, setCustFilter] = useState("all");
   const receiptRef = useRef(null);
   const invoiceRef = useRef(null);
-  const [sale, setSale] = useState(0);
   const [updatingSaleId, setUpdatingSaleId] = useState(null);
   const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        let totalSale = 0;
-        if (selectedPeriod.value === "daily") {
-          totalSale = await getSalesByDate(selectedDate);
-        } else if (selectedPeriod.value === "monthly") {
-          totalSale = await getSalesByMonth(new Date().getFullYear() + "-" + selectedMonth.value);
-        } else if (selectedPeriod.value === "annually") {
-          totalSale = await getSalesByYear(selectedYear.value);
-        }
-        console.log(`Fetched total sale for ${selectedPeriod.value}:`, totalSale);
-        setSale(totalSale);
-      };
-      if ((selectedPeriod.value === "daily" && selectedDate) ||
-          (selectedPeriod.value === "monthly" && selectedMonth) ||
-          (selectedPeriod.value === "annually" && selectedYear)) {
-        fetchData();
-      }
-    }, [selectedPeriod, selectedDate, selectedMonth, selectedYear]);
 
   const handleDelete = async (id) => {
     try {
@@ -191,36 +163,12 @@ const Sales = () => {
       setUpdatingDeliverySaleId(null);
     }
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleSubmit = async (data) => {
-    const res = await fetch("http://localhost:5000/sale/add-sale", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (res.ok) {
-      alertBox("The Sale is added successfully", "Success", <FaCheckCircle />);
-      setIsModalOpen(false);
-      window.location.reload();
-    } else {
-      console.error("Failed to add sale");
-    }
-  };
   const colors = {
     paid: "bg-green-600",
     half_payment: "bg-yellow-500",
     pending: "bg-red-500",
   };
 
-  const options = customers
-    .map((cust) => ({
-      key: cust.customer,
-      value: cust.id,
-    }))
-    .concat([{ key: "All", value: "all" }]);
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen">
@@ -234,8 +182,8 @@ const Sales = () => {
       </nav>
       <TopBar>
         <h1 className="text-2xl font-bold flex items-center py-2 gap-2">
-          <FaReceipt />
-          Sales
+          <FaUser />
+          Customer
         </h1>
       </TopBar>
       <main className="flex flex-col my-16 w-full p-4">
@@ -278,67 +226,15 @@ const Sales = () => {
             )}
           </div>
         </div>
-        <div className="">
-          <Metrics
-            title="Total Sales"
-            value={sale}
-            icon={<FaReceipt />}
-            bgColor="bg-gradient-to-l from-green-400 to-green-600"
-          />
-        </div>
-        <div className="flex items-center justify-center gap-4 py-6">
-          <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "paid" ? "bg-green-600 text-white" : "text-green-500"}`}
-            onClick={() => setFilter("paid")}
-          >
-            Full Payment
-          </button>
-          <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "pending" ? "bg-green-600 text-white" : "text-green-500"}`}
-            onClick={() => setFilter("pending")}
-          >
-            Pending
-          </button>
-          <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "half_payment" ? "bg-green-600 text-white" : "text-green-500"}`}
-            onClick={() => setFilter("half_payment")}
-          >
-            Half Payment
-          </button>
-          <button
-            className={`py-2 px-4 border-green-500 border rounded-lg ${filter === "all" ? "bg-green-600 text-white" : "text-green-500"}`}
-            onClick={() => setFilter("all")}
-          >
-            All
-          </button>
-        </div>
         <div className="px-2 py-6">
           <div>
             <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold mb-4">Sales</h2>
-              <div className="flex items-center justeify-center gap-4 mb-4">
-                <button
-                  onClick={() => setIsModalOpen(true)}
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center justify-center gap-2"
-                >
-                  <FaPlusCircle /> Sales
-                </button>
-                <DropDown
-                  options={options}
-                  onChange={(data) => setCustFilter(data.value)}
-                  className="w-40 px-4 py-2 border border-[#555] rounded-lg flex justify-between items-center cursor-pointer"
-                />
-              </div>
+              <h2 className="text-2xl font-bold mb-4">Customer Sales {id}</h2>
             </div>
           </div>
-          <hr className="mb-4" />
+          <hr className="mb-4 bg-neutral-900 dark:bg-neutral-200" />
           {salesWithItems
-            .filter((group) => {
-              const statusMatch = group.status === filter || filter === "all";
-              const custMatch = group.customer_id === custFilter || custFilter === "all";
-              const typeMatch = group.type === "sale";
-              return statusMatch && custMatch && typeMatch;
-            })
+            .filter((group) => group.customer_id == id)
             .map((group, index) => (
               <div key={index} className="">
                 <div className="grid grid-cols-2 mb-2">
@@ -466,18 +362,11 @@ const Sales = () => {
                     Total Price (Incl Tax): {group.total_amount + group.tax/100 * group.total_amount}
                   </p>
                 </div>
-                <hr className="mb-6" />
+                <hr className="mb-6 bg-neutral-900 dark:bg-neutral-200" />
               </div>
             ))}
         </div>
       </main>
-      <Modal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title="Add New Material"
-      >
-        <Form onSubmit={handleSubmit} type="sale" />
-      </Modal>
       <Modal
         isOpen={isPrintModalOpen}
         onClose={() => setIsPrintModalOpen(false)}
@@ -496,4 +385,4 @@ const Sales = () => {
   );
 };
 
-export default Sales;
+export default CustomerSales;

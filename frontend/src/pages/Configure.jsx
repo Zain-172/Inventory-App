@@ -39,11 +39,11 @@ const Configure = () => {
       </TopBar>
 
       <main className="pt-20 pb-24 px-4 sm:px-6 lg:px-8">
-        <div className='mb-8'>
+        <div className='mb-4'>
             <h1 className="text-xl font-semibold mb-2">Saved Printer</h1>
-            <p className='flex items-center gap-2 bg-green-300 py-2 px-4 rounded-md'><FaCheckCircle />{selectedPrinter || 'No printer selected'}</p>
+            <p className='flex items-center gap-2 bg-green-300 text-black py-2 px-4 rounded-md'><FaCheckCircle />{selectedPrinter || 'No printer selected'}</p>
         </div>
-        <div>
+        <div className='border-t py-4'>
             <h1 className='text-xl font-semibold mb-4'>Configure Printer</h1>
             <DropDown
                 label={{ key: selectedPrinter || 'Select a printer', value: selectedPrinter || '' }}
@@ -75,7 +75,7 @@ const Configure = () => {
             )}
 
         </div>
-        <section className="mt-10 bg-white rounded-lg shadow-sm border p-4 sm:p-6">
+        <section className="mt-4 shadow-sm border-t p-4 sm:p-6">
           <h2 className="text-xl font-semibold mb-3">How to Share Printer (Windows)</h2>
           <ol className="pl-5 space-y-2 text-sm sm:text-base">
             <li className='flex items-center gap-2'>1. Open Settings <FaArrowRight /> Bluetooth & devices <FaArrowRight /> Printers & scanners.</li>

@@ -8,6 +8,7 @@ import {
   FaEye,
 } from "react-icons/fa";
 import Modal from "./Modal";
+import { Link } from "react-router-dom";
 
 const SelectMenu = ({
   onModify,
@@ -17,7 +18,8 @@ const SelectMenu = ({
   onSave,
   onDiscard,
   buttons,
-  options
+  options,
+  id
 }) => {
   const [modify, setModify] = useState(false);
   return (
@@ -42,16 +44,13 @@ const SelectMenu = ({
                 <FaPencilAlt />
                 Modify
               </button>
-              <button
+              <Link
                 className="flex gap-2 justify-center items-center w-24 bg-green-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-green-600 transition-colors text-white font-bold"
-                onClick={() => {
-                  !buttons && setModify(true);
-                  onModify();
-                }}
+                to={`/customer-sale/${id}`}
               >
                 <FaEye />
                 View
-              </button>
+              </Link>
               <button
                 className="flex gap-2 justify-center items-center w-24 bg-red-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition-colors text-white font-bold"
                 onClick={onDelete}
