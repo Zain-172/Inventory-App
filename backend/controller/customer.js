@@ -24,7 +24,7 @@ export default class Customer {
     try {
       const rows = db
         .prepare(
-          "SELECT id, customer, phone, address, type FROM customers"
+          "SELECT id, customer, phone, address, type, ntn FROM customers"
         )
         .all();
 
@@ -44,7 +44,7 @@ export default class Customer {
     try {
       const row = db
         .prepare(
-          "SELECT id, customer, phone, address, type, date_added FROM customers WHERE id = ?"
+          "SELECT id, customer, phone, address, type, ntn, date_added FROM customers WHERE id = ?"
         )
         .get(id);
 
@@ -67,7 +67,7 @@ export default class Customer {
     try {
       const rows = db
         .prepare(
-          "SELECT id, customer, phone, address, type FROM customers WHERE customer LIKE ? LIMIT 10"
+          "SELECT id, customer, phone, address, type, ntn FROM customers WHERE customer LIKE ? LIMIT 10"
         )
         .all(`%${query}%`);
 
@@ -82,14 +82,14 @@ export default class Customer {
   // INSERT CUSTOMER
   // ================================
   insertCustomer = (req, res) => {
-    const { customer, phone, address, type } = req.body;
+    const { customer, phone, address, type, ntn } = req.body;
 
     try {
       const stmt = db.prepare(
-        "INSERT INTO customers (customer, phone, address, type) VALUES (?, ?, ?, ?)"
+        "INSERT INTO customers (customer, phone, address, type, ntn) VALUES (?, ?, ?, ?, ?)"
       );
 
-      const info = stmt.run(customer, phone, address, type);
+      const info = stmt.run(customer, phone, address, type, ntn || null);
 
       res.status(201).json({
         message: "Customer added",
@@ -106,16 +106,16 @@ export default class Customer {
   // ================================
   updateCustomer = (req, res) => {
     const { id } = req.params;
-    const { customer, phone, address, type } = req.body;
+    const { customer, phone, address, type, ntn } = req.body;
 
     try {
       const stmt = db.prepare(
         `UPDATE customers 
-         SET customer = ?, phone = ?, address = ?, type = ?
+         SET customer = ?, phone = ?, address = ?, type = ?, ntn = ?
          WHERE id = ?`
       );
 
-      const info = stmt.run(customer, phone, address, type, id);
+      const info = stmt.run(customer, phone, address, type, ntn || null, id);
 
       if (info.changes === 0)
         return res.status(404).json({ message: "Customer not found" });

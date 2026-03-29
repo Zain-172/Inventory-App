@@ -3,7 +3,7 @@ import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import { useEffect, useState } from "react";
 import { useAlertBox } from "../component/Alerts";
-import { getMpinStatus, setMpin } from "../api/Login";
+import { getMpinStatus, getNtnStatus, setMpin, setNtn } from "../api/Login";
 import { useNavigate } from "react-router-dom";
 
 export default function UserAccount() {
@@ -13,9 +13,12 @@ export default function UserAccount() {
   const navigate = useNavigate();
   const [statusLoading, setStatusLoading] = useState(true);
   const [isMpinSet, setIsMpinSet] = useState(false);
+  const [isNtnSet, setIsNtnSet] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [savingNtn, setSavingNtn] = useState(false);
   const [mpin, setMpinValue] = useState("");
   const [confirmMpin, setConfirmMpin] = useState("");
+  const [ntn, setNtnValue] = useState("");
 
   useEffect(() => {
     async function loadMpinStatus() {
@@ -25,12 +28,20 @@ export default function UserAccount() {
       }
 
       try {
-        const response = await getMpinStatus(user.id);
-        if (response.success) {
-          setIsMpinSet(response.isSet);
+        const [mpinResponse, ntnResponse] = await Promise.all([
+          getMpinStatus(user.id),
+          getNtnStatus(user.id),
+        ]);
+
+        if (mpinResponse.success) {
+          setIsMpinSet(mpinResponse.isSet);
+        }
+
+        if (ntnResponse.success) {
+          setIsNtnSet(ntnResponse.isSet);
         }
       } catch (error) {
-        console.error("Failed to fetch MPIN status:", error);
+        console.error("Failed to fetch account status:", error);
       } finally {
         setStatusLoading(false);
       }
@@ -68,6 +79,32 @@ export default function UserAccount() {
       await alertBox("Something went wrong while setting MPIN", "Failed", <FaKey />);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSetNtn = async (e) => {
+    e.preventDefault();
+
+    if (!/^\d{7,15}$/.test(ntn)) {
+      await alertBox("NTN must be 7 to 15 digits", "Invalid NTN", <FaIdBadge />);
+      return;
+    }
+
+    try {
+      setSavingNtn(true);
+      const response = await setNtn(user.id, ntn);
+      if (response.success) {
+        setIsNtnSet(true);
+        setNtnValue("");
+        await alertBox("NTN set successfully", "Success", <FaIdBadge />);
+      } else {
+        await alertBox(response.message || "Unable to set NTN", "Failed", <FaIdBadge />);
+      }
+    } catch (error) {
+      console.error("Failed to set NTN:", error);
+      await alertBox("Something went wrong while setting NTN", "Failed", <FaIdBadge />);
+    } finally {
+      setSavingNtn(false);
     }
   };
 
@@ -164,6 +201,49 @@ export default function UserAccount() {
               {!statusLoading && isMpinSet && (
                 <p className="mt-4 text-sm text-green-600 dark:text-green-400">
                   MPIN is already set for this account.
+                </p>
+              )}
+
+              <div className="flex items-center justify-between gap-4 pt-3 border-t border-neutral-200 dark:border-neutral-700">
+                <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300">
+                  <FaIdBadge />
+                  <span>NTN</span>
+                </div>
+                <span className="font-semibold">
+                  {statusLoading ? "Checking..." : isNtnSet ? "...." : "--"}
+                </span>
+              </div>
+
+              {!statusLoading && !isNtnSet && (
+                <form onSubmit={handleSetNtn} className="mt-4 space-y-3 border-t border-neutral-200 dark:border-neutral-700 pt-4">
+                  <h3 className="font-semibold">Set NTN Number</h3>
+                  <p className="text-sm text-neutral-600 dark:text-neutral-300">
+                    You can set your NTN only once.
+                  </p>
+
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={15}
+                    value={ntn}
+                    onChange={(e) => setNtnValue(e.target.value.replace(/\D/g, ""))}
+                    placeholder="Enter NTN (7-15 digits)"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                  />
+
+                  <button
+                    type="submit"
+                    disabled={savingNtn}
+                    className="bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white py-2 px-4 rounded-md transition-colors"
+                  >
+                    {savingNtn ? "Setting..." : "Set NTN"}
+                  </button>
+                </form>
+              )}
+
+              {!statusLoading && isNtnSet && (
+                <p className="mt-4 text-sm text-green-600 dark:text-green-400">
+                  NTN is already set for this account.
                 </p>
               )}
             </div>

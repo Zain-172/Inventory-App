@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS "customers" (
 	"phone"	TEXT,
 	"address"	TEXT,
 	"type"	TEXT DEFAULT 'normal',
+	"ntn"	TEXT,
 	"date_added"	TEXT DEFAULT (datetime('now')),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
@@ -130,6 +131,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT NOT NULL,
 	"mpin"	TEXT,
+	"ntn"	TEXT,
 	"date_created"	date DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("user_id" AUTOINCREMENT)
 );

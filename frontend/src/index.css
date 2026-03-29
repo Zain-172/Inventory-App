@@ -41,12 +41,10 @@
 
 div {
   border-color: #0000005c;
-  transition: all 0.3s ease;
 }
 
 .dark div {
   border-color: #ffffff5c;
-  transition: all 0.3s ease;
 }
 
 section {

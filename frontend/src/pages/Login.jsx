@@ -22,6 +22,7 @@ export default function Login() {
             id: response.id,
             username: response.username,
             email: response.email,
+            ntn: response.ntn,
           })
         );
         navigate("/home");

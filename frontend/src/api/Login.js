@@ -54,3 +54,19 @@ export async function verifyMpin(userId, mpin) {
   });
   return response.json();
 }
+
+export async function getNtnStatus(userId) {
+  const response = await fetch(`${API_BASE_URL}/login/ntn-status/${userId}`);
+  return response.json();
+}
+
+export async function setNtn(userId, ntn) {
+  const response = await fetch(`${API_BASE_URL}/login/set-ntn`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId, ntn }),
+  });
+  return response.json();
+}

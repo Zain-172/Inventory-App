@@ -358,7 +358,7 @@ const Sales = () => {
                       <FaEllipsisV />
                     </button>
                     {openMenuIndex === index && (
-                      <div className="absolute right-0 mt-10 w-40 dark:bg-neutral-900 bg-white border rounded-lg shadow-lg flex flex-col">
+                      <div className="absolute right-0 mt-10 w-40 dark:bg-neutral-900 bg-white rounded-lg shadow-xl shadow-black/40 border-white border flex flex-col">
                         <button
                           className="flex items-center gap-2 px-4 py-2 font-bold rounded-t-lg border-b text-red-600 dark:border-white/40 border-black/40"
                           onClick={(e) => {

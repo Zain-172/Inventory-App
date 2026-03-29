@@ -241,10 +241,10 @@ const Profit = () => {
                 </div>
                 <p className="text-2xl font-bold text-white">Profit</p>
               </div>
-              <div className="ml-20">
+              <div className="ml-14">
                 <div className="flex items-center justify-between w-full ">
                   <p className="text-xl font-bold text-white">
-                    {isShown ? profit : "••••"}
+                    {isShown ? "Rs. " + profit : "••••"}
                   </p>
                   <button
                     className="text-white hover:text-gray-200"

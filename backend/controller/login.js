@@ -2,6 +2,7 @@ import db from "../Database/DB.js";
 import crypto from "crypto";
 
 let mpinColumnChecked = false;
+let ntnColumnChecked = false;
 
 function ensureMpinColumn() {
     if (mpinColumnChecked) {
@@ -18,6 +19,26 @@ function ensureMpinColumn() {
     mpinColumnChecked = true;
 }
 
+function ensureNtnColumn() {
+    if (ntnColumnChecked) {
+        return;
+    }
+
+    const columns = db.prepare("PRAGMA table_info('user')").all();
+    const hasNtn = columns.some((column) => column.name === "ntn");
+
+    if (!hasNtn) {
+        db.prepare("ALTER TABLE user ADD COLUMN ntn TEXT").run();
+    }
+
+    ntnColumnChecked = true;
+}
+
+function ensureUserSecurityColumns() {
+    ensureMpinColumn();
+    ensureNtnColumn();
+}
+
 export default class Login {
     constructor(id, username, email, password, date_added) {
         this.id = id;
@@ -30,14 +51,14 @@ export default class Login {
     // LOGIN
     // ================================
     login = (req, res) => {
-        ensureMpinColumn();
+        ensureUserSecurityColumns();
         const { username, password } = req.body;
         try {
-            const stmt = db.prepare("SELECT user_id, username, email, password FROM user WHERE username = ?");
+            const stmt = db.prepare("SELECT user_id, username, email, ntn, password FROM user WHERE username = ?");
             const user = stmt.get(username);
             if (user && this.verifyPassword(password, user.password)) {
                 // Set session or token here
-                res.json({ id: user.user_id, username: user.username, email: user.email, login: true });
+                res.json({ id: user.user_id, username: user.username, email: user.email, ntn: user.ntn, login: true });
             } else {
                 res.status(401).json({ message: "Invalid credentials", login: false });
             }
@@ -62,7 +83,7 @@ export default class Login {
         // ================================
 
     resetPassword = (req, res) => {
-        ensureMpinColumn();
+        ensureUserSecurityColumns();
         const { email, password } = req.body;
         console.log(email, password);
         try {
@@ -83,7 +104,7 @@ export default class Login {
     }
 
     getMPINStatus = (req, res) => {
-        ensureMpinColumn();
+        ensureUserSecurityColumns();
         const userId = Number(req.params.userId);
 
         if (!userId) {
@@ -106,7 +127,7 @@ export default class Login {
     }
 
     setMPIN = (req, res) => {
-        ensureMpinColumn();
+        ensureUserSecurityColumns();
         const { userId, mpin } = req.body;
 
         if (!userId || !/^\d{4}$/.test(String(mpin))) {
@@ -136,7 +157,7 @@ export default class Login {
     }
 
     verifyMPIN = (req, res) => {
-        ensureMpinColumn();
+        ensureUserSecurityColumns();
         const { userId, mpin } = req.body;
 
         if (!userId || !/^\d{4}$/.test(String(mpin))) {
@@ -161,6 +182,60 @@ export default class Login {
             }
 
             return res.json({ success: true, message: "MPIN verified" });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Internal Server Error" });
+        }
+    }
+
+    getNTNStatus = (req, res) => {
+        ensureUserSecurityColumns();
+        const userId = Number(req.params.userId);
+
+        if (!userId) {
+            return res.status(400).json({ success: false, message: "Invalid user ID" });
+        }
+
+        try {
+            const stmt = db.prepare("SELECT ntn FROM user WHERE user_id = ?");
+            const user = stmt.get(userId);
+
+            if (!user) {
+                return res.status(404).json({ success: false, message: "User not found" });
+            }
+
+            return res.json({ success: true, isSet: Boolean(user.ntn) });
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: "Internal Server Error" });
+        }
+    }
+
+    setNTN = (req, res) => {
+        ensureUserSecurityColumns();
+        const { userId, ntn } = req.body;
+        const normalizedNtn = String(ntn || "").trim();
+
+        if (!userId || !/^\d{7,15}$/.test(normalizedNtn)) {
+            return res.status(400).json({ success: false, message: "NTN must be 7 to 15 digits" });
+        }
+
+        try {
+            const getStmt = db.prepare("SELECT ntn FROM user WHERE user_id = ?");
+            const user = getStmt.get(userId);
+
+            if (!user) {
+                return res.status(404).json({ success: false, message: "User not found" });
+            }
+
+            if (user.ntn) {
+                return res.status(400).json({ success: false, message: "NTN is already set" });
+            }
+
+            const updateStmt = db.prepare("UPDATE user SET ntn = ? WHERE user_id = ?");
+            updateStmt.run(normalizedNtn, userId);
+
+            return res.json({ success: true, message: "NTN set successfully" });
         } catch (err) {
             console.error(err);
             return res.status(500).json({ success: false, message: "Internal Server Error" });

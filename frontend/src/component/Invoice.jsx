@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 
 const Invoice = forwardRef(({ saleData }, ref) => {
+
   const handleClick = () => {
     window.print();
   };
@@ -14,6 +15,10 @@ const Invoice = forwardRef(({ saleData }, ref) => {
   );
   const tax = Number(saleData.tax || 0);
   const grandTotal = subTotal + (tax / 100) * subTotal;
+
+  const storedUser = localStorage.getItem("inventory_user");
+  const user = storedUser ? JSON.parse(storedUser) : null;
+
 
   return (
     <>
@@ -37,6 +42,9 @@ const Invoice = forwardRef(({ saleData }, ref) => {
           </p>
           <p>
             <strong>Customer:</strong> {saleData.customer}
+          </p>
+          <p className="text-right">
+            <strong>NTN:</strong> {user?.ntn || "--"}
           </p>
         </div>
         <hr className="my-2 print:bg-black" />

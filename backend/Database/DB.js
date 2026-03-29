@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS "customers" (
 	"phone"	TEXT,
 	"address"	TEXT,
 	"type"	TEXT DEFAULT 'normal',
+	"ntn"	TEXT,
 	"date_added"	TEXT DEFAULT (datetime('now')),
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
@@ -165,6 +166,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email"	TEXT NOT NULL UNIQUE,
 	"password"	TEXT NOT NULL,
 	"mpin"	TEXT,
+	"ntn"	TEXT,
 	"date_created"	date DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("user_id" AUTOINCREMENT)
 );
@@ -269,6 +271,17 @@ db.pragma("journal_mode = WAL");
 const userColumns = db.prepare("PRAGMA table_info('user')").all();
 if (!userColumns.some((column) => column.name === "mpin")) {
 	db.prepare("ALTER TABLE user ADD COLUMN mpin TEXT").run();
+}
+
+// Ensure older databases also get the ntn column.
+if (!userColumns.some((column) => column.name === "ntn")) {
+	db.prepare("ALTER TABLE user ADD COLUMN ntn TEXT").run();
+}
+
+// Ensure customers table has ntn column for older databases.
+const customerColumns = db.prepare("PRAGMA table_info('customers')").all();
+if (!customerColumns.some((column) => column.name === "ntn")) {
+	db.prepare("ALTER TABLE customers ADD COLUMN ntn TEXT").run();
 }
 
 console.log("✅ Database connected at:", dbPath);

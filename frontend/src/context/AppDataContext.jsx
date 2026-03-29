@@ -49,7 +49,7 @@ export const AppDataProvider = ({ children }) => {
     },
   );
 
-  const [selectedMonth, setSelectedMonth] = useState(month[0]);
+  const [selectedMonth, setSelectedMonth] = useState(month[new Date().getMonth()]);
   const [selectedYear, setSelectedYear] = useState(years[years.length - 1]);
 
   const fetchMaterials = async () => {
