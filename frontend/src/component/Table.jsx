@@ -61,7 +61,7 @@ export default function Table({
                           className="bg-transparent w-full rounded-none h-100 border-none focus:ring-0"
                           type="text"
                           name={col}
-                          value={editedData[col] || row[col] || ""}
+                          defaultValue={editedData[col] || row[col] || ""}
                           onChange={handleChange}
                         />
                       ) : col === "Action" ? (

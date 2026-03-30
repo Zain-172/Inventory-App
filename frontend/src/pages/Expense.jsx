@@ -5,7 +5,7 @@ import TopBar from "../component/TopBar";
 import { FaCreditCard } from "react-icons/fa";
 
 const Expense = () => {
-  const [filter, setFilter] = useState("factory");
+  const [filter, setFilter] = useState("all");
 
   return (
     <div className="grid">

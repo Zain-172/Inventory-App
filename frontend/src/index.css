@@ -37,6 +37,24 @@
     height: 100%;
     width: 100%;
   }
+  table th {
+    background-color: rgb(17, 17, 17) !important;
+    -webkit-print-color-adjust: exact;
+  }
+  table tr {
+    background-color: transparent !important;
+    -webkit-print-color-adjust: exact;
+    border: none !important;
+    border-bottom: 1px solid #000 !important;
+  }
+  table {
+    border-collapse: collapse;
+    color: #fff;
+    width: 100%;
+  }
+  div {
+    -webkit-print-color-adjust: exact;
+  }
 }
 
 div {
@@ -60,7 +78,6 @@ section {
 table {
   border-collapse: collapse;
   color: #fff;
-  border: 1px solid #ffffff3c;
   width: 100%;
 }
 
@@ -77,7 +94,6 @@ td {
 }
 
 th:hover {
-  background-color: rgb(50, 59, 83);
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -129,7 +145,6 @@ textarea {
 }
 
 tr:hover {
-  background-color: #333;
   cursor: pointer;
   transition: all 0.3s ease;
 }
