@@ -85,7 +85,6 @@ const Sales = () => {
   const [filter, setFilter] = useState("paid");
   const [custFilter, setCustFilter] = useState("all");
   const receiptRef = useRef(null);
-  const invoiceRef = useRef(null);
   const [sale, setSale] = useState(0);
   const [updatingSaleId, setUpdatingSaleId] = useState(null);
   const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
@@ -490,7 +489,7 @@ const Sales = () => {
         onClose={() => setIsInvoiceModalOpen(false)}
         title="Print Invoice"
       >
-        <Invoice saleData={selectedSale} ref={invoiceRef} />
+        <Invoice saleData={selectedSale} />
       </Modal>
     </div>
   );

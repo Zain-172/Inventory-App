@@ -38,14 +38,14 @@
     width: 100%;
   }
   table th {
-    background-color: rgb(17, 17, 17) !important;
+    background-color: #060055 !important;
     -webkit-print-color-adjust: exact;
   }
   table tr {
     background-color: transparent !important;
     -webkit-print-color-adjust: exact;
     border: none !important;
-    border-bottom: 1px solid #000 !important;
+    border-bottom: 1px solid #060055 !important;
   }
   table {
     border-collapse: collapse;
