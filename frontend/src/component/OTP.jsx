@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useAlertBox } from "./Alerts.jsx";
+import { useAlertBox } from "./useAlertBox.jsx";
 import { validateOTP } from "../api/SignUp.js";
 export default function OTP({ onSuccess }) {
   const inputs = useRef([]);

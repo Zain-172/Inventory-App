@@ -583,7 +583,9 @@ const Sales = () => {
         onClose={() => setIsInvoiceModalOpen(false)}
         title="Print Invoice"
       >
-        <Invoice saleData={selectedSale} />
+        <div className="scale-50">
+          <Invoice saleData={selectedSale} />
+        </div>
       </Modal>
     </div>
   );

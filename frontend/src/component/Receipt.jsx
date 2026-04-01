@@ -30,7 +30,7 @@ const Invoice = ({ saleData }) => {
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-4">
               <img
-                src="/logo.png"
+                src="logo.png"
                 alt="Company Logo"
                 className="w-[88px] aspect-square"
               />
@@ -84,13 +84,7 @@ const Invoice = ({ saleData }) => {
               ))}
             </tbody>
           </table>
-          <div className="flex justify-between items-start gap-2 w-full">
-            <div className="flex items-center justify-start gap-6">
-              <p className="font-bold">Total Items:</p>
-              <p>
-                {saleData.items.reduce((sum, i) => sum + Number(i.quantity), 0)}
-              </p>
-            </div>
+          <div className="flex items-end gap-2 w-full">
             <div>
               <div className="flex justify-end gap-6 px-2">
                 <p className="text-right font-bold">Sub Total:</p>
@@ -109,7 +103,7 @@ const Invoice = ({ saleData }) => {
         </div>
         <div className="flex items-center justify-end w-full font-bold gap-4 border-t border-black pt-2 mt-2">
           <img
-            src="/logo.png"
+            src="logo.png"
             alt="Company Logo"
             className="w-16 aspect-square"
           />

@@ -8,6 +8,7 @@ const Invoice = ({ saleData }) => {
   const invoiceRef = useRef(null);
   const { customers } = useAppData();
   const [ntn, setNtn] = useState("");
+  const [show, setShow] = useState(false);
 
   const handlePrint = useReactToPrint({
     contentRef: invoiceRef,
@@ -45,13 +46,13 @@ const Invoice = ({ saleData }) => {
       ) :
       <div
         ref={invoiceRef}
-        className="relative p-4 bg-white text-black page flex flex-col justify-between items-center"
+        className="relative p-4 bg-white text-black page flex flex-col justify-between items-center overflow-hidden aspect-[1/1.141] w-[210mm]"
       >
-        <div className="w-full">
+        <div className="w-full z-10">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-4">
               <img
-                src="/logo.png"
+                src="logo.png"
                 alt="Company Logo"
                 className="w-[88px] aspect-square"
               />
@@ -111,22 +112,18 @@ const Invoice = ({ saleData }) => {
               ))}
             </tbody>
           </table>
-          <div className="flex justify-between items-start gap-2 w-full">
-            <div className="flex items-center justify-start gap-6">
-              <p className="font-bold">Total Items:</p>
-              <p>
-                {saleData.items.reduce((sum, i) => sum + Number(i.quantity), 0)}
-              </p>
-            </div>
-            <div>
+          <div className="flex items-end justify-end gap-2 w-full">
+            <div className="">
               <div className="flex justify-end gap-6 px-2">
                 <p className="text-right font-bold">Sub Total:</p>
                 <p className="w-[88px]">Rs. {subTotal.toFixed(2)}</p>
               </div>
-              <div className="flex justify-end gap-6 px-2">
-                <p className="font-bold text-right">Tax:</p>
-                <p className="w-[88px]">{tax.toFixed(2)} %</p>
-              </div>
+              {show && (
+                <div className="flex justify-end gap-6 px-2">
+                  <p className="font-bold text-right">Tax:</p>
+                  <p className="w-[88px]">{tax.toFixed(2)} %</p>
+                </div>
+              )}
               <div className="flex justify-end gap-6 bg-[#060055] text-white px-2 py-1">
                 <p className="font-bold text-right">Grand Total:</p>
                 <p className="w-[88px]">Rs. {grandTotal.toFixed(2)}</p>
@@ -134,27 +131,40 @@ const Invoice = ({ saleData }) => {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-end w-full font-bold gap-4 border-t border-black pt-2 mt-2">
-          <img
-            src="/logo.png"
-            alt="Company Logo"
-            className="w-16 aspect-square"
-          />
-          <p className="text-xs">
-            Near Shalimar Bagh, G.T. Road, Lahore <br />
-            Cell #1: 03097175360 <br />
-            Cell #2: 03010500010
+        <div className="flex items-center justify-between w-full font-bold gap-4 border-t border-black pt-2 mt-2 z-10">
+          <p className="text-left font-bold text-sm">
+            Premium Quality <br />
+            Easy Clean A Name of Trust and Quality!
           </p>
+          <div className="flex gap-2 items-center">
+            <img
+              src="logo.png"
+              alt="Company Logo"
+              className="w-16 aspect-square"
+            />
+            <p className="text-xs">
+              Near Shalimar Bagh, G.T. Road, Lahore <br />
+              Cell #1: 03097175360 <br />
+              Cell #2: 03010500010
+            </p>
+          </div>
         </div>
+        <img src="logo.png" alt="logo" className="w-[400px] aspect-auto absolute opacity-15 z-0 top-96" />
       </div>
     }
       {(saleData.customer_id !== null || ntn !== "") && (
-        <button
-          onClick={handlePrint}
-          className="bg-green-600 text-white rounded-lg py-1 font-bold grid place-self-center w-[550px] mt-6 no-print"
-        >
-          Print
-        </button>
+        <div className="bg-white mt-2 rounded-lg p-2 flex items-center justify-end w-full no-print flex-col">
+          <div>
+            <input type="checkbox" name="tax" id="tax" onChange={() => setShow(!show)} />
+            <label htmlFor="tax" className="ml-2"> Tax</label>
+          </div>
+          <button
+            onClick={handlePrint}
+            className="bg-green-600 text-white rounded-lg py-1 font-bold grid place-self-center w-[550px] mt-2 no-print"
+          >
+            Print
+          </button>
+        </div>
       )}
     </>
   );
