@@ -71,6 +71,23 @@ export async function updateSaleDeliveryStatus(saleId, delivery_status) {
     return response.json();
 }
 
+export async function updateSaleTax(saleId, tax) {
+    const response = await fetch(`http://localhost:5000/sale/${saleId}/tax`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tax }),
+    });
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ message: 'Failed to update tax' }));
+        throw new Error(error.message || 'Failed to update tax');
+    }
+
+    return response.json();
+}
+
 export async function getSalesReport(startDate, endDate) {
     const response = await fetch(`http://localhost:5000/sale/report?start_date=${startDate}&end_date=${endDate}`);
     return response.json();

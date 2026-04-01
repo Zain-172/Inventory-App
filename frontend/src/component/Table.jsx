@@ -59,7 +59,7 @@ export default function Table({
                       enable && col !== nonEditable && deleteId === row.id ? (
                         <input
                           className="bg-transparent w-full rounded-none h-100 border-none focus:ring-0"
-                          type="text"
+                          type={ col === "amount" ? "number" : col === "date" ? "date" : "text"}
                           name={col}
                           defaultValue={editedData[col] || row[col] || ""}
                           onChange={handleChange}

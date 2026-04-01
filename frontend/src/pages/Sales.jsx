@@ -28,6 +28,7 @@ import {
   getSalesByYear,
   updateSaleDeliveryStatus,
   updateSaleStatus,
+  updateSaleTax,
 } from "../api/Sale";
 
 const statusStyles = {
@@ -88,6 +89,8 @@ const Sales = () => {
   const [sale, setSale] = useState(0);
   const [updatingSaleId, setUpdatingSaleId] = useState(null);
   const [updatingDeliverySaleId, setUpdatingDeliverySaleId] = useState(null);
+  const [updatingTaxSaleId, setUpdatingTaxSaleId] = useState(null);
+  const [taxDrafts, setTaxDrafts] = useState({});
 
     useEffect(() => {
       const fetchData = async () => {
@@ -188,6 +191,76 @@ const Sales = () => {
       );
     } finally {
       setUpdatingDeliverySaleId(null);
+    }
+  };
+
+  const handleTaxInputChange = (saleId, value) => {
+    if (value === "") {
+      setTaxDrafts((prev) => ({ ...prev, [saleId]: value }));
+      return;
+    }
+
+    const numericValue = Number(value);
+    if (!Number.isFinite(numericValue) || numericValue < 0) return;
+
+    setTaxDrafts((prev) => ({ ...prev, [saleId]: value }));
+  };
+
+  const clearTaxDraft = (saleId) => {
+    setTaxDrafts((prev) => {
+      if (!(saleId in prev)) return prev;
+      const next = { ...prev };
+      delete next[saleId];
+      return next;
+    });
+  };
+
+  const handleTaxUpdate = async (saleId, currentTax) => {
+    const rawValue = taxDrafts[saleId];
+    if (rawValue === undefined) return;
+
+    if (rawValue === "") {
+      clearTaxDraft(saleId);
+      alertBox("Tax cannot be empty", "Error", <FaCheckCircle />);
+      return;
+    }
+
+    const parsedTax = Number(rawValue);
+    if (!Number.isFinite(parsedTax) || parsedTax < 0) {
+      clearTaxDraft(saleId);
+      alertBox("Please enter a valid tax value", "Error", <FaCheckCircle />);
+      return;
+    }
+
+    const normalizedTax = Number(parsedTax.toFixed(2));
+    const previousTax = Number(currentTax || 0);
+
+    if (normalizedTax === previousTax) {
+      clearTaxDraft(saleId);
+      return;
+    }
+
+    setUpdatingTaxSaleId(saleId);
+    setSalesWithItems((prevData) =>
+      prevData.map((entry) =>
+        entry.id === saleId ? { ...entry, tax: normalizedTax } : entry,
+      ),
+    );
+
+    try {
+      await updateSaleTax(saleId, normalizedTax);
+      clearTaxDraft(saleId);
+    } catch (error) {
+      console.error("Failed to update tax:", error);
+      setSalesWithItems((prevData) =>
+        prevData.map((entry) =>
+          entry.id === saleId ? { ...entry, tax: previousTax } : entry,
+        ),
+      );
+      clearTaxDraft(saleId);
+      alertBox(error.message || "Failed to update tax", "Error", <FaCheckCircle />);
+    } finally {
+      setUpdatingTaxSaleId(null);
     }
   };
 
@@ -424,9 +497,30 @@ const Sales = () => {
                   <p className="text-lg">
                     <strong>Customer:</strong> {group.customer}
                   </p>
-                  <p className="text-lg text-right">
-                    <strong>Tax:</strong> {Number(group.tax || 0).toFixed(2)} %
-                  </p>
+                  <div className="text-lg text-right">
+                    <strong>Tax:</strong>{" "}
+                    <input
+                      type="number"
+                      className="w-20 border rounded px-1 py-0"
+                      step="0.01"
+                      min="0"
+                      value={taxDrafts[group.id] ?? Number(group.tax || 0).toFixed(2)}
+                      onChange={(e) => handleTaxInputChange(group.id, e.target.value)}
+                      onBlur={() => handleTaxUpdate(group.id, group.tax)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          e.currentTarget.blur();
+                        }
+                        if (e.key === "Escape") {
+                          clearTaxDraft(group.id);
+                          e.currentTarget.blur();
+                        }
+                      }}
+                      disabled={updatingTaxSaleId === group.id}
+                    />{" "}
+                    %
+                  </div>
 
                   <div className="text-lg my-2">
                     <strong>Status:</strong>{" "}
@@ -462,7 +556,7 @@ const Sales = () => {
                     Total Items: {group.total_items}
                   </p>
                   <p className="text-lg font-bold">
-                    Total Price (Incl Tax): {group.total_amount + group.tax/100 * group.total_amount}
+                    Total Price (Incl Tax): {Number(group.total_amount) + (Number(group.tax) / 100) * Number(group.total_amount)}
                   </p>
                 </div>
                 <hr className="mb-6" />

@@ -339,6 +339,29 @@ export default class Sale {
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
+  updateSaleTax = (req, res) => {
+    const { id } = req.params;
+    const { tax } = req.body;
+
+    const parsedTax = Number(tax);
+    if (!Number.isFinite(parsedTax) || parsedTax < 0) {
+      return res.status(400).json({ message: "Invalid tax value" });
+    }
+
+    try {
+      const stmt = db.prepare("UPDATE sales SET tax = ? WHERE id = ?");
+      const info = stmt.run(parsedTax, id);
+
+      if (info.changes === 0) {
+        return res.status(404).json({ message: "Sale not found" });
+      }
+
+      res.json({ message: "Sale tax updated", tax: parsedTax });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
   getProfitToday = (req, res) => {
     try {
       const row = db

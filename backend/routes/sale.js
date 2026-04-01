@@ -22,6 +22,9 @@ sale_router.put("/:id/status", (req, res) => {
 sale_router.put("/:id/delivery-status", (req, res) => {
     saleInstance.updateSaleDeliveryStatus(req, res);
 });
+sale_router.put("/:id/tax", (req, res) => {
+    saleInstance.updateSaleTax(req, res);
+});
 sale_router.delete("/:id", (req, res) => {
     saleInstance.deleteSale(req, res);
 });
