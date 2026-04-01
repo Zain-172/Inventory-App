@@ -17,7 +17,7 @@ import {
 } from "react-icons/fa";
 import MetricsCard from "../component/Metrics";
 import TopBar from "../component/TopBar";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 import { useState, useEffect } from "react";
 import { getDashboardData } from "../api/Dashboard";
 

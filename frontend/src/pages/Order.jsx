@@ -7,6 +7,7 @@ const Modal = lazy(() => import("../component/Modal"));
 const Form = lazy(() => import("../component/OrderForm"));
 const Receipt = lazy(() => import("../component/Receipt"));
 const DropDown = lazy(() => import("../component/DropDown"));
+const Invoice = lazy(() => import("../component/Invoice"));
 import {
   FaArrowsAltH,
   FaCartPlus,
@@ -18,8 +19,8 @@ import {
   FaTrashAlt,
   FaUsers,
 } from "react-icons/fa";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "../component/Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "../component/useAlertBox";
 import MessageBox from "../component/MessageBox";
 import {
   updateSaleDeliveryStatus,
@@ -59,6 +60,7 @@ const Order = () => {
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
   const [isPrintModalOpen, setIsPrintModalOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const {
     salesWithItems,
     setSalesWithItems,
@@ -313,52 +315,65 @@ const Order = () => {
                     >
                       <FaEllipsisV />
                     </button>
-                    {openMenuIndex === index && (
-                      <div className="absolute right-0 mt-10 w-40 bg-[#111] border border-white/40 text-white rounded-lg shadow-lg flex flex-col">
-                        <button
-                          className="flex items-center gap-2 hover:bg-gray-700 px-4 py-2 font-bold rounded-t-lg border-b border-white/40"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIsMessageBoxOpen(true);
-                          }}
-                        >
-                          <FaTrashAlt />
-                          Delete
-                        </button>
-                        <button
-                          className="flex items-center gap-2 hover:bg-gray-700 px-4 py-2 font-bold rounded-b-lg"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedSale(group);
-                            setIsPrintModalOpen(true);
-                          }}
-                        >
-                          <FaPrint />
-                          Print
-                        </button>
-                        {isMessageBoxOpen && openMenuIndex === index && (
-                          <MessageBox
-                            isOpen={isMessageBoxOpen}
-                            onClose={() => setIsMessageBoxOpen(false)}
-                            message="Delete"
-                            onConfirm={() => handleDelete(group.id)}
-                          >
-                            <div className="w-[300px] mb-2">
-                              <h2 className="text-xl font-bold flex items-center justify-center gap-2 w-full mb-4">
-                                <FaTrashAlt />
-                                DELETE
-                              </h2>
-                              <p className="text-center text-sm">
-                                Do you want to delete this{" "}
-                                <strong>Order Record</strong> from your orders
-                                records?. <br /> <strong> Warning: </strong> If
-                                you delete this the quantity is added to stock.
-                              </p>
-                            </div>
-                          </MessageBox>
-                        )}
-                      </div>
-                    )}
+                    
+                                        {openMenuIndex === index && (
+                                          <div className="absolute right-0 mt-10 w-40 dark:bg-neutral-900 bg-white rounded-lg shadow-xl shadow-black/40 border-white border flex flex-col">
+                                            <button
+                                              className="flex items-center gap-2 px-4 py-2 font-bold rounded-t-lg border-b text-red-600 dark:border-white/40 border-black/40"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setIsMessageBoxOpen(true);
+                                              }}
+                                            >
+                                              <FaTrashAlt />
+                                              Delete
+                                            </button>
+                                            <button
+                                              className="flex items-center gap-2 px-4 py-2 font-bold border-b text-blue-600 dark:border-white/40 border-black/40"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedSale(group);
+                                                setIsPrintModalOpen(true);
+                                              }}
+                                            >
+                                              <FaPrint />
+                                              Sale Receipt
+                                            </button>
+                    
+                                            <button
+                                              className="flex items-center gap-2 px-4 py-2 font-bold rounded-b-lg text-green-600"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                setSelectedSale(group);
+                                                setIsInvoiceModalOpen(true);
+                                              }}
+                                            >
+                                              <FaReceipt />
+                                              Invoice
+                                            </button>
+                                            {isMessageBoxOpen && openMenuIndex === index && (
+                                              <MessageBox
+                                                isOpen={isMessageBoxOpen}
+                                                onClose={() => setIsMessageBoxOpen(false)}
+                                                message="Delete"
+                                                onConfirm={() => handleDelete(group.id)}
+                                              >
+                                                <div className="w-[300px] mb-2">
+                                                  <h2 className="text-xl font-bold flex items-center justify-center gap-2 w-full mb-4">
+                                                    <FaTrashAlt />
+                                                    DELETE
+                                                  </h2>
+                                                  <p className="text-center text-sm">
+                                                    Do you want to delete this{" "}
+                                                    <strong>Sale Record</strong> from your sales
+                                                    records?. <br /> <strong> Warning: </strong> If
+                                                    you delete this the quantity is added to stock.
+                                                  </p>
+                                                </div>
+                                              </MessageBox>
+                                            )}
+                                          </div>
+                                        )}
                   </div>
                   <p className="text-lg">
                     <strong>Order Taker:</strong> {group.salesman}
@@ -421,6 +436,13 @@ const Order = () => {
         title="Print Receipt"
       >
         <Receipt saleData={selectedSale} ref={receiptRef} />
+      </Modal>
+      <Modal
+        isOpen={isInvoiceModalOpen}
+        onClose={() => setIsInvoiceModalOpen(false)}
+        title="Invoice"
+      >
+        <Invoice saleData={selectedSale} />
       </Modal>
     </div>
   );

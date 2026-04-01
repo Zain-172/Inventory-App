@@ -1,8 +1,8 @@
 import Table from "../component/Table";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 import { useState } from "react";
 import { FaCheckCircle, FaPlusCircle, FaUserAlt } from "react-icons/fa";
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import Modal from "../component/Modal";

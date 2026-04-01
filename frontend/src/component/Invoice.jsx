@@ -1,6 +1,7 @@
-import { lazy, useEffect, useRef, useState } from "react";
+import { lazy, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
+import { Link } from "react-router-dom";
 const Modal = lazy(() => import("../component/Modal"));
 
 const Invoice = ({ saleData }) => {
@@ -8,9 +9,9 @@ const Invoice = ({ saleData }) => {
   const { customers } = useAppData();
   const [ntn, setNtn] = useState("");
 
-  useEffect(() => {
-    console.log("Sale Data:", saleData.customer_id === null );
-  }, [saleData]);
+  const handlePrint = useReactToPrint({
+    contentRef: invoiceRef,
+  });
 
   if (!saleData) {
     return null;
@@ -32,16 +33,11 @@ const Invoice = ({ saleData }) => {
     setNtn(ntn.value);
   };
 
-
-  const handlePrint = useReactToPrint({
-    contentRef: invoiceRef,
-  });
-
   return (
     <>
       { saleData.customer_id === null && ntn === "" ? (
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-lg w-[45vw] border border-white/30 shadow-lg p-6 bg-white">
-        <h4 className="text-xl text-center font-bold mb-4">Customer NTN</h4>
+        <h4 className="text-xl text-center font-bold mb-4">National Tax Number</h4>
         <label htmlFor="ntn">Customer NTN</label>
         <input type="text" id="ntn" name="ntn" />
         <button type="submit" className="bg-green-600 text-white rounded-md py-2">Submit</button>
@@ -67,7 +63,7 @@ const Invoice = ({ saleData }) => {
             <div className="px-2">
               <h2 className="font-bold py-1">Seller:</h2>
               <p>Easy Clean</p>
-              <p>NTN: {user?.ntn || "--"}</p>
+              <p>NTN: {user?.ntn || <span className="text-xs">Set From <Link to="/user-account" className="text-blue-800">here</Link></span>}</p>
             </div>
             <div className="px-2">
               <h2 className="font-bold py-1">Billed to:</h2>
@@ -152,7 +148,7 @@ const Invoice = ({ saleData }) => {
         </div>
       </div>
     }
-      {saleData.customer_id !== null && ntn !== "" && (
+      {(saleData.customer_id !== null || ntn !== "") && (
         <button
           onClick={handlePrint}
           className="bg-green-600 text-white rounded-lg py-1 font-bold grid place-self-center w-[550px] mt-6 no-print"

@@ -1,7 +1,7 @@
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import OkCloseMessageBox from "./OkClose.jsx";
 import { FaExclamationCircle } from "react-icons/fa";
-const AlertContext = createContext();
+import { AlertContext } from "./AlertContext";
 
 export function AlertProvider({ children }) {
   const [alertState, setAlertState] = useState({
@@ -43,8 +43,4 @@ export function AlertProvider({ children }) {
       />
     </AlertContext.Provider>
   );
-}
-
-export function useAlertBox() {
-  return useContext(AlertContext);
 }

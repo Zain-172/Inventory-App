@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Expense from "../models/Expense";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "./Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "./useAlertBox";
 import { FaCheckCircle, FaWarehouse } from "react-icons/fa";
 import TrieSearch from "./Trie";
 export default function MaterialForm() {

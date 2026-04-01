@@ -125,6 +125,14 @@ export const generateAttendenceReport = (req, res) => {
     const left = doc.page.margins.left;
     const right = doc.page.width - doc.page.margins.right;
 
+    if (company) {
+      doc
+        .font("Helvetica-Bold")
+        .fontSize(18)
+        .fillColor("#333")
+        .text(company, { align: "center", width: pageWidth })
+        .moveDown(1);
+    }
     doc
       .font("Helvetica-Bold")
       .fontSize(22)
@@ -132,13 +140,6 @@ export const generateAttendenceReport = (req, res) => {
       .text(title, { align: "center", width: pageWidth })
       .moveDown(1);
 
-    if (company) {
-      doc
-        .fontSize(14)
-        .fillColor("#333")
-        .text(company, { align: "center", width: pageWidth })
-        .moveDown(1.5);
-    }
 
     const matrix = {};
     employees.forEach((employee) => {
@@ -258,18 +259,19 @@ export const generateReport = (req, res) => {
 
     doc.font("Helvetica-Bold");
     // ------------------ Title ------------------
+    if (company) {
+      doc
+        .fontSize(18)
+        .fillColor("#333")
+        .text(company, { align: "center", width: pageWidth })
+        .moveDown(1);
+    }
+
     doc
       .fontSize(22)
       .fillColor("#333")
       .text(title, { align: "center", width: pageWidth })
       .moveDown(1);
-    if (company) {
-      doc
-        .fontSize(14)
-        .fillColor("#333")
-        .text(company, { align: "center", width: pageWidth })
-        .moveDown(2);
-    }
 
     // ------------------ Table ------------------
     const tableHeaders = Object.keys(data[0]); // dynamic headers

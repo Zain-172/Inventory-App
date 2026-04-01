@@ -1,11 +1,11 @@
 import { FaBarcode, FaCheckCircle } from "react-icons/fa";
 import { lazy, useEffect, useState, useRef } from "react";
 import JsBarcode from "jsbarcode";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 const TopBar = lazy(() => import("../component/TopBar"));
 const Navigation = lazy(() => import("../component/Navigation"));
 const Dropdown = lazy(() => import("../component/DropDown"));
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 import { printLabel } from "../api/Barcode";
 import { Link } from "react-router-dom";
 
@@ -92,7 +92,7 @@ const Barcode = () => {
           />
         </div>
         { value && (
-        <div className="grid grid-cols-[3fr_2fr] gap-4 py-4 px-8 bg-white rounded-lg shadow-md mt-4 max-w-3xl w-full place-self-center">
+        <div className="grid grid-cols-[3fr_2fr] gap-4 py-4 px-8 border rounded-lg shadow-md mt-4 max-w-3xl w-full place-self-center">
           <h3 className="flex items-center gap-2 col-span-2 justify-center text-2xl mb-2"><FaBarcode /> Barcode</h3>
           <form className="w-full">
 
@@ -151,7 +151,7 @@ const Barcode = () => {
             </button>
           </form>
           <div className="flex items-center justify-end">
-            <div id="label" className="border border-black p-4 rounded-lg flex flex-col items-center justify-center">
+            <div id="label" className="border border-black text-black p-4 rounded-lg flex flex-col items-center justify-center">
               {company && <span>Easy Clean</span>}
               <svg ref={barcodeRef} width="220px" height="120px" />
               <div className="flex items-center justify-evenly w-full">

@@ -17,8 +17,8 @@ import {
   FaTrashAlt,
   FaUser,
 } from "react-icons/fa";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "../component/Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "../component/useAlertBox";
 import MessageBox from "../component/MessageBox";
 import {
   updateSaleDeliveryStatus,

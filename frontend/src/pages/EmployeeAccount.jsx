@@ -1,4 +1,4 @@
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
@@ -11,7 +11,7 @@ import {
   FaTrashAlt
 } from "react-icons/fa";
 import { lazy } from "react";
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 const Navigation = lazy(() => import("../component/Navigation"));
 const Table = lazy(() => import("../component/Table"));
 const TopBar = lazy(() => import("../component/TopBar"));

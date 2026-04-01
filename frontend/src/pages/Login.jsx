@@ -2,7 +2,7 @@ import { FaRegEye, FaRegEyeSlash, FaUserCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/Login";
 import { lazy, useState } from "react";
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 const Modal = lazy(() => import("../component/Modal"));
 export default function Login() {
   const { alertBox } = useAlertBox();

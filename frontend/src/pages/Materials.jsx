@@ -15,9 +15,9 @@ import {
 import Modal from "../component/Modal";
 import { Link } from "react-router-dom";
 import DropDown from "../component/DropDown";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 import Product from "../models/Product";
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 import Trie from "../component/Trie";
 
 const Material = () => {

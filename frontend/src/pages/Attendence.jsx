@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FaCalendarAlt, FaUserCheck } from "react-icons/fa";
 import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 import {
 	getAttendenceByDate,
 	upsertAttendence,

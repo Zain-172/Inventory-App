@@ -4,8 +4,8 @@ import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import { FaBroom } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "../component/Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "../component/useAlertBox";
 import { FaCheckCircle } from "react-icons/fa";
 
 export default function CostCalculator() {

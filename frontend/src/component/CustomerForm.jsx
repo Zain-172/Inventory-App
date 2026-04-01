@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "./Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "./useAlertBox";
 import { FaCheckCircle, FaHandshake } from "react-icons/fa";
 
 export default function CustomerForm() {

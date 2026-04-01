@@ -5,6 +5,10 @@ const Modal = lazy(() => import("../component/Modal"));
 const Invoice = ({ saleData }) => {
   const invoiceRef = useRef(null);
 
+  const handlePrint = useReactToPrint({
+    contentRef: invoiceRef,
+  });
+
   if (!saleData) {
     return null;
   }
@@ -15,12 +19,6 @@ const Invoice = ({ saleData }) => {
   );
   const tax = Number(saleData.tax || 0);
   const grandTotal = subTotal + (tax / 100) * subTotal;
-
-
-
-  const handlePrint = useReactToPrint({
-    contentRef: invoiceRef,
-  });
 
   return (
     <>

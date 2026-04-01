@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const OTP = lazy(() => import("../component/OTP"));
 const Modal = lazy(() => import("../component/Modal"));
 import { resetPassword } from "../api/Login";
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 import { generateOTP } from "../api/SignUp";
 import { useNavigate } from "react-router-dom";
 

@@ -30,5 +30,5 @@
 ^FB400,1,0,R,0
 ^FDBroom^FS
 
-^PQ5
+^PQ1
 ^XZ

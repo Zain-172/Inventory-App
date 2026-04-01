@@ -3,8 +3,8 @@ import { FaPlus, FaPlusCircle, FaTrashAlt } from "react-icons/fa";
 import DropDown from "./DropDown";
 import Table from "./Table"
 import Trie from "./Trie";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "./Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "./useAlertBox";
 
 export default function SalesForm({ onSubmit }) {
   const { products, customers, employees } = useAppData();
@@ -50,7 +50,7 @@ export default function SalesForm({ onSubmit }) {
     e.preventDefault();
     const newInvoiceId = generateInvoiceId();
     if (!formData.salesman || entry.length === 0 || !formData.customer) {
-      alert(
+      alertBox(
         "Please fill in all required fields and add at least one product entry."
       );
       return;

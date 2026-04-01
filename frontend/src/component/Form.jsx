@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaCalculator, FaPlus, FaTrashAlt, FaWarehouse } from "react-icons/fa";
 import DropDown from "./DropDown";
 import Table from "./Table";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 export default function Form({ onSubmit }) {
   const [formData, setFormData] = useState({
     name: "",

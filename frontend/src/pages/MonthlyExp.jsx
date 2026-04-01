@@ -4,10 +4,10 @@ import Table from "../component/Table";
 import ExpenseForm from "../component/ExpenseForm";
 import Expense from "../models/Expense";
 import DropDown from "../component/DropDown";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaArrowsAltH } from "react-icons/fa";
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 
 const Monthly = ({ filterVal = "factory" }) => {
   const [openModal, setOpenModal] = useState(false);

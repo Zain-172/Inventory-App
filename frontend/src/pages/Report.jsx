@@ -10,8 +10,8 @@ import {
 import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import DropDown from "../component/DropDown";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "../component/Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "../component/useAlertBox";
 import { useEffect, useState } from "react";
 const Report = () => {
   const { expenses, sales } = useAppData();
@@ -90,7 +90,7 @@ const Report = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title,
-          company: "My Company",
+          company: "Easy Clean",
           data: filteredExpenses.map((exp) => ({
             "#": exp.id,
             Title: exp.title,
@@ -159,7 +159,7 @@ const Report = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title,
-          company: "My Company",
+          company: "Easy Clean",
           data: filteredSales.map((sale) => ({
             Invoice: sale.invoice_id,
             Salesman: sale.salesman,
@@ -248,7 +248,7 @@ const Report = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: title,
-            company: "My Company",
+            company: "Easy Clean",
             data: filteredAttendence.map((a) => ({
               Name: a.name || a.employee_name || a.employee,
               Status: a.status,
@@ -317,7 +317,7 @@ const Report = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: title,
-          company: "My Company",
+          company: "Easy Clean",
           data: filteredSales.map((sale, index) => ({
             "#": index + 1,
             Product: sale.product_name,
@@ -404,7 +404,7 @@ const Report = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
-          company: "My Company",
+          company: "Easy Clean",
           data: filteredRawMaterials.map((item, index) => ({
             "#": index + 1,
             Name: item.name,

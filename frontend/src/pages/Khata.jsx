@@ -5,8 +5,8 @@ import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import Modal from "../component/Modal";
 import KhataForm from "../component/KhataForm";
-import { useAppData } from "../context/AppDataContext";
-import { useAlertBox } from "../component/Alerts";
+import { useAppData } from "../context/useAppData";
+import { useAlertBox } from "../component/useAlertBox";
 
 const Khata = () => {
   const [open, setOpen] = useState(false);

@@ -6,7 +6,7 @@ const TopBar = lazy(() => import("../component/TopBar"));
 const DropDown = lazy(() => import("../component/DropDown"));
 const Modal = lazy(() => import("../component/Modal"));
 import { FaDollarSign, FaEye, FaEyeSlash, FaUsers } from "react-icons/fa";
-import { useAppData } from "../context/AppDataContext";
+import { useAppData } from "../context/useAppData";
 import {
   getProfitByDate,
   getProfitByMonth,

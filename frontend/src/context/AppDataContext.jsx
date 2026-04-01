@@ -1,6 +1,5 @@
-import { createContext, useState, useContext, useEffect } from "react";
-
-const AppDataContext = createContext();
+import { useState, useEffect } from "react";
+import { AppDataContext } from "./AppDataStateContext";
 
 export const AppDataProvider = ({ children }) => {
   const [rawMaterials, setRawMaterials] = useState([]);
@@ -244,6 +243,3 @@ export const AppDataProvider = ({ children }) => {
     </AppDataContext.Provider>
   );
 };
-
-// Custom hook
-export const useAppData = () => useContext(AppDataContext);

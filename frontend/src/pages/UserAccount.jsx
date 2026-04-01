@@ -2,7 +2,7 @@ import { FaEnvelope, FaIdBadge, FaKey, FaPowerOff, FaUserCircle } from "react-ic
 import Navigation from "../component/Navigation";
 import TopBar from "../component/TopBar";
 import { useEffect, useState } from "react";
-import { useAlertBox } from "../component/Alerts";
+import { useAlertBox } from "../component/useAlertBox";
 import { getMpinStatus, getNtnStatus, setMpin, setNtn } from "../api/Login";
 import { useNavigate } from "react-router-dom";
 
