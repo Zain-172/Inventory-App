@@ -35,7 +35,7 @@ const EmployeesAccount = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isModifyOpen, setIsModifyOpen] = useState(false);
   const [DropDownOpen, setDropDownOpen] = useState(false);
-  const { loading, employees } = useAppData();
+  const { loading, employees, fetchEmployees } = useAppData();
   const [accounts, setAccounts] = useState([]);
   const { alertBox } = useAlertBox();
   const navigate = useNavigate();
@@ -122,6 +122,8 @@ const EmployeesAccount = () => {
         "Success",
         <FaCheckCircle />
       );
+      await fetchEmployees();
+      setIsModifyOpen(false);
     } else {
       console.error("Failed to modify");
     }

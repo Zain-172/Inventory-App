@@ -22,7 +22,7 @@ export default function SalesForm({ onSubmit, type = "sale" }) {
     { key: "Delivered", value: "delivered" },
   ];
   const salesmen = [
-    ...employees.filter((emp) => emp.position.toLowerCase() === "salesman").map((emp) => ({ key: emp.name, value: emp.id })),
+    ...employees.filter((emp) => emp.position.toLowerCase().includes("sale")).map((emp) => ({ key: emp.name, value: emp.id })),
   ];
   const [formData, setFormData] = useState({
     id: product[0]?.value,

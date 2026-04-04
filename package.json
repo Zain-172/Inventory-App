@@ -1,6 +1,6 @@
 {
   "name": "desktop-app",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A modern Electron-based Inventory Management System that streamlines stock tracking, automated invoicing, employee management, and digital Khata (ledger) handling—providing businesses with a fast, reliable, and all-in-one desktop solution.",
   "author": {
     "name": "TwinTech Developers",

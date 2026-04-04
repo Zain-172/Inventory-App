@@ -1,4 +1,4 @@
-import { FaArrowCircleLeft, FaPowerOff, FaUserAlt } from "react-icons/fa";
+import { FaAngleRight, FaArrowAltCircleRight, FaArrowCircleLeft, FaArrowCircleRight, FaPowerOff, FaReply, FaSync, FaUserAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import ThemeToggle from "./ThemeToggle";
@@ -29,6 +29,7 @@ export default function TopBar({ children }) {
         </Link>
         <Link to="/user-account" className="bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full"><FaUserAlt /></Link>
         <ThemeToggle />
+        <button className="bg-neutral-200 dark:bg-neutral-700 p-2 rounded-full" onClick={() => {window.location.reload()}}><FaSync /></button>
       </div>
     </header>
   );
