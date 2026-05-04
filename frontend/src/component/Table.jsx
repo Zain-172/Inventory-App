@@ -70,7 +70,7 @@ export default function Table({
                         <p className="p-2 min-w-[150px]">{row[col]}</p>
                       )
                     ) : (
-                      <p className="text-center">{row[col]}</p>
+                      <p className="text-center">{rowIndex + 1}</p>
                     )}
                   </td>
                 ))}

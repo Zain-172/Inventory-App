@@ -12,7 +12,7 @@ let backendProcess = null;
 let mainWindow = null;
 
 // Only production mode
-const isDev = false;
+const isDev = true;
 
 if (!isDev) {
   // Start backend server (production only)
