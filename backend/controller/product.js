@@ -95,12 +95,12 @@ export default class Product {
     }
   }
   insertProduct = (req, res) => {
-    const { name, cost_price, stock, date, type, action } = req.body;
+    const { name, cost_price, stock, date, type, barcode, action } = req.body;
       try {
         const stmt1 = db.prepare(`
         INSERT INTO products (name, cost_price, stock, date, type)
-        VALUES (?, ?, ?, ?, ?)
-        ON CONFLICT(name, type) DO UPDATE
+        VALUES (?, ?, ?, ?, ?, ?)
+        ON CONFLICT(barcode) DO UPDATE
         SET stock = stock + excluded.stock,
             cost_price = excluded.cost_price,
             date = excluded.date

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Navigation from "../component/Navigation";
 import Table from "../component/Table";
 import TopBar from "../component/TopBar";
@@ -32,10 +32,16 @@ const Material = () => {
     type: filter,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [removeModal, setRemoveModal] = useState(false);
   const { alertBox } = useAlertBox();
 
+
+  const filteredProducts = useMemo(() => {
+    return products.filter(
+      (product) => product.type === filter && product.stock > 0
+    );
+  }, [products, filter]);
   const handleSubmit = async (e) => {
+    console.log("Submitting form with data: ", formData);
     e.preventDefault();
     const data = { ...formData, type: filter, action: "ADD" };
     console.log("Form Data: ", data);
@@ -68,51 +74,55 @@ const Material = () => {
     setIsModalOpen(false);
   };
 
-  const handleRemove = async (e) => {
-    e.preventDefault();
-    console.log("Form Data: ", formData);
-    if (
-      formData.stock >
-      products.find((product) => product.name === formData.name)?.stock
-    ) {
-      alert("Cannot remove more stock than available!");
-      return;
-    }
-    const data = new Product(
-      0,
-      formData.name,
-      formData.cost_price,
-      -formData.stock,
-      formData.date,
-      filter,
-    );
-    data.action = "REMOVE";
-    try {
-      const res = await fetch("http://localhost:5000/product/add-product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      const result = await res.json();
-      if (res.ok) {
-        alertBox(
-          "The Product stock is removed successfully",
-          "Success",
-          <FaCheckCircle />,
-        );
-        fetchProducts();
-        setRemoveModal(false);
-        setFormData(new Product());
-      } else {
-        console.error("Failed to add product:", result.message);
-      }
-    } catch (err) {
-      console.log("Error: ", err);
-    }
-    setIsModalOpen(false);
-  };
+  // const handleRemove = async (e) => {
+  //   e.preventDefault();
+  //   console.log("Form Data: ", formData);
+  //   if (
+  //     formData.stock >
+  //     products.find((product) => product.id === formData.id)?.stock
+  //   ) {
+  //     alertBox(
+  //       "Cannot remove more stock than available!",
+  //       "Error",
+  //       <FaExclamationTriangle />,
+  //     );
+  //     return;
+  //   }
+  //   const data = new Product(
+  //     0,
+  //     formData.name,
+  //     formData.cost_price,
+  //     -formData.stock,
+  //     formData.date,
+  //     filter,
+  //   );
+  //   data.action = "REMOVE";
+  //   try {
+  //     const res = await fetch("http://localhost:5000/product/add-product", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(data),
+  //     });
+  //     const result = await res.json();
+  //     if (res.ok) {
+  //       alertBox(
+  //         "The Product stock is removed successfully",
+  //         "Success",
+  //         <FaCheckCircle />,
+  //       );
+  //       fetchProducts();
+  //       setRemoveModal(false);
+  //       setFormData(new Product());
+  //     } else {
+  //       console.error("Failed to add product:", result.message);
+  //     }
+  //   } catch (err) {
+  //     console.log("Error: ", err);
+  //   }
+  //   setIsModalOpen(false);
+  // };
 
   const handleDelete = async (id) => {
     try {
@@ -138,10 +148,37 @@ const Material = () => {
 
   const handleModify = async (editedData) => {
     console.log("Edited Data: ", editedData);
-    setFormData(editedData);
-    setIsModalOpen(true);
-  }
-
+    const stock = products.find((prod) => prod.id === editedData.id).stock;
+    editedData.stock = editedData.stock - stock;
+    const data = { ...editedData, type: filter, action: "ADD" };
+    console.log("Form Data: ", data);
+    try {
+      const res = await fetch("http://localhost:5000/product/add-product", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        alertBox(
+          "The Product is added successfully",
+          "Success",
+          <FaCheckCircle />,
+        );
+        fetchProducts();
+        setFormData(new Product());
+      } else {
+        alertBox(
+          "Failed to add product: Insufficient Raw Materials or Invalid Data",
+          "Error",
+          <FaExclamationTriangle />,
+        );
+      }
+    } catch (err) {
+      console.log("Error: ", err);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -211,19 +248,19 @@ const Material = () => {
                 <FaPlusCircle /> Add Stock
               </button>
 
-              <button
+              {/* <button
                 onClick={() => setRemoveModal(true)}
                 className="px-4 py-2 bg-green-600 text-white rounded-lg font-bold flex items-center gap-2"
               >
                 <FaTrashAlt /> Remove Stock
-              </button>
+              </button> */}
             </div>
           </div>
           <Table
             open={open}
             setOpen={setOpen}
-            data={products
-              .filter((product) => product.type === filter && product.stock > 0)
+            data={
+              filteredProducts
               .map((product) => ({
                 id: product.id,
                 name: product.name,
@@ -234,7 +271,6 @@ const Material = () => {
               }))}
             onDelete={handleDelete}
             onUpdate={handleModify}
-            nonEditable="back"
             accent="bg-green-600"
           />
         </div>
@@ -256,21 +292,23 @@ const Material = () => {
             <div className="w-full">
               <label className="block text-sm font-medium mb-1">Name</label>
               <Trie
-                items={products.map((product) => product.name)}
+                items={filteredProducts
+                  .map((product) => product.name)}
                 onChange={(value) =>
                   setFormData((prev) => ({
                     ...prev,
                     name: value.key,
-                    cost_price: products.find((prod) => prod.name === value.key)?.cost_price || "",
+                    barcode: filteredProducts.find((p) => p.name === value.key)?.barcode || "",
+                    cost_price:
+                      filteredProducts.find((prod) => prod.name === value.key)
+                        ?.cost_price || "",
                   }))
                 }
                 value={formData.name}
               />
             </div>
             <div className="w-full">
-              <label className="block text-sm font-medium mb-1">
-                Price
-              </label>
+              <label className="block text-sm font-medium mb-1">Price</label>
               <input
                 type="number"
                 name="costPrice"
@@ -351,28 +389,26 @@ const Material = () => {
           </h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="w-full">
-              <label className="block text-sm font-medium mb-1">Name</label>
+              <label className="block text-sm font-medium mb-1">Material</label>
               <DropDown
                 className="flex justify-between items-center w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 border-black dark:border-white"
-                options={products
-                  .filter((product) => product.type === "production")
+                options={filteredProducts
                   .map((product) => ({
                     key: product.name,
-                    value: product.cost_price,
+                    value: product.barcode,
                   }))}
                 onChange={(d) =>
                   setFormData((prev) => ({
                     ...prev,
                     name: d.key,
-                    cost_price: d.value,
+                    barcode: d.value,
+                    cost_price: filteredProducts.find((p) => p.barcode === d.value)?.cost_price || 0,
                   }))
                 }
               />
             </div>
             <div className="w-full">
-              <label className="block text-sm font-medium mb-1">
-                Price
-              </label>
+              <label className="block text-sm font-medium mb-1">Price</label>
               <input
                 type="number"
                 name="costPrice"
@@ -434,7 +470,8 @@ const Material = () => {
           </button>
         </form>
       </Modal>
-      <Modal
+
+      {/* <Modal
         isOpen={removeModal}
         onClose={() => setRemoveModal(false)}
         title="Remove Stock"
@@ -448,15 +485,17 @@ const Material = () => {
             Stock
           </h2>
           <div className="w-full">
-            <label className="block text-sm font-medium mb-1">Name</label>
+            <label className="block text-sm font-medium mb-1">Material</label>
             <DropDown
-              options={products.map((product) => ({ key: product.name, value: product.id }))}
+              options={filteredProducts.map((product) => ({ key: product.name, value: product.id }))}
               onChange={(data) =>
                 setFormData((prev) => ({
                   ...prev,
                   name: data.key,
                   id: data.value,
-                  cost_price: products.find((prod) => prod.id === data.value)?.cost_price || "",
+                  cost_price:
+                    filteredProducts.find((prod) => prod.id === data.value)
+                      ?.cost_price || "",
                 }))
               }
             />
@@ -477,8 +516,7 @@ const Material = () => {
               required
             />
             {formData.stock >
-              products.find((product) => product.name === formData.name)
-                ?.stock && (
+              products.find((product) => product.id === formData.id)?.stock && (
               <span className="absolute -bottom-4 left-1 text-[10px] text-red-600 italic">
                 *The Quantity exceeds the available stock!
               </span>
@@ -507,7 +545,7 @@ const Material = () => {
             <FaMinusCircle /> Remove Stock
           </button>
         </form>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };
