@@ -12,7 +12,11 @@ export default class Product {
 
   getProduct = (req, res) => {
     try {
-      const row = db.prepare("SELECT id, name, cost_price, stock, date, type, barcode FROM products").all();
+      const row = db
+        .prepare(
+          "SELECT id, name, cost_price, stock, date, type, barcode FROM products",
+        )
+        .all();
       if (!row) {
         return res.status(404).json({ message: "Product not found" });
       }
@@ -27,7 +31,7 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated, type, barcode from products GROUP by name"
+          "SELECT id, name, sum(stock) as total_stock, cost_price, max(date) as date_updated, type, barcode from products GROUP by name",
         )
         .all();
       res.json(rows);
@@ -42,7 +46,7 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT sum(stock * cost_price) from products WHERE date = ? group by date"
+          "SELECT sum(stock * cost_price) from products WHERE date = ? group by date",
         )
         .all(date);
       res.json(rows);
@@ -57,69 +61,113 @@ export default class Product {
     try {
       const rows = db
         .prepare(
-          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and date = ? "
+          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and date = ? ",
         )
         .all(date);
-        res.json(rows);
+      res.json(rows);
     } catch (err) {
-      console.log(err)
-      res.status(500).json({ message: "Internal Server Error"})
+      console.log(err);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-  }
+  };
   getStockHistoryMonth = (req, res) => {
     const { date } = req.query;
     try {
       const rows = db
         .prepare(
-          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and strftime('%Y-%m', date) = ? "
+          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and strftime('%Y-%m', date) = ? ",
         )
         .all(date);
-        res.json(rows);
+      res.json(rows);
     } catch (err) {
-      console.log(err)
-      res.status(500).json({ message: "Internal Server Error"})
+      console.log(err);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-  }
+  };
   getStockHistoryYear = (req, res) => {
     const { date } = req.query;
     try {
       const rows = db
         .prepare(
-          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and strftime('%Y', date) = ? "
+          "SELECT name, stock, cost_price, date, barcode FROM products_history WHERE stock > 0 and strftime('%Y', date) = ? ",
         )
         .all(date);
-        res.json(rows);
+      res.json(rows);
     } catch (err) {
-      console.log(err)
-      res.status(500).json({ message: "Internal Server Error"})
+      console.log(err);
+      res.status(500).json({ message: "Internal Server Error" });
     }
-  }
-  insertProduct = (req, res) => {
-    const { name, cost_price, stock, date, type, barcode, action } = req.body;
-      try {
-        const stmt1 = db.prepare(`
-        INSERT INTO products (name, cost_price, stock, date, type)
-        VALUES (?, ?, ?, ?, ?, ?)
-        ON CONFLICT(barcode) DO UPDATE
-        SET stock = stock + excluded.stock,
-            cost_price = excluded.cost_price,
-            date = excluded.date
-      `);
-        stmt1.run(name, cost_price, stock, date, type);
-
-      const stmt2 = db.prepare(`
-      INSERT INTO products_history (name, cost_price, stock, date, type, action)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `);
-      stmt2.run(name, cost_price, stock, date, type, action);
-
-      res.status(201).json({ message: "Product created/updated" });
+  };
+  // Get all product history entries
+  getHistory = (req, res) => {
+    try {
+      const rows = db
+        .prepare(
+          "SELECT id, name, stock, cost_price, date, action, type, barcode FROM products_history ORDER BY date DESC, id DESC"
+        )
+        .all();
+      res.json(rows);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: "Internal Server Error" });
     }
   };
 
+  // Delete a history entry by id
+  deleteHistory = (req, res) => {
+    const { id } = req.params;
+    try {
+      const stmt = db.prepare("DELETE FROM products_history WHERE id = ?");
+      const info = stmt.run(id);
+      if (info.changes === 0) {
+        return res.status(404).json({ message: "History entry not found" });
+      }
+      res.json({ message: "History entry deleted" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  insertProduct = (req, res) => {
+    const { name, cost_price, stock, date, type, action } = req.body;
+
+    try {
+      db.prepare("BEGIN").run();
+
+      const stmt1 = db.prepare(`
+      INSERT INTO products (name, cost_price, stock, date, type)
+      VALUES (?, ?, ?, ?, ?)
+      ON CONFLICT(name, type) DO UPDATE
+      SET stock = stock + excluded.stock,
+          cost_price = excluded.cost_price,
+          date = excluded.date,
+          type = excluded.type
+    `);
+
+      stmt1.run(name, cost_price, stock, date, type);
+
+      // resolve barcode for this product (may have been generated)
+      const productRow = db
+        .prepare("SELECT barcode FROM products WHERE name = ? AND type = ? LIMIT 1")
+        .get(name, type);
+      const barcode = productRow ? productRow.barcode : null;
+
+      const stmt2 = db.prepare(`
+      INSERT INTO products_history (name, cost_price, stock, date, type, action, barcode)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+      stmt2.run(name, cost_price, stock, date, type, action, barcode);
+
+      db.prepare("COMMIT").run();
+
+      res.status(201).json({ message: "Product created/updated" });
+    } catch (err) {
+      db.prepare("ROLLBACK").run();
+      console.error(err);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
   deleteProduct = (req, res) => {
     const { id } = req.params;
     try {
@@ -140,7 +188,7 @@ export default class Product {
     const { name, price, stock, type, barcode } = req.body;
     try {
       const stmt = db.prepare(
-        "UPDATE products SET name = ?, cost_price = ?, stock = ?, type = ?, barcode = ? WHERE id = ?"
+        "UPDATE products SET name = ?, cost_price = ?, stock = ?, type = ?, barcode = ? WHERE id = ?",
       );
       const info = stmt.run(name, price, stock, type, barcode, id);
     } catch (err) {

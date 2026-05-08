@@ -13,5 +13,7 @@ counter_router.get("/inventory", productInstance.getInventory);
 counter_router.get("/stock-history-date", productInstance.getStockHistoryDate);
 counter_router.get("/stock-history-month", productInstance.getStockHistoryMonth);
 counter_router.get("/stock-history-year", productInstance.getStockHistoryYear);
+counter_router.get("/history", productInstance.getHistory);
+counter_router.delete("/history/:id", productInstance.deleteHistory);
 
 export default counter_router;

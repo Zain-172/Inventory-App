@@ -55,13 +55,13 @@ const fetchRawMaterialPurchasingReport = (res, whereClause, filterValue) => {
   try {
     const rows = db
       .prepare(
-        `SELECT id, name, stock, cost_price, date, action, (stock * cost_price) AS amount
+        `SELECT id, name, barcode, stock, cost_price, date, action, (stock * cost_price) AS amount
          FROM products_history
          WHERE type = 'raw' AND stock > 0 AND ${whereClause}
          ORDER BY date DESC, id DESC`
       )
       .all(filterValue);
-
+    console.log("Fetched raw material purchasing report data:", rows);
     res.json(rows);
   } catch (err) {
     console.error(err);

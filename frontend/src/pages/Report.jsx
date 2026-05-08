@@ -12,51 +12,10 @@ import TopBar from "../component/TopBar";
 import DropDown from "../component/DropDown";
 import { useAppData } from "../context/useAppData";
 import { useAlertBox } from "../component/useAlertBox";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 const Report = () => {
-  const { expenses, sales } = useAppData();
+  const { expenses, sales, period, month, years, selectedPeriod, setSelectedPeriod, selectedDate, setSelectedDate, selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useAppData();
   const { alertBox } = useAlertBox();
-  const period = [
-    { value: "daily", key: "Daily" },
-    { value: "monthly", key: "Monthly" },
-    { value: "annually", key: "Annually" },
-  ];
-  const [selectedPeriod, setSelectedPeriod] = useState(period[0]);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().split("T")[0],
-  );
-
-  const month = [
-    { key: "January", value: "01" },
-    { key: "February", value: "02" },
-    { key: "March", value: "03" },
-    { key: "April", value: "04" },
-    { key: "May", value: "05" },
-    { key: "June", value: "06" },
-    { key: "July", value: "07" },
-    { key: "August", value: "08" },
-    { key: "September", value: "09" },
-    { key: "October", value: "10" },
-    { key: "November", value: "11" },
-    { key: "December", value: "12" },
-  ];
-
-  const [selectedMonth, setSelectedMonth] = useState(month[0]);
-  const [selectedYear, setSelectedYear] = useState(null);
-  const [years, setYears] = useState([]);
-  useEffect(() => {
-    const minimumYear = 2026;
-    const currentYear = new Date().getFullYear();
-    const years = Array.from(
-      { length: Math.max(currentYear - minimumYear + 1, 0) },
-      (_, i) => {
-        const year = currentYear - i;
-        return { key: year.toString(), value: year.toString() };
-      },
-    );
-    setYears(years);
-    setSelectedYear(years[years.length - 1]);
-  }, []);
 
   const GenerateExpensesReport = async () => {
     let filteredExpenses = [];
@@ -408,6 +367,7 @@ const Report = () => {
           data: filteredRawMaterials.map((item, index) => ({
             "#": index + 1,
             Name: item.name,
+            Barcode: item.barcode,
             Date: item.date,
             "Cost Price": "Rs. " + item.cost_price,
             Quantity: item.stock,

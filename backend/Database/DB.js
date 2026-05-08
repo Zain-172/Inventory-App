@@ -28,8 +28,8 @@ console.log("App Data Directory:", appDir);
 console.log("Database Path:", dbPath);
 // ── Ensure directory exists ────────────────────────────────────
 fs.mkdirSync(appDir, { recursive: true });
-const dbExist = fs.existsSync(dbPath)
-const db = new Database(dbPath)
+const dbExist = fs.existsSync(dbPath);
+const db = new Database(dbPath);
 // ── Copy seed DB if no DB exists yet ──────────────────────────
 if (!dbExist) {
   const sql = `
@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS "products_history" (
 	"name"	TEXT NOT NULL,
 	"stock"	INTEGER NOT NULL,
 	"cost_price"	REAL NOT NULL,
+	"barcode"	TEXT,
 	"date"	TEXT,
 	"action"	TEXT,
 	"type"	TEXT,
@@ -261,7 +262,6 @@ COMMIT;
   } catch (err) {
     console.error("Error : ", err);
   }
-
 }
 
 db.pragma("foreign_keys = ON");
@@ -270,21 +270,47 @@ db.pragma("journal_mode = WAL");
 // Ensure older databases also get the mpin column.
 const userColumns = db.prepare("PRAGMA table_info('user')").all();
 if (!userColumns.some((column) => column.name === "mpin")) {
-	db.prepare("ALTER TABLE user ADD COLUMN mpin TEXT").run();
+  db.prepare("ALTER TABLE user ADD COLUMN mpin TEXT").run();
 }
 
 // Ensure older databases also get the ntn column.
 if (!userColumns.some((column) => column.name === "ntn")) {
-	db.prepare("ALTER TABLE user ADD COLUMN ntn TEXT").run();
+  db.prepare("ALTER TABLE user ADD COLUMN ntn TEXT").run();
 }
 
 // Ensure customers table has ntn column for older databases.
 const customerColumns = db.prepare("PRAGMA table_info('customers')").all();
 if (!customerColumns.some((column) => column.name === "ntn")) {
-	db.prepare("ALTER TABLE customers ADD COLUMN ntn TEXT").run();
+  db.prepare("ALTER TABLE customers ADD COLUMN ntn TEXT").run();
+}
+
+// Ensure products_history has barcode column for older databases.
+try {
+  const productsHistoryColumns = db
+    .prepare("PRAGMA table_info('products_history')")
+    .all();
+  console.log(
+    "products_history columns:",
+    productsHistoryColumns.map((c) => c.name),
+  );
+
+  const hasBarcode = productsHistoryColumns.some(
+    (column) => column.name === "barcode",
+  );
+  if (!hasBarcode) {
+    console.log("Adding 'barcode' column to products_history...");
+    db.prepare("ALTER TABLE products_history ADD COLUMN barcode TEXT").run();
+    console.log("✅ Migrated: added 'barcode' column to products_history");
+  } else {
+    console.log("✅ products_history already has 'barcode' column");
+  }
+} catch (err) {
+  console.error(
+    "❌ Error checking/adding barcode column to products_history:",
+    err.message,
+  );
 }
 
 console.log("✅ Database connected at:", dbPath);
 
 export default db;
-

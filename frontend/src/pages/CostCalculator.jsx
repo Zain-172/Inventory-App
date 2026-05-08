@@ -20,6 +20,7 @@ export default function CostCalculator() {
 
   const handleSubmit = async (payload) => {
     try {
+      console.log("Submitting cost calculation:", payload);
       const response = await fetch("http://localhost:5000/raw-material/add-raw-material", {
         method: "POST",
         headers: {
