@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import DropDown from "../component/DropDown";
 import { fetchProductHistory } from "../api/ProductHistory";
 import { useAppData } from "../context/useAppData";
@@ -25,54 +25,70 @@ export default function ProductHistory() {
   } = useAppData();
 
   const load = () => {
-    fetchProductHistory()
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    fetchProductHistory(signal)
       .then((rows) => {
         const normalized = rows.map((r) => ({
           id: r.id,
           name: r.name,
-          stock: r.stock,
-          cost_price: r.cost_price,
+          stock: Number(r.stock) || 0,
+          cost_price: Number(r.cost_price) || 0,
           barcode: r.barcode,
           date: r.date,
-          action: r.action,
           type: r.type,
         }));
         setData(normalized);
       })
       .catch((err) => {
+        if (err && err.name === "AbortError") return;
         console.error(err);
         setData([]);
       });
+
+    return controller;
   };
+
+  const loadCallback = useCallback(() => load(), []);
 
   useEffect(() => {
-    load();
-  }, []);
+    const controller = loadCallback();
+    return () => controller?.abort();
+  }, [loadCallback]);
 
 
-  const matchesPeriod = (historyDate) => {
-    const normalizedDate = String(historyDate ?? "").slice(0, 10);
-    if (!normalizedDate) return false;
+  const filteredData = useMemo(() => {
+    const periodValue = selectedPeriod?.value;
 
-    const historyYear = normalizedDate.slice(0, 4);
-    const historyMonth = normalizedDate.slice(5, 7);
+    return data.filter((row) => {
+      const normalizedDate = String(row.date ?? "").slice(0, 10);
+      if (!normalizedDate) return false;
 
-    if (selectedPeriod.value === "daily") {
-      return normalizedDate === selectedDate;
-    }
+      const historyYear = normalizedDate.slice(0, 4);
+      const historyMonth = normalizedDate.slice(5, 7);
 
-    if (selectedPeriod.value === "monthly") {
-      return historyMonth === selectedMonth.value;
-    }
+      if (periodValue === "daily") {
+        return normalizedDate === selectedDate;
+      }
 
-    if (selectedPeriod.value === "annually") {
-      return historyYear === selectedYear.value;
-    }
+      if (periodValue === "monthly") {
+        return historyMonth === selectedMonth?.value;
+      }
 
-    return true;
-  };
+      if (periodValue === "annually") {
+        return historyYear === selectedYear?.value;
+      }
 
-  const filteredData = data.filter((row) => matchesPeriod(row.date));
+      return true;
+    });
+  }, [
+    data,
+    selectedPeriod?.value,
+    selectedDate,
+    selectedMonth?.value,
+    selectedYear?.value,
+  ]);
 
   return (
     <>
@@ -133,9 +149,8 @@ export default function ProductHistory() {
                 id: d.id,
                 name: d.name,
                 barcode: d.barcode,
-                quantity: d.stock > 0 ? d.stock : -d.stock,
-                cost_price: d.cost_price,
-                action: d.action,
+                quantity: d.stock,
+                price: d.cost_price,
                 type: d.type,
                 date: d.date,
               }))}
