@@ -19,14 +19,14 @@ const SelectMenu = ({
   onDiscard,
   buttons,
   options,
-  id
+  id,
 }) => {
   const [modify, setModify] = useState(false);
   return (
     <>
       {!modify && options === "view" ? (
         <Modal isOpen={open} onClose={() => setOpen(false)}>
-          <div className="bg-white dark:bg-neutral-900 w-80 grid grid-rows-2 gap-4 p-4 rounded-2xl shadow-lg shadow-white/10 border border-white/30">
+          <div className="bg-white dark:bg-neutral-900 w-96 grid grid-rows-2 gap-4 p-4 rounded-2xl shadow-lg shadow-white/10 border border-white/30">
             <h1 className="flex items-center justify-center gap-2 font-bold text-2xl">
               <FaHandPointer /> Action
             </h1>
@@ -35,7 +35,7 @@ const SelectMenu = ({
             </p>
             <div className="flex justify-evenly items-center">
               <button
-                className="flex gap-2 justify-center w-32 items-center bg-yellow-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-yellow-600 transition-colors text-white font-bold"
+                className="flex gap-2 justify-center w-24 items-center bg-yellow-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-yellow-600 transition-colors text-white font-bold"
                 onClick={() => {
                   setModify(true);
                   onModify();
@@ -44,8 +44,15 @@ const SelectMenu = ({
                 <FaPencilAlt />
                 Modify
               </button>
+              <button
+                className="flex gap-2 justify-center items-center w-24 bg-red-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-red-600 transition-colors text-white font-bold"
+                onClick={onDelete}
+              >
+                <FaTrashAlt />
+                Delete
+              </button>
               <Link
-                className="flex gap-2 justify-center w-32 items-center bg-green-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-green-600 transition-colors text-white font-bold"
+                className="flex gap-2 justify-center w-24 items-center bg-green-500 px-4 py-2 rounded-lg cursor-pointer hover:bg-green-600 transition-colors text-white font-bold"
                 to={`/customer-sale/${id}`}
               >
                 <FaEye />

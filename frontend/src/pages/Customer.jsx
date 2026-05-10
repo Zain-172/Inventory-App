@@ -13,26 +13,7 @@ const Customer = () => {
   const [openModal, setOpenModal] = useState(false);
   const { loading, customers, setCustomers, fetchCustomers } = useAppData();
   const { alertBox } = useAlertBox();
-  const handleSubmit = async (data) => {
-    const res = await fetch("http://localhost:5000/customer/add-customer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-    if (res.ok) {
-      const newCustomer = await res.json();
-      setCustomers((prevCustomers) => [...prevCustomers, newCustomer]);
-      alertBox(
-        "The Customer is added successfully",
-        "Success",
-        <FaCheckCircle />
-      );
-    } else {
-      console.error("Failed to add customer");
-    }
-  };
+
   const handleModify = async (editedData, deleteId) => {
     console.log(editedData, deleteId);
     try {
@@ -115,7 +96,7 @@ const Customer = () => {
         </div>
       </main>
       <Modal isOpen={openModal} onClose={() => setOpenModal(false)}>
-        <CustomerForm onSubmit={handleSubmit} />
+        <CustomerForm onClose={() => setOpenModal(false)} />
       </Modal>
     </div>
   );

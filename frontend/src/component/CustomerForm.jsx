@@ -3,7 +3,7 @@ import { useAppData } from "../context/useAppData";
 import { useAlertBox } from "./useAlertBox";
 import { FaCheckCircle, FaHandshake } from "react-icons/fa";
 
-export default function CustomerForm() {
+export default function CustomerForm({onClose}) {
   const [form, setForm] = useState({
     customer: "",
     phone: "",
@@ -31,7 +31,7 @@ export default function CustomerForm() {
       setCustomers((prev) => [
         ...prev,
         {
-          customer_id: data.customerId,
+          id: data.customerId,
           ...form,
         },
       ]);
@@ -50,6 +50,7 @@ export default function CustomerForm() {
         "Success",
         <FaCheckCircle />
       );
+      onClose();
     } else {
       console.error("Failed to add customer");
     }

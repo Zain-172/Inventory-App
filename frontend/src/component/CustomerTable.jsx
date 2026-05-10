@@ -3,7 +3,7 @@ import MessageBox from "./MessageBox";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import SelectMenu from "../component/SelectMenu";
 
-export default function Table({
+export default function CustomerTable({
   data,
   accent = "bg-green-600",
   open,
@@ -119,7 +119,7 @@ export default function Table({
               DELETE
             </h2>
             <p className="text-center text-sm">
-              Do you want to delete this <strong>Product</strong> from your
+              Do you want to delete this <strong>Customer</strong> from your
               sales records?. <br /> <strong> Warning: </strong> This cannot be
               undone.
             </p>
