@@ -49,6 +49,7 @@ export default function ProductHistory() {
     load();
   }, []);
 
+
   const matchesPeriod = (historyDate) => {
     const normalizedDate = String(historyDate ?? "").slice(0, 10);
     if (!normalizedDate) return false;

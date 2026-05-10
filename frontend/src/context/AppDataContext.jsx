@@ -157,7 +157,9 @@ export const AppDataProvider = ({ children }) => {
     };
 
     fetchAllData();
+    // sendProductContext(products);
   }, []);
+
 
   const fetchSalesWithItems = async (period, date) => {
     console.log(

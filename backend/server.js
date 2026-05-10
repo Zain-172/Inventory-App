@@ -15,6 +15,7 @@ import opt_router from "./routes/otp.js";
 import sign_up_router from "./routes/sign_up.js";
 import login_router from "./routes/login.js";
 import barcode_router from "./routes/barcode.js";
+import context_router from "./routes/context.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -40,6 +41,7 @@ app.use("/otp", opt_router);
 app.use("/sign-up", sign_up_router);
 app.use("/login", login_router);
 app.use("/barcode", barcode_router);
+app.use("/context", context_router);
 
 app.listen(PORT, () => {
   console.log(`Backend running at http://localhost:${PORT}`);

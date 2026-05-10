@@ -15,10 +15,10 @@ export default function SignUp() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, username, password, confirmPassword } = e.target.elements;
-    // if (password.value !== confirmPassword.value) {
-    //   // You can show an error message to the user here
-    //   return;
-    // }
+    if (password.value !== confirmPassword.value) {
+      alert("Passwords do not match");
+      return;
+    }
     console.log(email.value, username.value, password.value, confirmPassword.value);
     await generateOTP(email.value);
     setData({ email: email.value, username: username.value, password: password.value });
@@ -34,7 +34,7 @@ export default function SignUp() {
       }
     } catch (error) {
       console.error("Error signing up:", error);
-      // You can show an error message to the user here
+      alert("Error signing up. Please try again.");
     }
   };
 
